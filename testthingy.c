@@ -4,7 +4,7 @@
 
 int main()
 {
-    FILE *fp1=NULL,*fp2=NULL;
+    FILE *fp1,*fp2;
     char line[SIZE];
     fp1=fopen("f1","r");
     fp2=fopen("f2","w");
