@@ -5,7 +5,7 @@
 int main()
 {
     char *a= "aaaaa";
-    if(strcmp(a,"bbbb")==0)
+    if(strcmp(a,"aaaaa")==0)
     {
         printf("yeee");
     }
