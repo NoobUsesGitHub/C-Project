@@ -11,8 +11,9 @@ int main()
     
     while(fgets(line, SIZE,fp1)!=NULL)
     {
-        if(strcmp(line,"aaaa")!=0)
+        if(strcmp(line,'aaaa')!=0)
         {
+            printf("%s",line);
             fputs(line,fp2);
         }
     }
