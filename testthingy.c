@@ -16,8 +16,8 @@ int main()
             fputs(line,fp2);
         }
     }
-    int x= remove(fp1);
-    printf("%d",x);
+    if(remove(fp1)==0)
+        printf("0");
     /*remove(file pointer) removes a file, 0 if worked*/
     fclose(fp2);
 
