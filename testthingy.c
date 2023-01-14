@@ -4,7 +4,7 @@
 int main()
 {
     char *a= "aaaaa";
-    if(*a=="bbb")
+    if(a=='bbb')
     {
         printf("yeee");
     }
