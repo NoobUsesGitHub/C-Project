@@ -6,7 +6,7 @@ int main()
     char *a= "aaaaa";
     if(a=="bbb")
     {
-        printf("yeee")
+        printf("yeee");
     }
     return 1;
 }
