@@ -4,11 +4,16 @@
 
 int main()
 {
-    char *a= "aaaaa";
-    if(strcmp(a,"aaaaa")==0)
+    FILE *fp;
+
+    fp=fopen("f1","a");
+    if(fp==NULL)
     {
-        printf("yeee");
+        return 0;
     }
+    putc('a',fp);
+    fclose(fp);
+
     return 1;
 }
 
