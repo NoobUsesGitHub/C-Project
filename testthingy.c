@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#define SIZE 81
+#define SIZE 6
 
 int main()
 {
