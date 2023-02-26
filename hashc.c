@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <string.h>
-
+/*
+▀█▀ ▄▀▄    ██▄ ██▀    █▀▄ ██▀ █   ██▀ ▀█▀ ██▀ █▀▄ 
+ █  ▀▄▀    █▄█ █▄▄    █▄▀ █▄▄ █▄▄ █▄▄  █  █▄▄ █▄▀ 
+ */
 unsigned int perfect_hash(char* s) {
     unsigned int hash = 0;
     int len = strlen(s);
