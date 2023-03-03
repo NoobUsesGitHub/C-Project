@@ -32,5 +32,9 @@
     "**/.*/**",
     "**/.vscode",
     "**/.vscode/**"
-  ]
+  ],
+  "files.associations": {
+    "string.h": "c",
+    "testThingy2.C": "cpp"
+  }
 }
