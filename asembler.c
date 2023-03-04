@@ -2,6 +2,7 @@
 #include <string.h>
 #include <struct.h>
 #include <macroDecoder.c>
+#include <helpers.c>
 
 
 int main(int argc, char *argv[])
@@ -23,8 +24,8 @@ int main(int argc, char *argv[])
     macroFilesHead=macroNode;
     for (i=1;i<argc-1;i++)
     {
-        macroNode.p=macroDecoder(tempNode.p);
-        if(macroNode.p==NULL)/**assuming that the Macro decoder has found some error and finished early, after printing them**/
+        macroNode=macroDecoder(*tempNode.file);
+        if(macroNode.file==NULL)/**assuming that the Macro decoder has found some error and finished early, after printing them**/
         {
             return 1;
         }

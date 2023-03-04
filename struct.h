@@ -2,7 +2,7 @@
 #include <string.h>
 struct FileList
 {
-    FILE* p;
+    FILE* file;
     struct FileList* next;
 };
 typedef struct FileList FileList;

@@ -1,10 +1,12 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <struct.h>
 
 FileList nuller(FileList f)
 {
-    f.p=NULL;
+    FileList f;
+    f.file=(FILE*) malloc(sizeof(FILE));
     f.next=NULL;
     return f;
 }
@@ -14,10 +16,10 @@ void closeFileList(FileList head)
 {
     while(head.next!=NULL)
     {
-        fclose(head.p);    
+        fclose(head.file);    
         head=*(head.next);
     }
-    fclose(head.p);
+    fclose(head.file);
 }
 
 
