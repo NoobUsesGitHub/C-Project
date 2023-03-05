@@ -6,6 +6,6 @@
 
 FileList macroDecoder(FILE f)
 {
-    	
+    	return NULL;
     
 }

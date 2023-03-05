@@ -36,5 +36,6 @@
   "files.associations": {
     "string.h": "c",
     "testThingy2.C": "cpp"
-  }
+  },
+  "C_Cpp.errorSquiggles": "disabled"
 }
