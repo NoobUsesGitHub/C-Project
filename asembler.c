@@ -7,12 +7,10 @@ int main(int argc, char *argv[])
 {
     /*int i=0;*/
     FileList macroNode,tempNode,inputFilesHead,macroFilesHead;
-    printf("problem here312");
     macroNode=nuller(&macroNode);
     tempNode=nuller(&tempNode);
     inputFilesHead=nuller(&inputFilesHead);
     macroFilesHead=nuller(&macroFilesHead);
-    printf("problem here");
     if(argc<=1)
     {
         printf("please input file names");
