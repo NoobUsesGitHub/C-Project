@@ -3,6 +3,7 @@
 #include <string.h>
 #include "struct.h"
 
+FileList nuller(FileList*);
 /*
 * input: a pointer for a file node object
 * output: the node 
