@@ -7,10 +7,10 @@ int main(int argc, char *argv[])
 {
     int i=0;
     FileList macroNode,tempNode,inputFilesHead,macroFilesHead;
-    macroNode=helpers.nuller(&macroNode);
-    tempNode=helpers.nuller(&tempNode);
-    inputFilesHead=helpers.nuller(&inputFilesHead);
-    macroFilesHead=helpers.nuller(&macroFilesHead);
+    macroNode=nuller(&macroNode);
+    tempNode=nuller(&tempNode);
+    inputFilesHead=nuller(&inputFilesHead);
+    macroFilesHead=nuller(&macroFilesHead);
     
     if(argc<=1)
     {
