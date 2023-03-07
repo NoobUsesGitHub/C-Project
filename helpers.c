@@ -36,7 +36,7 @@ void closeFileList(FileList *head)
 FileList stringToFiles(int argc,char *argv[])
 {
     int i;
-    static char *asmblrType=".as"
+    static char *asmblrType=".as";
     FileList header,temp;
     char *str;
     header=nuller(&header);
