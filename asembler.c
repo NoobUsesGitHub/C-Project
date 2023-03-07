@@ -11,13 +11,15 @@ int main(int argc, char *argv[])
     tempNode=nuller(&tempNode);
     inputFilesHead=nuller(&inputFilesHead);
     macroFilesHead=nuller(&macroFilesHead);
-    
+    printf("problem here");
     if(argc<=1)
     {
         printf("please input file names");
         return 1; 
     }
+    
     inputFilesHead=stringToFiles(argc,argv);
+    printf("problem here2");
     /*
     tempNode=inputFilesHead;
     macroFilesHead=macroNode;
@@ -33,6 +35,7 @@ int main(int argc, char *argv[])
     }
     */
     closeFileList(&inputFilesHead);
+    printf("problem here3");
     /*get input
 
     //open file
