@@ -3,7 +3,6 @@
 #include <string.h>
 #include "struct.h"
 
-#define ASMBLRTYPE '.as'
 /*
 * input: a pointer for a file node object
 * output: the node 
@@ -36,6 +35,7 @@ void closeFileList(FileList *head)
 
 FileList stringToFiles(int argc,char *argv[])
 {
+    char* asmblrType='.as'
     int i=0;
     FileList header,temp;
     char *str;
@@ -45,7 +45,7 @@ FileList stringToFiles(int argc,char *argv[])
     for(i=1;i<argc-1;i++)
     {
         str=argv[i];
-        strcat(*str,ASMBLRTYPE);
+        strcat(*str,asmblrType);
         temp.file=fopen(str,'r');
         temp=temp.next;
     }
