@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <string.h>
-#include <struct.h>
+#include "struct.h"
 /*#include <macroDecoder.c>*/
-#include <helpers.c>
+#include "helpers.c"
 
 
 int main(int argc, char *argv[])

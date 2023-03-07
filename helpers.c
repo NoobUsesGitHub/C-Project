@@ -9,8 +9,8 @@
 */
 FileList nuller(FileList *f)
 {
-    *f.file=(FILE*) malloc(sizeof(FILE));
-    *f.next=NULL;
+    *(f).file=(FILE*) malloc(sizeof(FILE));
+    *(f).next=NULL;
     return *f;
 }
 
@@ -21,14 +21,14 @@ FileList nuller(FileList *f)
 void closeFileList(FileList *head)
 {
     FileList next=*head;
-    while(head.next!=NULL)
+    while(*(head).next!=NULL)
     {
-        fclose(head.file);
-        next=*(head.next);
-        free(head);
+        fclose(*(head).file);
+        next=*(*(head).next);
+        free(*(head));
         head=next;
     }
-    fclose(head.file);
+    fclose(*(head).file);
     free(head);
 }
 
