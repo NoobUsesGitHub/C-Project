@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 /*#include <macroDecoder.c>*/
+#include "struct.h"
 
 
 int main(int argc, char *argv[])
