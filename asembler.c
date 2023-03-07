@@ -5,7 +5,7 @@
 
 int main(int argc, char *argv[])
 {
-    int i=0;
+    /*int i=0;*/
     FileList macroNode,tempNode,inputFilesHead,macroFilesHead;
     macroNode=nuller(&macroNode);
     tempNode=nuller(&tempNode);
@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
         macroNode=*macroNode.next;
     }
     */
-    closeFileList(inputFilesHead);
+    closeFileList(&inputFilesHead);
     /*get input
 
     //open file
