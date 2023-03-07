@@ -26,7 +26,7 @@ void closeFileList(FileList *head)
         fclose((*head).file);
         next=*((*head).next);
         free(head);
-        head=next;
+        (*head)=next;
     }
     fclose((*head).file);
     free(head);
@@ -41,7 +41,7 @@ FileList stringToFiles(int argc,char *argv[])
     header=nuller(&header);
     temp=header;
 
-    for(i=1;i<argv-1;i++)
+    for(i=1;i<argc-1;i++)
     {
         str=argv[i];
         strcat(*str,'.as');
