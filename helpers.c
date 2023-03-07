@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <struct.h>
+#include "struct.h"
 
 /*
 * input: a pointer for a file node object

@@ -1,11 +1,17 @@
 #include <stdio.h>
 #include <string.h>
-#include <helpers.c>
+#include "helpers.c"
 
 /** ptr = fopen("fileopen","mode");**/
 
-FileList macroDecoder(FILE f)
+FileList macroDecoder(FILE* f)
 {
-    	return NULL;
+    
+    
+    
+    
+    
+    
+    return NULL;
     
 }
