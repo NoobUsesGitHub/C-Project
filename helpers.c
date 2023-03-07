@@ -35,14 +35,15 @@ void closeFileList(FileList *head)
 
 FileList stringToFiles(int argc,char *argv[])
 {
+    int i;
     static char *asmblrType=".as"
-    int i=0;
     FileList header,temp;
     char *str;
     header=nuller(&header);
     temp=header;
+    i=1;
 
-    for(i=1;i<argc-1;i++)
+    for(;i<argc-1;i++)
     {
         str=argv[i];
         strcat(str,asmblrType);
