@@ -35,7 +35,7 @@ void closeFileList(FileList *head)
 
 FileList stringToFiles(int argc,char *argv[])
 {
-    char* asmblrType='.as'
+    static char *asmblrType=".as"
     int i=0;
     FileList header,temp;
     char *str;
@@ -45,7 +45,7 @@ FileList stringToFiles(int argc,char *argv[])
     for(i=1;i<argc-1;i++)
     {
         str=argv[i];
-        strcat(*str,asmblrType);
+        strcat(str,asmblrType);
         temp.file=fopen(str,'r');
         temp=temp.next;
     }
