@@ -25,7 +25,7 @@ void closeFileList(FileList *head)
     {
         fclose((*head).file);
         next=*((*head).next);
-        free((*head));
+        free(head);
         head=next;
     }
     fclose((*head).file);
