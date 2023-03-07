@@ -3,25 +3,34 @@
 #include <string.h>
 #include <struct.h>
 
-FileList nuller(FileList f)
+/*
+* input: a pointer for a file node object
+* output: the node 
+*/
+FileList nuller(FileList *f)
 {
-    FileList f;
-    f.file=(FILE*) malloc(sizeof(FILE));
-    f.next=NULL;
-    return f;
+    *f.file=(FILE*) malloc(sizeof(FILE));
+    *f.next=NULL;
+    return *f;
 }
 
-
-void closeFileList(FileList head)
+/*
+* input:a file node header
+* will close all file objects
+*/
+void closeFileList(FileList *head)
 {
+    FileList next=*head;
     while(head.next!=NULL)
     {
-        fclose(head.file);    
-        head=*(head.next);
+        fclose(head.file);
+        next=*(head.next);
+        free(head);
+        head=next;
     }
     fclose(head.file);
+    free(head);
 }
-
 
 
 FileList stringToFiles(int argc,char *argv[])
@@ -36,8 +45,8 @@ FileList stringToFiles(int argc,char *argv[])
     {
         str=argv[i];
         strcat(*str,'.as');
-        temp.p=fopen(str,'r');
-        temp=*temp.next;
+        temp.file=fopen(str,'r');
+        temp=temp.next;
     }
     return header;    
 }
