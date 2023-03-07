@@ -29,7 +29,7 @@ void closeFileList(FileList *head)
         free(head);
         (*head)=next;
     }
-    fclose((*head).file);
+    fclose(*(*head).file);
     free(head);
 }
 
@@ -44,7 +44,7 @@ FileList stringToFiles(int argc,char *argv[])
     temp=header;
     i=1;
 
-    for(;i<argc-1;i++)
+    for(;i<=argc-1;i++)
     {
         str=argv[i];
         strcat(str,asmblrType);
