@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
     /*
     tempNode=inputFilesHead;
     macroFilesHead=macroNode;
-    for (i=1;i<argc-1;i++)
+    for (i=1;i<=argc-1;i++)
     {
         macroNode=macroDecoder(tempNode.file);
         if(macroNode.file==NULL)assuming that the Macro decoder has found some error and finished early, after printing them

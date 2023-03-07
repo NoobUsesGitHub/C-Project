@@ -41,7 +41,7 @@ FileList stringToFiles(int argc,char *argv[])
     FileList header,temp;
     char *str;
     header=nuller(&header);
-    temp=header;
+    temp=*header;
     i=1;
 
     for(;i<=argc-1;i++)
