@@ -47,7 +47,7 @@ FileList stringToFiles(int argc,char *argv[])
     {
         str=argv[i];
         strcat(str,asmblrType);
-        temp.file=fopen(str,'r');
+        temp.file=fopen(str,"r");
         temp=temp.next;
     }
     return header;    
