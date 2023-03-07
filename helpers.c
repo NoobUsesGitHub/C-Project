@@ -3,6 +3,7 @@
 #include <string.h>
 #include "struct.h"
 
+#define ASMBLRTYPE '.as'
 /*
 * input: a pointer for a file node object
 * output: the node 
@@ -44,7 +45,7 @@ FileList stringToFiles(int argc,char *argv[])
     for(i=1;i<argc-1;i++)
     {
         str=argv[i];
-        strcat(*str,'.as');
+        strcat(*str,ASMBLRTYPE);
         temp.file=fopen(str,'r');
         temp=temp.next;
     }
