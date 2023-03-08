@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-
+#include "struct.h"
 
 FileList macroDecoder(FILE* fp)
 {
