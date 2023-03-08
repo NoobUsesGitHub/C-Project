@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
     
     inputFilesHead=stringToFiles(argc,argv);
     printf("problem here2");
-    /*
+    
     tempNode=inputFilesHead;
     macroFilesHead=macroNode;
     for (i=1;i<=argc-1;i++)
@@ -32,7 +32,6 @@ int main(int argc, char *argv[])
         tempNode=*tempNode.next;
         macroNode=*macroNode.next;
     }
-    */
     closeFileList(&inputFilesHead);
     printf("problem here3");
     /*get input
