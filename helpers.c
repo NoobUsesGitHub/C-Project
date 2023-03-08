@@ -2,16 +2,15 @@
 #include <stdlib.h>
 #include <string.h>
 
-FileList nuller(FileList*);
 /*
 * input: a pointer for a file node object
 * output: the node 
 */
-FileList nuller(FileList *f)
+void constNode(FileList *f)
 {
-    (*f).file=(FILE*) malloc(sizeof(FILE));
+    f=(FileList*)malloc(sizeof(FileList));
+    (*f).file=NULL;
     (*f).next=NULL;
-    return *f;
 }
 
 /*
@@ -39,7 +38,7 @@ FileList stringToFiles(int argc,char *argv[])
     static char *asmblrType=".as";
     FileList header,temp;
     char *str;
-    header=nuller(&header);
+    constNode(&header);
     temp.file=header.file;
     temp.next=header.next;
     
@@ -53,4 +52,27 @@ FileList stringToFiles(int argc,char *argv[])
         temp=temp.next;
     }
     return header;    
+}
+
+
+
+
+void addToList(FileList header, FILE *fp)
+{
+    
+    if (header == NULL) {
+        header = new_node;
+    } else {
+        FileList *current_node = header;
+        while (current_node->next != NULL) {
+            current_node = current_node->next;
+        }
+        current_node->next = new_node;
+}
+
+
+
+
+
+
 }
