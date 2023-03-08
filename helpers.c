@@ -25,7 +25,7 @@ void addToList(FileList header, FILE *fp)
         FileList *current_node = &header;
         while (current_node->next != NULL) 
         {
-            *current_node = current_node->next;
+            current_node = current_node->next;
         }
         constNode(&new_node);
         new_node.file=fp;
