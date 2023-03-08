@@ -60,7 +60,6 @@ FileList stringToFiles(int argc,char *argv[])
     FileList header;
     char *str;
     FILE *temp;
-    constNode(&header);
     i=1;
     for(;i<=argc-1;i++)
     {
