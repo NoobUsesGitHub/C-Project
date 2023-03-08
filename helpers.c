@@ -13,6 +13,27 @@ void constNode(FileList *f)
     (*f).next=NULL;
 }
 
+
+void addToList(FileList header, FILE *fp)
+{
+    FileList new_node;
+    if (header.file == NULL) 
+    {
+        header.file = fp;
+    } else 
+    {
+        FileList *current_node = header;
+        while (current_node->next != NULL) 
+        {
+            current_node = current_node->next;
+        }
+        constNode(&new_node);
+        new_node.file=fp;
+        current_node->next = new_node;
+    }
+}
+
+
 /*
 * input:a file node header
 * will close all file objects
@@ -39,40 +60,17 @@ FileList stringToFiles(int argc,char *argv[])
     FileList header,temp;
     char *str;
     constNode(&header);
-    temp.file=header.file;
-    temp.next=header.next;
-    
+    FILE *temp;
     i=1;
-
     for(;i<=argc-1;i++)
     {
         str=argv[i];
         strcat(str,asmblrType);
-        temp.file=fopen(str,"r");
-        temp=temp.next;
+        temp=fopen(str,"r");
+        addToList(header,temp);
     }
     return header;    
 }
 
 
 
-
-void addToList(FileList header, FILE *fp)
-{
-    
-    if (header == NULL) {
-        header = new_node;
-    } else {
-        FileList *current_node = header;
-        while (current_node->next != NULL) {
-            current_node = current_node->next;
-        }
-        current_node->next = new_node;
-}
-
-
-
-
-
-
-}
