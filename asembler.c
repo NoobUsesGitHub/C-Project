@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     for (i=1;i<=argc-1;i++)
     {
         macroNode=macroDecoder(tempNode.file);
-        if(macroNode.file==NULL)assuming that the Macro decoder has found some error and finished early, after printing them
+        if(macroNode.file==NULL)/*assuming that the Macro decoder has found some error and finished early, after printing them*/
         {
             return 1;
         }
