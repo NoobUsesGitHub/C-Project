@@ -12,5 +12,8 @@ FileList macroDecoder(FILE* fp)
         i++;
         printf("%3d: %s\n", i, str);
     }   
-    return NULL;
+    FileList f;
+    f.file=fp;
+    f.next=NULL;
+    return f;
 }
