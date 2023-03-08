@@ -22,7 +22,7 @@ void addToList(FileList header, FILE *fp)
         header.file = fp;
     } else 
     {
-        FileList *current_node = header;
+        FileList current_node = header;
         while (current_node->next != NULL) 
         {
             current_node = current_node->next;
@@ -57,10 +57,10 @@ FileList stringToFiles(int argc,char *argv[])
 {
     int i;
     static char *asmblrType=".as";
-    FileList header,temp;
+    FileList header;
     char *str;
-    constNode(&header);
     FILE *temp;
+    constNode(&header);
     i=1;
     for(;i<=argc-1;i++)
     {
