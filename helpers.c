@@ -61,6 +61,7 @@ FileList stringToFiles(int argc,char *argv[])
     char *str;
     FILE *temp;
     i=1;
+    constNode(&header);
     for(;i<=argc-1;i++)
     {
         str=argv[i];
