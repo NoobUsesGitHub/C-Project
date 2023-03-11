@@ -19,16 +19,14 @@ int main(int argc, char *argv[])
     
     tempNode=inputFilesHead;
     constNode(&macroFilesHead);
-    macroFilesHead=macroNode;
     for (i=1;i<=argc-1;i++)
     {
-        macroDecoder(tempNode->file,macroNode);
+        addToList(macroNode,macroDecoder(tempNode->file));
         if(macroNode->file==NULL)/*assuming that the Macro decoder has found some error and finished early, after printing them*/
         {
             return 1;
         }
-            tempNode=tempNode->next;
-            macroNode=macroNode->next;
+        tempNode=tempNode->next;/*going forward with the list*/
     }
     closeFileList(inputFilesHead);
 

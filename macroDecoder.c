@@ -3,7 +3,7 @@
 #include "struct.h"
 
 
-void macroDecoder(FILE* fp,FileList* node)
+FILE* macroDecoder(FILE* fp)
 {
     char str[150];
     int i=0;
@@ -11,7 +11,6 @@ void macroDecoder(FILE* fp,FileList* node)
     {
         i++;
         printf("%3d: %s\n", i, str);
-    }   
-    constNode(&node);
-    node->file=fp;
+    }
+    return fp;/*tochange*/
 }
