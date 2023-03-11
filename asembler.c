@@ -19,6 +19,7 @@ int main(int argc, char *argv[])
     
     tempNode=inputFilesHead;
     constNode(&macroFilesHead);
+    macroNode=macroFilesHead;
     for (i=1;i<=argc-1;i++)
     {
         addToList(macroNode,macroDecoder(tempNode->file));
