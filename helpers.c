@@ -8,7 +8,7 @@
 */
 void constNode(FileList *f)
 {
-    /*f=(FileList*)malloc(sizeof(FileList));*/
+    f=(FileList*)malloc(sizeof(FileList));
     f->file=NULL;
     f->next=NULL;
 }
