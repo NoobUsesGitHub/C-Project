@@ -24,14 +24,14 @@ int main(int argc, char *argv[])
     macroFilesHead=macroNode;
     for (i=1;i<=argc-1;i++)
     {
-        macroDecoder(tempNode.file,&macroNode);
+        macroDecoder(tempNode->file,&macroNode);
         if(macroNode.file==NULL)/*assuming that the Macro decoder has found some error and finished early, after printing them*/
         {
             return 1;
         }
-        if(tempNode.next!=NULL)
+        if(tempNode->next!=NULL)
         {
-            tempNode=*tempNode.next;
+            tempNode=tempNode->next;
             macroNode=*macroNode.next;
         }
     }
