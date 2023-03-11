@@ -9,7 +9,6 @@ int main(int argc, char *argv[])
     FileList macroNode,tempNode,inputFilesHead,macroFilesHead;
     /*constNode(&macroNode);
     constNode(&tempNode);*/
-    constNode(&(&inputFilesHead));
     /*constNode(&macroFilesHead);*/
     
     /*get input*/
