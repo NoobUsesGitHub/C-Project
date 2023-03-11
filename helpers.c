@@ -6,11 +6,11 @@
 * input: a pointer for a file node object
 * output: the node 
 */
-void constNode(FileList **f)
+void constNode(FileList** f)
 {
     *f=(FileList*)malloc(sizeof(FileList));
-    *(f)->file=NULL;
-    *(f)->next=NULL;
+    (*(f))->file=NULL;
+    (*(f))->next=NULL;
 }
 
 
