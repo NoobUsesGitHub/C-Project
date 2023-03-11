@@ -62,10 +62,11 @@ void stringToFiles(int argc,char *argv[],FileList** header)
     constNode(header);
     for(;i<=argc-1;i++)
     {
-        strcpy(str,argv[i]);
+        pritnf("%s\n",argv[i]);
+     /*   strcpy(str,argv[i]);
         strcat(str,asmblrType);
         temp=fopen(str,"r");
-        addToList(*header,temp);
+        addToList(*header,temp);*/
     }
 }
 
