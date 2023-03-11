@@ -9,15 +9,15 @@
 void constNode(FileList **f)
 {
     *f=(FileList*)malloc(sizeof(FileList));
-    *(f->file)=NULL;
-    *(f->next)=NULL;
+    *(f)->file=NULL;
+    *(f)->next=NULL;
 }
 
 
 void addToList(FileList* header, FILE *fp)
 {
     FileList new_node;
-    if (header->file == )NULL 
+    if (header->file == NULL )
     {
         header->file = fp;
     } else 
