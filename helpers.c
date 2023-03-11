@@ -52,20 +52,20 @@ void closeFileList(FileList *head)
 }
 
 
-void stringToFiles(int argc,char *argv[],FileList* header)
+void stringToFiles(int argc,char *argv[],FileList** header)
 {
     int i;
     static char *asmblrType=".as";
     char *str;
     FILE *temp;
     i=1;
-    constNode(&header);
+    constNode(header);
     for(;i<=argc-1;i++)
     {
         str=argv[i];
         strcat(str,asmblrType);
         temp=fopen(str,"r");
-        addToList(header,temp);
+        addToList(*header,temp);
     }
 }
 
