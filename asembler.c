@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
         return 1; 
     }
     
-    inputFilesHead=stringToFiles(argc,argv,&inputFilesHead);
+    stringToFiles(argc,argv,&inputFilesHead);
     
     tempNode=inputFilesHead;
     macroFilesHead=macroNode;
