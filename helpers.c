@@ -17,12 +17,12 @@ void constNode(FileList *f)
 void addToList(FileList* header, FILE *fp)
 {
     FileList new_node;
-    if (header.file == NULL) 
+    if (header->file == NULL) 
     {
-        header.file = fp;
+        header->file = fp;
     } else 
     {
-        FileList *current_node = &header;
+        FileList *current_node = header;
         while (current_node->next != NULL) 
         {
             current_node = current_node->next;
@@ -53,7 +53,7 @@ void closeFileList(FileList *head)
 }
 
 
-FileList stringToFiles(int argc,char *argv[],FileList* header)
+void stringToFiles(int argc,char *argv[],FileList* header)
 {
     int i;
     static char *asmblrType=".as";
@@ -68,7 +68,6 @@ FileList stringToFiles(int argc,char *argv[],FileList* header)
         temp=fopen(str,"r");
         addToList(header,temp);
     }
-    return header;    
 }
 
 
