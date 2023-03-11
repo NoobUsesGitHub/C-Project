@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
     }
     closeFileList(&inputFilesHead);
 
-    //open file
+    /*//open file
     //parse it 
     //pre process
     //start parsing it to binary/././././../././
