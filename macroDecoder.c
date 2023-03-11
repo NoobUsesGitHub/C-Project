@@ -12,6 +12,6 @@ void macroDecoder(FILE* fp,FileList* node)
         i++;
         printf("%3d: %s\n", i, str);
     }   
-    constNode(node);
+    constNode(&node);
     node->file=fp;
 }
