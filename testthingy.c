@@ -9,7 +9,7 @@ int main()
 
     v=&a;
     *v=4;
-    
+
     return 1;
 }
 

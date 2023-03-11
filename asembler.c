@@ -7,10 +7,10 @@ int main(int argc, char *argv[])
 {
     int i=0;
     FileList macroNode,tempNode,inputFilesHead,macroFilesHead;
-    /*(&macroNode);
-    constNode(&tempNode);
+    /*constNode(&macroNode);
+    constNode(&tempNode);*/
     constNode(&inputFilesHead);
-    constNode(&macroFilesHead);*/
+    /*constNode(&macroFilesHead);*/
     if(argc<=1)
     {
         printf("please input file names");
@@ -28,8 +28,8 @@ int main(int argc, char *argv[])
         {
             return 1;
         }
-        tempNode=*tempNode.next;
-        macroNode=*macroNode.next;
+        tempNode=tempNode->next;
+        macroNode=macroNode->next;
     }
     closeFileList(&inputFilesHead);
     printf("problem here3");
