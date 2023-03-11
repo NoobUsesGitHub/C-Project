@@ -62,7 +62,6 @@ void stringToFiles(int argc,char *argv[],FileList** header)
     constNode(header);
     for(;i<=argc-1;i++)
     {
-        str=NULL;
         strcpy(str,argv[i]);
         strcat(str,asmblrType);
         temp=fopen(str,"r");
