@@ -56,14 +56,14 @@ void stringToFiles(int argc,char *argv[],FileList** header)
 {
     int i;
     static char *asmblrType=".as";
-    char *str,*str2;
+    char *str;
     FILE *temp;
     i=1;
     constNode(header);
     for(;i<=argc-1;i++)
     {
-        str2=argv[i];
-        strcpy(str,str2);
+        str=char[strlen(argv[i])];
+        strcpy(str,argv[i]);
         strcat(str,asmblrType);
         temp=fopen(str,"r");
         addToList(*header,temp);
