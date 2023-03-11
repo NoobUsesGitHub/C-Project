@@ -6,18 +6,18 @@
 * input: a pointer for a file node object
 * output: the node 
 */
-void constNode(FileList *f)
+void constNode(FileList **f)
 {
-    f=(FileList*)malloc(sizeof(FileList));
-    f->file=NULL;
-    f->next=NULL;
+    *f=(FileList*)malloc(sizeof(FileList));
+    *(f->file)=NULL;
+    *(f->next)=NULL;
 }
 
 
 void addToList(FileList* header, FILE *fp)
 {
     FileList new_node;
-    if (header->file == NULL) 
+    if (header->file == )NULL 
     {
         header->file = fp;
     } else 
@@ -27,7 +27,7 @@ void addToList(FileList* header, FILE *fp)
         {
             current_node = current_node->next;
         }
-        constNode(&new_node);
+        constNode(&&new_node);
         new_node.file=fp;
         current_node->next = &new_node;
     }
@@ -61,7 +61,7 @@ void stringToFiles(int argc,char *argv[],FileList* header)
     char *str;
     FILE *temp;
     i=1;
-    constNode(header);
+    constNode(&header);
     for(;i<=argc-1;i++)
     {
         str=argv[i];
