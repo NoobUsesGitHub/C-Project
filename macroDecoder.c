@@ -10,7 +10,10 @@ FileList* macroDecoder(FILE* fp,char* fileName)
     int i=0;
     FileList *macroNode;
     constNode(&macroNode);
-    char strNewName[strlen(fileName)];
+/*
+▀█▀ ▄▀▄    █▀ █ ▀▄▀    ▀▄▀ ▄▀▄ █ █    █▀ █ █ ▄▀▀ █▄▀ 
+ █  ▀▄▀    █▀ █ █ █     █  ▀▄▀ ▀▄█    █▀ ▀▄█ ▀▄▄ █ █ 
+    */char strNewName[strlen(fileName)];
     strcpy(strNewName,fileName);
     strNewName[strlen(strNewName)-1]='m';
     macroNode->fileName=(char*)malloc(strlen(strNewName)*sizeof(char));
@@ -18,6 +21,12 @@ FileList* macroDecoder(FILE* fp,char* fileName)
     macroNode->file=fopen(strNewName,"w");
     while (fgets(str,MAXLINESIZE, fp)) 
     {
+        /*
+        
+▄▀▄ █▀▄ █▀▄    █▄█ ██▀ █▀▄ ██▀    ▀█▀ █▄█ ██▀    █▀▄ ██▀ ▄▀▀ ▄▀▄ █▀▄ ██▀ █▀▄    █ █▄ █ █▀ ▄▀▄ 
+█▀█ █▄▀ █▄▀    █ █ █▄▄ █▀▄ █▄▄     █  █ █ █▄▄    █▄▀ █▄▄ ▀▄▄ ▀▄▀ █▄▀ █▄▄ █▀▄    █ █ ▀█ █▀ ▀▄▀ 
+        
+        */
         i++;
         printf("%3d: %s\n", i, str);
     }
