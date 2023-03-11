@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 #include "struct.h"
-#include "helpers.h"
+#include "helpers.c"
+
 
 void macroDecoder(FILE* fp,FileList* node)
 {
