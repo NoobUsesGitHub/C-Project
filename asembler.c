@@ -28,8 +28,8 @@ int main(int argc, char *argv[])
         {
             return 1;
         }
-        tempNode=tempNode->next;
-        macroNode=macroNode->next;
+        tempNode=*tempNode.next;
+        macroNode=*macroNode.next;
     }
     closeFileList(&inputFilesHead);
     printf("problem here3");
