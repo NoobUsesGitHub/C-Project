@@ -60,7 +60,7 @@ void stringToFiles(int argc,char *argv[],FileList* header)
     char *str;
     FILE *temp;
     i=1;
-    constNode(&header);
+    constNode(header);
     for(;i<=argc-1;i++)
     {
         str=argv[i];
