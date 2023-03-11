@@ -54,15 +54,20 @@ void closeFileList(FileList *head)
 
 void stringToFiles(int argc,char *argv[],FileList** header)
 {
-    int i;
+    int i,maxSize=0;
     static char *asmblrType=".as";
-    char *str;
+    i=1;
+    for(;i<=argc-1;i++)
+    {
+        if(maxSize<strlen(argv[i]))
+            maxSize=strlen(argv[i]);
+    }
+    char *str=(char*)malloc(maxSize*(sizeof(char)+1));
     FILE *temp;
     i=1;
     constNode(header);
     for(;i<=argc-1;i++)
     {
-        str=char[strlen(argv[i])];
         strcpy(str,argv[i]);
         strcat(str,asmblrType);
         temp=fopen(str,"r");
