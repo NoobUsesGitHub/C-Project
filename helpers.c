@@ -66,7 +66,7 @@ void stringToFiles(int argc,char *argv[],FileList** header)
         strcpy(str,str2);
         strcat(str,asmblrType);
         temp=fopen(str,"r");
-        addToList(*header,temp);*/
+        addToList(*header,temp);
     }
 }
 
