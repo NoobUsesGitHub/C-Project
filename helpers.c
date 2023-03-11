@@ -10,15 +10,17 @@ void constNode(FileList** f)
 {
     *f=(FileList*)malloc(sizeof(FileList));
     (*(f))->file=NULL;
+    (*(f))->fileName=NULL; 
     (*(f))->next=NULL;
 }
 
 
-void addToList(FileList* header, FILE *fp)
+void addToList(FileList* header, FILE *fp,char* fileName)
 {
     if (header->file == NULL )
     {
         header->file = fp;
+        header->fileName=fileName;
     } else 
     {
         FileList *current_node = header;
@@ -28,6 +30,7 @@ void addToList(FileList* header, FILE *fp)
         }
         constNode(&(current_node->next));
         current_node->next->file=fp;
+        current_node->next->fileName=fileName;
     }
 }
 
@@ -42,11 +45,13 @@ void closeFileList(FileList *head)
     while(next->next!=NULL)
     {
         fclose(head->file);
+        free(head->fileName);
         next=head->next;
         free(head);
         head=next;
     }
     fclose(head->file);
+    free(head->fileName);
     free(head->next);
     free(head);
 }
@@ -71,7 +76,7 @@ void stringToFiles(int argc,char *argv[],FileList** header)
         strcpy(str,argv[i]);
         strcat(str,asmblrType);
         temp=fopen(str,"r");
-        addToList(*header,temp);
+        addToList(*header,temp,str);
     }
 }
 

@@ -22,14 +22,14 @@ int main(int argc, char *argv[])
     macroNode=macroFilesHead;
     for (i=1;i<=argc-1;i++)
     {
-        addToList(macroNode,macroDecoder(tempNode->file));
+        addToList(macroNode,macroDecoder(tempNode->file,tempNode->fileName));
         if(macroNode->file==NULL)/*assuming that the Macro decoder has found some error and finished early, after printing them*/
         {
             return 1;
         }
         tempNode=tempNode->next;/*going forward with the list*/
     }
-    closeFileList(inputFilesHead);
+    closeFileList(inputFilesHead);/*to do- check this really cleans the whole file list*/
 
     /*//open file
     //parse it 
