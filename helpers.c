@@ -49,7 +49,9 @@ void closeFileList(FileList *head)
         head=next;
     }
     fclose(head->file);
-    free(*(head));
+    free(head->file);
+    free(head->next);
+    free(head);
 }
 
 
