@@ -16,7 +16,7 @@ void constNode(FileList** f)
 
 void addToList(FileList* header, FILE *fp)
 {
-    FileList new_node;
+    FileList new_node=NULL;
     if (header->file == NULL )
     {
         header->file = fp;
