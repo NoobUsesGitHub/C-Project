@@ -29,11 +29,8 @@ int main(int argc, char *argv[])
         {
             return 1;
         }
-        if(tempNode->next!=NULL)
-        {
             tempNode=tempNode->next;
             macroNode=macroNode->next;
-        }
     }
     closeFileList(inputFilesHead);
 
