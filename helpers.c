@@ -40,13 +40,13 @@ void addToList(FileList* header, FILE *fp)
 */
 void closeFileList(FileList *head)
 {
-    FileList next=*head;
-    while((*head).next!=NULL)
+    FileList* next=head;
+    while(next->next!=NULL)
     {
-        fclose((*head).file);
-        next=*((*head).next);
+        fclose(head->file);
+        next=head->next;
         free(head);
-        (*head)=next;
+        head=next;
     }
     /*fclose((*head).file);*/
     free(head);
