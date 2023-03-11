@@ -14,7 +14,7 @@ void constNode(FileList *f)
 }
 
 
-void addToList(FileList header, FILE *fp)
+void addToList(FileList* header, FILE *fp)
 {
     FileList new_node;
     if (header.file == NULL) 
@@ -53,11 +53,10 @@ void closeFileList(FileList *head)
 }
 
 
-FileList stringToFiles(int argc,char *argv[])
+FileList stringToFiles(int argc,char *argv[],FileList* header)
 {
     int i;
     static char *asmblrType=".as";
-    FileList header;
     char *str;
     FILE *temp;
     i=1;
