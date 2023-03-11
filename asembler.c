@@ -6,7 +6,7 @@
 int main(int argc, char *argv[])
 {
     int i=0;
-    FileList macroNode,tempNode,inputFilesHead,macroFilesHead;
+    FileList macroNode,*tempNode,inputFilesHead,macroFilesHead;
     /*constNode(&macroNode);
     constNode(&tempNode);*/
     /*constNode(&macroFilesHead);*/
@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
     
     stringToFiles(argc,argv,&inputFilesHead);
     
-    tempNode=inputFilesHead;
+    tempNode=&inputFilesHead;
     macroFilesHead=macroNode;
     for (i=1;i<=argc-1;i++)
     {
