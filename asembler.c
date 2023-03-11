@@ -6,7 +6,7 @@
 int main(int argc, char *argv[])
 {
     int i=0;
-    FileList *macroNode,*tempNode,*inputFilesHead,*macroFilesHead;
+    FileList *macroNode,*tempNode,*inputFilesHead,*macroFilesHead,*tempMacroNode;
     
     /*get input*/
     if(argc<=1)
@@ -22,7 +22,8 @@ int main(int argc, char *argv[])
     macroNode=macroFilesHead;
     for (i=1;i<=argc-1;i++)
     {
-        addToList(macroNode,macroDecoder(tempNode->file,tempNode->fileName));
+        tempMacroNode=macroDecoder(tempNode->file,tempNode->fileName);
+        addToList(macroNode,tempMacroNode->file,tempMacroNode->fileName);
         if(macroNode->file==NULL)/*assuming that the Macro decoder has found some error and finished early, after printing them*/
         {
             return 1;
