@@ -2,7 +2,7 @@
 #include <string.h>
 #include "struct.h"
 
-FileList macroDecoder(FILE* fp)
+void macroDecoder(FILE* fp,FileList* node)
 {
     char str[150];
     int i=0;
@@ -11,8 +11,6 @@ FileList macroDecoder(FILE* fp)
         i++;
         printf("%3d: %s\n", i, str);
     }   
-    FileList f;
-    f.file=fp;
-    f.next=NULL;
-    return f;
+    constNode(node);
+    node->file=fp;
 }
