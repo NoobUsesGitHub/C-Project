@@ -4,10 +4,10 @@
 
 int main ()
 {
-  char str[] ="- This, a sample string.";
+  char str[] ="This a    sample string";
   char * pch;
   printf ("Splitting string \"%s\" into tokens:\n",str);
-  pch = strtok (str," ,.-");
+  pch = strtok (str,"    \f \r");
   while (pch != NULL)
   {
     printf ("%s\n",pch);
