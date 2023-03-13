@@ -18,13 +18,13 @@ int main ()
         printf ("checking first note %c\n",pch[0]);
 
     }
-    if(strcmp(pch,"mcr")==1)
+    if(strcmp(pch,"mcr")==0)
     {
         printf("mcr started");
     }
 
     
-    if(strcmp(pch,"endmcr")==1)
+    if(strcmp(pch,"endmcr")==0)
     {
         printf("mcr ended");
     }
