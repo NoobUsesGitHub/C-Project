@@ -4,7 +4,7 @@
 
 int main ()
 {
-  char str[] ="mcr aaaaa This     a\tsample\tstring endmcr aadsad";
+  char str[] ="mcr aaaaa This     a\tsample\tstring endmcr /o hjdfhasfhashfhash fsafasasfas f asfa sfa s aaaaa /o";
   char * pch;
   printf ("Splitting string \"%s\" into tokens:\n",str);
   pch = strtok (str,"    \t \f \r");
@@ -13,17 +13,16 @@ int main ()
   {
     if(i==0)
     {
-        
         if(pch[0]==';')
             printf ("first note is ; %c\n",pch[0]);
-
     }
+
+
     if(strcmp(pch,"mcr")==0)
     {
         printf("mcr started");
     }
 
-    
     if(strcmp(pch,"endmcr")==0)
     {
         printf("mcr ended");
