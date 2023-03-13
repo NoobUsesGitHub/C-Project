@@ -14,8 +14,8 @@ int main ()
     if(i==0)
     {
         
-    /*check for;*/
-        printf ("checking first note %c\n",pch[0]);
+        if(pch[0]==';')
+            printf ("first note is ; %c\n",pch[0]);
 
     }
     if(strcmp(pch,"mcr")==0)
