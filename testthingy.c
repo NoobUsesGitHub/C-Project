@@ -26,8 +26,10 @@ int main()
       if (i == 0)
       {
         if (pch[0] == ';')
+        {
           printf("first note is ; %c\n", pch[0]);
-        skp = 1;
+          skp = 1;
+        }
       }
 
       if (strcmp(pch, "mcr") == 0)
@@ -44,7 +46,7 @@ int main()
 
       if (skp == 0)
         printf("%s\n", pch);
-      
+
       pch = strtok(NULL, "    \t \f \r");
       i++;
       skp = 0;
