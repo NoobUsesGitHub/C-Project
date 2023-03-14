@@ -4,7 +4,7 @@
 
 int main ()
 {
-  FILE *f=fopen("test","w");
+  FILE *f=fopen("test","r");
   if (f == NULL){
       printf("wtf");
     return 1;}
