@@ -8,11 +8,11 @@ int main ()
   if (f == NULL){
       printf("wtf");
     return 1;}
-getline(&buffer,&size,stdin);
+
 
   /*char str[] ="mcr aaaaa This     a\tsample\tstring endmcr /o hjdfhasfhashfhash fsafasasfas f asfa sfa s aaaaa /o";*/
   char * pch;
-  printf ("Splitting string \"%s\" into tokens:\n",str);
+  /*printf ("Splitting string \"%s\" into tokens:\n",str);*/
   int i=0;
   char *str[85];
   while(fgets(str,85,f)){
