@@ -40,7 +40,7 @@ int main ()
         skip=1;
     }
     
-    if(skip=1)
+    if(skip!=1)
       printf ("%s\n",pch);
     pch = strtok (NULL, "    \t \f \r");
     i++;
