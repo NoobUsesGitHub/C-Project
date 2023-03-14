@@ -4,11 +4,20 @@
 
 int main ()
 {
-  char str[] ="mcr aaaaa This     a\tsample\tstring endmcr /o hjdfhasfhashfhash fsafasasfas f asfa sfa s aaaaa /o";
+  FILE *f=fopen("test","w");
+  if (f == NULL){
+      printf("wtf");
+    return 1;}
+getline(&buffer,&size,stdin);
+
+  /*char str[] ="mcr aaaaa This     a\tsample\tstring endmcr /o hjdfhasfhashfhash fsafasasfas f asfa sfa s aaaaa /o";*/
   char * pch;
   printf ("Splitting string \"%s\" into tokens:\n",str);
-  pch = strtok (str,"    \t \f \r");
   int i=0;
+  char *str[85];
+  while(fgets(str,85,f)){
+  pch = strtok (str,"    \t \f \r");
+  i=0;
   while (pch != NULL)
   {
     if(i==0)
@@ -16,7 +25,6 @@ int main ()
         if(pch[0]==';')
             printf ("first note is ; %c\n",pch[0]);
     }
-
 
     if(strcmp(pch,"mcr")==0)
     {
@@ -28,8 +36,8 @@ int main ()
         printf("mcr ended");
     }
     printf ("%s\n",pch);
-    pch = strtok (NULL, " ,.-");
+    pch = strtok (NULL, "    \t \f \r");
     i++;
-  }
+  }}
   return 0;
 }
