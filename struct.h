@@ -8,7 +8,7 @@ typedef struct FileList
 
 typedef struct MacroList
 {
-    char* MacroName;
+    char* macroName;
     char** macro;
-    struct MacroList* next;
+    struct macroList* next;
 }MacroList;
