@@ -17,6 +17,9 @@ int main()
   char *str[85];
   while (fgets(str, 85, f)!=NULL)
   {
+    puts(str);
+    
+    printf("%s\n", str);
     if (str[0] == ';')
       skp = 1;
 
