@@ -58,7 +58,7 @@ int main()
 void constMacroList(MacroList **m)
 {
   *m = (MacroList *)malloc(sizeof(MacroList));
-  (*(m))->MacroName = NULL;
+  (*(m))->macroName = NULL;
   (*(m))->macro = NULL;
   (*(m))->next = NULL;
 }
@@ -70,7 +70,7 @@ void addToList(MacroList *header, char *macroName, char **macroList)
   if (header->MacroName == NULL)
   {
     header->macro = macroList;
-    header->MacroName = str;
+    header->macroName = str;
   }
   else
   {
