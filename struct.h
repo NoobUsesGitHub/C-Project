@@ -5,3 +5,10 @@ typedef struct FileList
     char* fileName;
     struct FileList* next;
 }FileList;
+
+typedef struct MacroList
+{
+    char* MacroName;
+    char** macro;
+    struct MacroList* next;
+}MacroList;
