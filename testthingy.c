@@ -55,15 +55,15 @@ int main()
  * input: a pointer for a file node object
  * output: the node
  */
-void constMacroNode(MacroNode **m)
+void constMacroList(MacroList **m)
 {
-  *m = (MacroNode *)malloc(sizeof(MacroNode));
+  *m = (MacroList *)malloc(sizeof(MacroList));
   (*(m))->MacroName = NULL;
   (*(m))->macro = NULL;
   (*(m))->next = NULL;
 }
 
-void addToList(MacroNode *header, char *macroName, char **macroList)
+void addToList(MacroList *header, char *macroName, char **macroList)
 {
   char *str = (char *)malloc(strlen(macroName) * (sizeof(char) + 1));
   strcpy(str, macroName);
@@ -74,12 +74,12 @@ void addToList(MacroNode *header, char *macroName, char **macroList)
   }
   else
   {
-    MacroNode *current_node = header;
+    MacroList *current_node = header;
     while (current_node->next != NULL)
     {
       current_node = current_node->next;
     }
-    constMacroNode(&(current_node->next));
+    constMacroList(&(current_node->next));
     current_node->next->macro = macroList;
     current_node->next->macroName = str;
   }
