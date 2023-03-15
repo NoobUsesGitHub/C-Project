@@ -12,6 +12,8 @@ int main()
   }
   int i = 0;
   int skp = 0;
+  char * pch;
+
   char *str[85];
   while (fgets(str, 85, f)!=NULL)
   {
