@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#define coment ';'
+
 int main()
 {
   FILE *f = fopen("test", "r");
@@ -13,14 +15,13 @@ int main()
   int i = 0;
   int skp = 0;
   char * pch;
+  char bit=' ';
 
   char *str[85];
   while (fgets(str, 85, f)!=NULL)
   {
-    puts(str);
-    
-    printf("%s\n", str);
-    if (atoi(str[0]) == atoi(';'))
+    sscanf(str,"%c",bit);
+    if ((int)bit == ((int)coment))
       skp = 1;
 
     pch = strtok(str, "    \t \f \r");
