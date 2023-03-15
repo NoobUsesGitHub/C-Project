@@ -17,24 +17,18 @@ int main()
   char *str[85];
   while (fgets(str, 85, f)!=NULL)
   {
+    if (str[0] == ';')
+      skp = 1;
+
     pch = strtok(str, "    \t \f \r");
-    i = 0;
-    while (pch != NULL)
+    while ((pch != NULL)&&(skp!=1))
     {
-      if (i == 0)
-      {
-        if (pch[0] == ';')
-        {
-          printf("first note is ; %c\n", pch[0]);
-          skp = 1;
-        }
-      }
       if (strcmp(pch, "mcr") == 0)
       {
         printf("mcr started");
         skp = 1;
       }
-      if (strcmp(pch, "endmcr") == 0)
+      if (strcmp(pch, "endmcr") == 0 || strcmp(pch, "endmcr\n") == 0)
       {
         printf("mcr ended");
         skp = 1;
@@ -43,9 +37,9 @@ int main()
         printf("%s\n", pch);
 
       pch = strtok(NULL, "    \t \f \r");
-      i++;
-      skp = 0;
     }
+    
+      skp = 0;
   }
   return 0;
 }
