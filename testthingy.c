@@ -20,7 +20,7 @@ int main()
   char *str[85];
   while (fgets(str, 85, f)!=NULL)
   {
-    sscanf(str,"%c",bit);
+    sscanf(str,"%c",&bit);
     if ((int)bit == ((int)coment))
       skp = 1;
 
@@ -34,7 +34,7 @@ int main()
       }
       if (strcmp(pch, "endmcr") == 0 || strcmp(pch, "endmcr\n") == 0)
       {
-        printf("mcr ended");
+        printf("mcr ended\n");
         skp = 1;
       }
       if (skp == 0)
