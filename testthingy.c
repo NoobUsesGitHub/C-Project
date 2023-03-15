@@ -10,14 +10,10 @@ int main()
     printf("wtf");
     return 1;
   }
-
-  /*char str[] ="mcr aaaaa This     a\tsample\tstring endmcr /o hjdfhasfhashfhash fsafasasfas f asfa sfa s aaaaa /o";*/
-  char *pch;
-  /*printf ("Splitting string \"%s\" into tokens:\n",str);*/
   int i = 0;
   int skp = 0;
   char *str[85];
-  while (fgets(str, 85, f))
+  while (fgets(str, 85, f)!=NULL)
   {
     pch = strtok(str, "    \t \f \r");
     i = 0;
@@ -31,19 +27,16 @@ int main()
           skp = 1;
         }
       }
-
       if (strcmp(pch, "mcr") == 0)
       {
         printf("mcr started");
         skp = 1;
       }
-
       if (strcmp(pch, "endmcr") == 0)
       {
         printf("mcr ended");
         skp = 1;
       }
-
       if (skp == 0)
         printf("%s\n", pch);
 
