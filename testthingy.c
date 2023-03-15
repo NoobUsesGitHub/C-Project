@@ -20,7 +20,7 @@ int main()
     puts(str);
     
     printf("%s\n", str);
-    if (str[0] == ';')
+    if (atoi(str[0]) == atoi(';'))
       skp = 1;
 
     pch = strtok(str, "    \t \f \r");
