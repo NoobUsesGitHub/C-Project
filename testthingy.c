@@ -62,6 +62,26 @@ MacroList *addMacroToList(MacroList *header, char *macroName, char **macroList)
   }
 }
 
+
+/*
+ * input:a file node header
+ * will close all file objects
+ */
+void freeMacro(char **head,int size)
+{
+  if(size==1)
+  {
+    free(*head);
+    free(head);
+  }  
+  size--;
+  free(*(head+size));
+  free((head+size));
+  freeMacro(head,size);
+}
+
+
+
 /*
  * input:a file node header
  * will close all file objects
@@ -72,13 +92,13 @@ void freeList(MacroList *head)
   while (next->next != NULL)
   {
     free(head->macroName);
-    freeMacro(head->macro);
+    freeMacro(head->macro,head->size);
     next = head->next;
     free(head);
     head = next;
   }
   free(head->macroName);
-  freeMacro(head->macro);
+  freeMacro(head->macro,head->size);
   free(head->next);
   free(head);
 }
