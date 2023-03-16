@@ -30,13 +30,16 @@ void addLineToNode(MacroList *m, char *str)
   if (m->size > 1)
   {
     realloc(m->macro, m->size * sizeof(char) * MAXLINESIZE);
+  }
+  else
+  {
+    m->macro = (char **)malloc(m->size * sizeof(char) * MAXLINESIZE);
     if (m->macro == NULL)
       printf("can't allocate memory..");
-  }else
-  {
-    m->macro=(char**)malloc( m->size * sizeof(char) * MAXLINESIZE);
   }
-  strcpy(m->macro[m->size-1], str);
+  m->macro[m->size - 1] = (char *)malloc(MAXLINESIZE * sizeof(char)); // added line
+
+  strcpy(m->macro[m->size - 1], str);
 }
 
 MacroList *addMacroToList(MacroList *header, char *macroName, char **macroList)
@@ -62,25 +65,22 @@ MacroList *addMacroToList(MacroList *header, char *macroName, char **macroList)
   }
 }
 
-
 /*
  * input:a file node header
  * will close all file objects
  */
-void freeMacro(char **head,int size)
+void freeMacro(char **head, int size)
 {
-  if(size==1)
+  if (size == 1)
   {
     free(*head);
     free(head);
-  }  
+  }
   size--;
-  free(*(head+size));
-  free((head+size));
-  freeMacro(head,size);
+  free(*(head + size));
+  free((head + size));
+  freeMacro(head, size);
 }
-
-
 
 /*
  * input:a file node header
@@ -89,19 +89,16 @@ void freeMacro(char **head,int size)
 void freeList(MacroList *head)
 {
   MacroList *next = head;
-  while (next->next != NULL)
+  while (next != NULL)
   {
     free(head->macroName);
-    freeMacro(head->macro,head->size);
+    freeMacro(head->macro, head->size);
     next = head->next;
     free(head);
     head = next;
   }
-  free(head->macroName);
-  freeMacro(head->macro,head->size);
-  free(head->next);
-  free(head);
 }
+
 
 int main()
 {
