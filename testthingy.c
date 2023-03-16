@@ -29,7 +29,7 @@ void addLineToNode(MacroList *m, char *str)
   m->size++;
   if (m->size > 1)
   {
-    realloc(m->macro, m->size * sizeof(char) * MAXLINESIZE);
+    m->macro=(char**)realloc(m->macro, m->size * sizeof(char) * MAXLINESIZE);
   }
   else
   {
