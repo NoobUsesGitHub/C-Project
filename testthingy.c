@@ -80,7 +80,7 @@ void freeMacro(char **head, int size)
   free(*(head + size));
   free((head + size));
   freeMacro(head, size);*/
-  int i = 0
+  int i = 0;
      for (; i < size; i++) {
         free(head[i]);
     }
@@ -163,5 +163,6 @@ int main()
   }
 
   freeList(header);
+  printf("done");
   return 0;
 }
