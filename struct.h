@@ -11,7 +11,7 @@ typedef struct MacroList
     char* macroName;
     char** macro;
     int size;
-    struct macroList* next;
+    struct MacroList* next;
 }MacroList;
 
 typedef enum bool{TRUE=1, FALSE= 0}bool; 
