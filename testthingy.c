@@ -78,7 +78,7 @@ void freeMacro(char **head, int size)
   }
   size--;
   free(*(head + size));
-  free((head + size));
+  /*free((head + size));*/
   freeMacro(head, size);
 }
 
