@@ -29,16 +29,16 @@ void addLineToNode(MacroList *m, char *str)
   m->size++;
   if (m->size > 1)
   {
-    m->macro=(char**)realloc(m->macro, m->size * sizeof(char) * MAXLINESIZE);
+    m->macro = (char **)realloc(m->macro, m->size * sizeof(char) * MAXLINESIZE);
   }
   else
   {
     m->macro = (char **)malloc(m->size * sizeof(char) * MAXLINESIZE);
-    m->macro[m->size - 1] = (char *)malloc(MAXLINESIZE * sizeof(char));
     if (m->macro == NULL)
       printf("can't allocate memory..");
   }
-  
+
+  m->macro[m->size - 1] = (char *)malloc(MAXLINESIZE * sizeof(char));
 
   strcpy(m->macro[m->size - 1], str);
 }
@@ -99,7 +99,6 @@ void freeList(MacroList *head)
     head = next;
   }
 }
-
 
 int main()
 {
