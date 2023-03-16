@@ -30,11 +30,11 @@ void addLineToNode(MacroList *m, char *str)
   if (m->size > 1)
   {
     realloc(m->macro, m->size * sizeof(char) * MAXLINESIZE);
-    if (m->macoro == NULL)
+    if (m->macro == NULL)
       return;
   }else
   {
-    malloc(m->macro, m->size * sizeof(char) * MAXLINESIZE);
+    m->macro=(char**)malloc( m->size * sizeof(char) * MAXLINESIZE);
   }
   strcpy(m->macro[m->size], str);
 }
@@ -43,7 +43,7 @@ MacroList *addMacroToList(MacroList *header, char *macroName, char **macroList)
 {
   char *str = (char *)malloc(strlen(macroName) * (sizeof(char) + 1));
   strcpy(str, macroName);
-  if (header->MacroName == NULL)
+  if (header->macroName == NULL)
   {
     header->macro = macroList;
     header->macroName = str;
