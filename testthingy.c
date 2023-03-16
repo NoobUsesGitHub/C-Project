@@ -31,7 +31,7 @@ void addLineToNode(MacroList *m, char *str)
   {
     realloc(m->macro, m->size * sizeof(char) * MAXLINESIZE);
     if (m->macro == NULL)
-      return;
+      printf("can't allocate memory..");
   }else
   {
     m->macro=(char**)malloc( m->size * sizeof(char) * MAXLINESIZE);
