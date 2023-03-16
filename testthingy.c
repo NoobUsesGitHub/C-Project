@@ -36,7 +36,7 @@ void addLineToNode(MacroList *m, char *str)
   {
     m->macro=(char**)malloc( m->size * sizeof(char) * MAXLINESIZE);
   }
-  strcpy(m->macro[m->size], str);
+  strcpy(m->macro[m->size-1], str);
 }
 
 MacroList *addMacroToList(MacroList *header, char *macroName, char **macroList)
