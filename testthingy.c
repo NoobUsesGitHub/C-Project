@@ -71,8 +71,7 @@ MacroList *addMacroToList(MacroList *header, char *macroName, char **macroList)
  * will close all file objects
  */
 void freeMacro(char **head, int size)
-{
-  if (size == 1)
+{/*  if (size == 1)
   {
     free(*head);
     free(head);
@@ -80,7 +79,12 @@ void freeMacro(char **head, int size)
   size--;
   free(*(head + size));
   free((head + size));
-  freeMacro(head, size);
+  freeMacro(head, size);*/
+  int i = 0
+     for (; i < size; i++) {
+        free(head[i]);
+    }
+    free(head);
 }
 
 /*
