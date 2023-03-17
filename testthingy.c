@@ -170,7 +170,7 @@ int main()
         macroCollectionStarted = TRUE;
         pch = strtok(NULL, delimints);
         curMacro = addMacroToList(header, pch, NULL);
-        addToHashTable(&hash, str);
+        addToHashTable(&hash, pch);
         skp = TRUE;
       }
 
