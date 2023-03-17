@@ -113,12 +113,12 @@ void freeList(MacroList *head)
 
 void addToHashTable(double *hash, char *str, int *size)
 {
-  if (size > 1 && hash[*size - 1] != NULL)
+  if (*size > 1)
   {
     hash = (double *)realloc(hash, (*size + 2) * sizeof(double));
     *size += 2;
   }
-  *hash[*size - 1] = hasher(str); /*no idea why the fuck this shit is failing on me*/
+  hash[*size - 1] = hasher(str); /*no idea why the fuck this shit is failing on me*/
 }
 
 int main()
