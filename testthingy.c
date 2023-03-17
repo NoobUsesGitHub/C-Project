@@ -45,13 +45,13 @@ void addLineToNode(MacroList *m, char *str)
 
 double hasher(char *str)
 {
-  int size = sizeof(str) / sizeof(char);
+  double size = strlen(str);
   double hash = 0;
   int i = 0;
   /*maybe change to while*/
   for (; str[i] != '\0'; i++)
   {
-    hash += ((int)(str[i])) / (size - i) * 7; /*hashing func*/
+    hash += ((int)(str[i])) / (size - i) * 7.0; /*hashing func*/
   }
   return hash;
 }
