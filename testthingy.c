@@ -49,10 +49,13 @@ double hasher(char *str)
   double hash = 0;
   int i = 0;
   /*maybe change to while*/
-  for (; str[i] != '\0'; i++)
+  if(str[((int)size)-1]=='\n')
+    size--;
+  while (str[i] != '\0')
   {
     if (str[i] != '\n')
       hash += ((int)(str[i])) / (size - i) * 7.0; /*hashing func*/
+    i++;
   }
   return hash;
 }
@@ -138,25 +141,16 @@ int dumpIfexistsInMacro(MacroList *header, double hash)
   return found == TRUE ? 1 : 0;
 }
 
-double *addToHashTable(double *hash, char *str, int *size)
-{
-  hash = (double *)realloc(hash, (*size + 1) * sizeof(double));
-  *size += 1;
-  hash[*size - 1] = hasher(str); /*no idea why the fuck this shit is failing on me*/
-  return hash;
-}
 
 int main()
 {
-  double *hash = NULL;
-  int hashSize = 1;
   FILE *f = fopen("test", "r");
   if (f == NULL)
   {
     printf("wtf");
     return 1;
   }
-  hash = (double *)malloc(sizeof(double) * hashSize);
+ 
   int i = 0;
   bool skp = FALSE;
   bool macroCollectionStarted = FALSE;
@@ -197,7 +191,6 @@ int main()
         macroCollectionStarted = TRUE;
         pch = strtok(NULL, delimints);
         curMacro = addMacroToList(header, pch, NULL);
-        hash = addToHashTable(hash, pch, &hashSize);
         skp = TRUE;
       }
 
@@ -215,13 +208,6 @@ int main()
   }
 
   freeList(header);
-  free(hash);
-
-  while (hashSize != 0)
-  {
-    printf("%f\n", hash[hashSize - 1]);
-    hashSize--;
-  }
   printf("done");
   return 0;
 }
