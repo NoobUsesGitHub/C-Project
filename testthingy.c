@@ -119,12 +119,12 @@ void addToHashTable(double **hash, char *str)
     *hash = (double *)realloc(*hash, (size + 2) * sizeof(double));
     size = sizeof(*hash) / sizeof(*(hash[0]));
   }
-  *hash[size - 1] = hasher(str);
+  *hash[size - 1] = hasher(str);/*no idea why the fuck this shit is failing on me*/
 }
 
 int main()
 {
-  double hash[2];
+  double hash[2]={0,0};
   FILE *f = fopen("test", "r");
   if (f == NULL)
   {
