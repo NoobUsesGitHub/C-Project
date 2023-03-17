@@ -48,6 +48,7 @@ double hasher(char *str)
   int size = sizeof(str) / sizeof(char);
   double hash = 0;
   int i = 0;
+  /*maybe change to while*/
   for (; str[i] != '\0'; i++)
   {
     hash += ((int)(str[i]))/(size-i)*7;/*hashing func*/
@@ -111,9 +112,8 @@ void freeList(MacroList *head)
   }
 }
 
-void addToHashTable(double **hash, char *str)
+void addToHashTable(double *hash, char *str,int size)
 {
-  int size = sizeof(*hash) / sizeof(*hash[0]);
   if (size>1&&hash[size - 1] != NULL)
   {
     *hash = (double *)realloc(*hash, (size + 2) * sizeof(double));
@@ -124,20 +124,21 @@ void addToHashTable(double **hash, char *str)
 
 int main()
 {
-  double hash[2]={0,0};
+  double *hash=NULL;
+  int hashSize=2;
   FILE *f = fopen("test", "r");
   if (f == NULL)
   {
     printf("wtf");
     return 1;
   }
-  /*hash=(double*)malloc(sizeof(double)*2);*/
+  hash=(double*)malloc(sizeof(double)*hashSize);
   int i = 0;
   bool skp = FALSE;
   bool macroCollectionStarted = FALSE;
   MacroList *header, *curMacro;
   constMacroList(&header);
-  char *pch;
+  char *pch=NULL;
   char bit = ' ';
 
   char *str[85];
@@ -172,7 +173,8 @@ int main()
         macroCollectionStarted = TRUE;
         pch = strtok(NULL, delimints);
         curMacro = addMacroToList(header, pch, NULL);
-        addToHashTable(&hash, pch);
+        hashSize++;
+        addToHashTable(hash, pch,hashSize);
         skp = TRUE;
       }
 
