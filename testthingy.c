@@ -49,7 +49,7 @@ double hasher(char *str)
   double hash = 0;
   int i = 0;
   /*maybe change to while*/
-  if(str[((int)size)-1]=='\n')
+  if (str[((int)size) - 1] == '\n')
     size--;
   while (str[i] != '\0')
   {
@@ -79,6 +79,7 @@ MacroList *addMacroToList(MacroList *header, char *macroName, char **macroList)
     }
     constMacroList(&(current_node->next));
     current_node->next->macro = macroList;
+    current_node->next->hash = hasher(str);
     current_node->next->macroName = str;
     return current_node->next;
   }
@@ -141,7 +142,6 @@ int dumpIfexistsInMacro(MacroList *header, double hash)
   return found == TRUE ? 1 : 0;
 }
 
-
 int main()
 {
   FILE *f = fopen("test", "r");
@@ -150,7 +150,7 @@ int main()
     printf("wtf");
     return 1;
   }
- 
+
   int i = 0;
   bool skp = FALSE;
   bool macroCollectionStarted = FALSE;
