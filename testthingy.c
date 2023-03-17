@@ -183,11 +183,11 @@ int main()
 
   freeList(header);
   free(hash);
-  int size = sizeof(hash) / sizeof(hash[0]);
-  while (size != 0)
+
+  while (hashSize != 0)
   {
-    printf("%f\n", hash[size - 1]);
-    size--;
+    printf("%f\n", hash[hashSize - 1]);
+    hashSize--;
   }
   printf("done");
   return 0;
