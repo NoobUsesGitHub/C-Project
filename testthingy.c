@@ -180,8 +180,9 @@ int main()
     }
     skp = FALSE;
   }
-
+  
   freeList(header);
+  free(hash);
   printf("done");
   return 0;
 }
