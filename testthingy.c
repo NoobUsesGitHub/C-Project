@@ -112,12 +112,12 @@ void freeList(MacroList *head)
   }
 }
 
-void addToHashTable(double *hash, char *str,int size)
+void addToHashTable(double *hash, char *str,int *size)
 {
   if (size>1&&hash[size - 1] != NULL)
   {
-    *hash = (double *)realloc(*hash, (size + 2) * sizeof(double));
-    size = sizeof(*hash) / sizeof(*(hash[0]));
+    hash = (double *)realloc(hash, (*size + 2) * sizeof(double));
+    *size+=2;
   }
   *hash[size - 1] = hasher(str);/*no idea why the fuck this shit is failing on me*/
 }
@@ -173,8 +173,7 @@ int main()
         macroCollectionStarted = TRUE;
         pch = strtok(NULL, delimints);
         curMacro = addMacroToList(header, pch, NULL);
-        hashSize++;
-        addToHashTable(hash, pch,hashSize);
+        addToHashTable(hash, pch,&hashSize);
         skp = TRUE;
       }
 
