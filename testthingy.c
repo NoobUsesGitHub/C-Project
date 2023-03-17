@@ -121,7 +121,7 @@ void printList(char **macro, int size)
 
   while (size != 0)
   {
-    printf("%s\n", *macro);
+    printf("%s", *macro);
     macro++;
     size--;
   }
@@ -147,7 +147,7 @@ int main()
   FILE *f = fopen("test", "r");
   if (f == NULL)
   {
-    printf("wtf");
+    printf("couldnt allocate memeory");
     return 1;
   }
 
@@ -171,7 +171,6 @@ int main()
 
     if (strcmp(pch, "endmcr") == 0 || strcmp(pch, "endmcr\n") == 0)
     {
-      printf("mcr ended\n");
       skp = TRUE;
       macroCollectionStarted = FALSE;
     }
@@ -187,7 +186,6 @@ int main()
       /*checking for mactros*/
       if (strcmp(pch, "mcr") == 0)
       {
-        printf("mcr started");
         macroCollectionStarted = TRUE;
         pch = strtok(NULL, delimints);
         curMacro = addMacroToList(header, pch, NULL);
@@ -208,6 +206,5 @@ int main()
   }
 
   freeList(header);
-  printf("done");
   return 0;
 }
