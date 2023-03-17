@@ -129,7 +129,7 @@ int dumpIfexistsInMacro(MacroList *header, double hash)
   {
     if (header->hash == hash)
     {
-      printList(header->macro);
+      printList(header->macro, header->size);
       found = TRUE;
     }
     header = header->next;
