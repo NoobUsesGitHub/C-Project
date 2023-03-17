@@ -184,6 +184,9 @@ int main()
   
   freeList(header);
   free(hash);
+  int size=sizeof(hash) / sizeof(hash[0]);
+  while(size!=0)
+    printf("%f\n",hash[size-1]);
   printf("done");
   return 0;
 }
