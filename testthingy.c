@@ -51,7 +51,8 @@ double hasher(char *str)
   /*maybe change to while*/
   for (; str[i] != '\0'; i++)
   {
-    hash += ((int)(str[i])) / (size - i) * 7.0; /*hashing func*/
+    if (str[i] != '\n')
+      hash += ((int)(str[i])) / (size - i) * 7.0; /*hashing func*/
   }
   return hash;
 }
@@ -111,9 +112,9 @@ void freeList(MacroList *head)
   }
 }
 
-void printList(char** macro,int size)
+void printList(char **macro, int size)
 {
-  
+
   while (size != 0)
   {
     printf("%s\n", *macro);
@@ -134,7 +135,7 @@ int dumpIfexistsInMacro(MacroList *header, double hash)
     }
     header = header->next;
   }
-  return found==TRUE?1:0;
+  return found == TRUE ? 1 : 0;
 }
 
 double *addToHashTable(double *hash, char *str, int *size)
