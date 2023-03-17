@@ -116,7 +116,7 @@ void addToHashTable(double **hash, char *str)
   int size = sizeof(hash) / sizeof(hash[0]);
   if (hash[size - 1] != NULL)
   {
-    hash = (double **)realloc(hash, (size + 2) * sizeOf(double));
+    hash = (double **)realloc(hash, (size + 2) * sizeof(double));
   }
   *hash[size - 1] = hasher(str);
 }
