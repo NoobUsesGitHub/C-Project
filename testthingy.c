@@ -111,6 +111,32 @@ void freeList(MacroList *head)
   }
 }
 
+void printList(char** macro,int size)
+{
+  
+  while (size != 0)
+  {
+    printf("%s\n", *macro);
+    macro++;
+    size--;
+  }
+}
+
+int dumpIfexistsInMacro(MacroList *header, double hash)
+{
+  bool found = FALSE;
+  while (header != NULL && found == FALSE)
+  {
+    if (header->hash == hash)
+    {
+      printList(header->macro);
+      found = TRUE;
+    }
+    header = header->next;
+  }
+  return found==TRUE?1:0;
+}
+
 double *addToHashTable(double *hash, char *str, int *size)
 {
   hash = (double *)realloc(hash, (*size + 1) * sizeof(double));
@@ -175,7 +201,13 @@ int main()
       }
 
       if (skp == FALSE)
-        printf("%s\n", pch);
+      {
+        if (dumpIfexistsInMacro(header, hasher(pch)) == 0)
+        {
+          printf("%s ", pch);
+        }
+      }
+
       pch = strtok(NULL, delimints);
     }
     skp = FALSE;
