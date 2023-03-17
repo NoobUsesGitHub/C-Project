@@ -43,6 +43,19 @@ void addLineToNode(MacroList *m, char *str)
   strcpy(m->macro[m->size - 1], str);
 }
 
+double hasher(char *str)
+{
+  int size = sizeof(str) / sizeof(char);
+  double hash = 0;
+  int i = 0;
+  for (; str[i] != '\0'; i++)
+  {
+    hash += ((int)(str[i]))/(size-i)*7;/*hashing func*/
+  }
+  return hash;
+}
+
+
 MacroList *addMacroToList(MacroList *header, char *macroName, char **macroList)
 {
   char *str = (char *)malloc(strlen(macroName) * (sizeof(char) + 1));
@@ -50,6 +63,7 @@ MacroList *addMacroToList(MacroList *header, char *macroName, char **macroList)
   if (header->macroName == NULL)
   {
     header->macro = macroList;
+    header->hash = hasher(str);
     header->macroName = str;
   }
   else
@@ -71,20 +85,13 @@ MacroList *addMacroToList(MacroList *header, char *macroName, char **macroList)
  * will close all file objects
  */
 void freeMacro(char **head, int size)
-{/*  if (size == 1)
-  {
-    free(*head);
-    free(head);
-  }
-  size--;
-  free(*(head + size));
-  free((head + size));
-  freeMacro(head, size);*/
+{
   int i = 0;
-     for (; i < size; i++) {
-        free(head[i]);
-    }
-    free(head);
+  for (; i < size; i++)
+  {
+    free(head[i]);
+  }
+  free(head);
 }
 
 /*
@@ -104,8 +111,19 @@ void freeList(MacroList *head)
   }
 }
 
+void addToHashTable(double **hash, char *str)
+{
+  int size = sizeof(hash) / sizeof(hash[0]);
+  if (hash[size - 1] != NULL)
+  {
+    hash = (double **)realloc(hash, (size + 2) * sizeOf(int));
+  }
+  hash[size - 1] = hasher(str);
+}
+
 int main()
 {
+  double hash[1] = {0};
   FILE *f = fopen("test", "r");
   if (f == NULL)
   {
@@ -152,6 +170,7 @@ int main()
         macroCollectionStarted = TRUE;
         pch = strtok(NULL, delimints);
         curMacro = addMacroToList(header, pch, NULL);
+        addToHashTable(&hash, str);
         skp = TRUE;
       }
 
