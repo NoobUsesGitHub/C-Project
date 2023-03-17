@@ -113,23 +113,24 @@ void freeList(MacroList *head)
 
 void addToHashTable(double **hash, char *str)
 {
-  int size = sizeof(hash) / sizeof(hash[0]);
+  int size = sizeof(*hash) / sizeof(*hash[0]);
   if (hash[size - 1] != NULL)
   {
-    hash = (double **)realloc(hash, (size + 2) * sizeof(double));
+    *hash = (double *)realloc(hash, (size + 2) * sizeof(double));
   }
   *hash[size - 1] = hasher(str);
 }
 
 int main()
 {
-  double hash[2];
+  double *hash;
   FILE *f = fopen("test", "r");
   if (f == NULL)
   {
     printf("wtf");
     return 1;
   }
+  hash=(double*)malloc(sizeof(double)*2);
   int i = 0;
   bool skp = FALSE;
   bool macroCollectionStarted = FALSE;
