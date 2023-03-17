@@ -123,7 +123,7 @@ void addToHashTable(double **hash, char *str)
 
 int main()
 {
-  double hash[1] = {0};
+  double hash[2];
   FILE *f = fopen("test", "r");
   if (f == NULL)
   {
