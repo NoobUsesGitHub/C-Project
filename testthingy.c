@@ -117,6 +117,7 @@ void addToHashTable(double **hash, char *str)
   if (hash[size - 1] != NULL)
   {
     *hash = (double *)realloc(*hash, (size + 2) * sizeof(double));
+    size = sizeof(*hash) / sizeof(*(hash[0]));
   }
   *hash[size - 1] = hasher(str);
 }
@@ -185,8 +186,10 @@ int main()
   freeList(header);
   free(hash);
   int size=sizeof(hash) / sizeof(hash[0]);
-  while(size!=0)
+  while(size!=0){
     printf("%f\n",hash[size-1]);
+    size--;
+  }
   printf("done");
   return 0;
 }
