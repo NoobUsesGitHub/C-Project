@@ -4,6 +4,7 @@
 #include "helpers.c"
 
 #define MAXLINESIZE 85
+
 #define coment ';'
 #define delimints "    \t \f \r"
 
@@ -11,14 +12,6 @@ MacroList* addMacroToList(MacroList*, char*, char**);
 double hasher(char*);
 
 
-
-int main()
-{
-    FILE *f=fopen("f1.as","r");
-    macroDecoder(f,"f1.as");
-    return 1;    
-
-}
 FileList* macroDecoder(FILE *fp, char *fileName)
 {
 
@@ -82,7 +75,7 @@ FileList* macroDecoder(FILE *fp, char *fileName)
 
             if (skp == FALSE)
             {
-                if (dumpIfexistsInMacro(header, hasher(pch)) == 0)
+                if (dumpIfexistsInMacro(header, hasher(pch),macroFileNode->file) == 0)
                 {
                     fprintf(macroFileNode->file,"%s ", pch);
                 }
@@ -96,4 +89,12 @@ FileList* macroDecoder(FILE *fp, char *fileName)
     freeList(header);
 
     return macroFileNode; /*tochange*/
+}
+
+int main()
+{
+    FILE *f=fopen("f1.as","r");
+    macroDecoder(f,"f1.as");
+    return 1;    
+
 }
