@@ -1,8 +1,5 @@
 #include <stdio.h>
-
-
-#define MAXLINESIZE 85
-
+#include "struct.h"
 
 typedef struct FileList
 {
