@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "struct.h"
+#include "helpers.c"
 
 #define MAXLINESIZE 85
 #define coment ';'
@@ -9,6 +10,15 @@
 MacroList* addMacroToList(MacroList*, char*, char**);
 double hasher(char*);
 
+
+
+int main()
+{
+    FILE *f=fopen("f1.as","r");
+    macroDecoder(f,"f1.as");
+    return 1;    
+
+}
 FileList* macroDecoder(FILE *fp, char *fileName)
 {
 
