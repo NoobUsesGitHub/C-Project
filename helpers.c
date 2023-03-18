@@ -14,6 +14,58 @@ void constNode(FileList **f)
     (*(f))->next = NULL;
 }
 
+
+/*
+input: a string that we want to hash
+output: a double that is the encoded string
+*/
+double hasher(char *str)
+{
+  double size = strlen(str);
+  double hash = 0;
+  int i = 0;
+  /*maybe change to while*/
+  if (str[((int)size) - 1] == '\n')
+    size--;
+  while (str[i] != '\0')
+  {
+    if (str[i] != '\n')
+      hash += ((int)(str[i])) / (size - i) * 7.0; /*hashing func- takes every letter and its place and calculates a key for it, adding them together*/
+    i++;
+  }
+  return hash;
+}
+
+
+/*
+    input: a header node, a name for the new macro and it's list of strings that it unfolds to
+    output: the new macro node already connected to the list
+*/
+MacroList *addMacroToList(MacroList *header, char *macroName, char **macroList)
+{
+    char *str = (char *)malloc(strlen(macroName) * (sizeof(char) + 1));
+    strcpy(str, macroName);
+    if (header->macroName == NULL)
+    {
+        header->macro = macroList;
+        header->hash = hasher(str);
+        header->macroName = str;
+    }
+    else
+    {
+        MacroList *current_node = header;
+        while (current_node->next != NULL)
+        {
+            current_node = current_node->next;
+        }
+        constMacroList(&(current_node->next));
+        current_node->next->macro = macroList;
+        current_node->next->hash = hasher(str);
+        current_node->next->macroName = str;
+        return current_node->next;
+    }
+}
+
 void addToList(FileList *header, FILE *fp, char *fileName)
 {
     char *str = (char *)malloc(strlen(fileName) * (sizeof(char) + 1));
@@ -125,34 +177,6 @@ void freeMacro(char **head, int size)
     free(head);
 }
 
-/*
-    input: a header node, a name for the new macro and it's list of strings that it unfolds to
-    output: the new macro node already connected to the list
-*/
-MacroList *addMacroToList(MacroList *header, char *macroName, char **macroList)
-{
-    char *str = (char *)malloc(strlen(macroName) * (sizeof(char) + 1));
-    strcpy(str, macroName);
-    if (header->macroName == NULL)
-    {
-        header->macro = macroList;
-        header->hash = hasher(str);
-        header->macroName = str;
-    }
-    else
-    {
-        MacroList *current_node = header;
-        while (current_node->next != NULL)
-        {
-            current_node = current_node->next;
-        }
-        constMacroList(&(current_node->next));
-        current_node->next->macro = macroList;
-        current_node->next->hash = hasher(str);
-        current_node->next->macroName = str;
-        return current_node->next;
-    }
-}
 
 /*
  * input: a pointer for a macro node object, a string
@@ -214,23 +238,3 @@ int dumpIfexistsInMacro(MacroList *header, double hash,FILE *fp)
 
 
 
-/*
-input: a string that we want to hash
-output: a double that is the encoded string
-*/
-double hasher(char *str)
-{
-  double size = strlen(str);
-  double hash = 0;
-  int i = 0;
-  /*maybe change to while*/
-  if (str[((int)size) - 1] == '\n')
-    size--;
-  while (str[i] != '\0')
-  {
-    if (str[i] != '\n')
-      hash += ((int)(str[i])) / (size - i) * 7.0; /*hashing func- takes every letter and its place and calculates a key for it, adding them together*/
-    i++;
-  }
-  return hash;
-}
