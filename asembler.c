@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <string.h>
-#include "struct.h"
-#include "helpers.c"
 #include "macroDecoder.c"
+#include "helpers.c"
 
 
 
