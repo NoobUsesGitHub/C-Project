@@ -4,6 +4,8 @@
 #include "macroDecoder.c"
 #include "helpers.c"
 
+#define MAXLINESIZE 85
+
 
 int main(int argc, char *argv[])
 {
