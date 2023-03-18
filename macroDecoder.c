@@ -1,67 +1,86 @@
 #include <stdio.h>
 #include <string.h>
 #include "struct.h"
+
 #define MAXLINESIZE 85
+#define coment ';'
+#define delimints "    \t \f \r"
 
 FileList *macroDecoder(FILE *fp, char *fileName)
 {
-    
-    int i = 0,skp = 0;
-    char *line[MAXLINESIZE],*pch=NULL,*str[MAXLINESIZE];
+
+    int i = 0;
+    bool macroCollectionStarted = FALSE, skp = FALSE;
+    MacroList *header, *curMacro;
+    constMacroList(&header);
+    char bit = ' ' * line[MAXLINESIZE] = NULL, *pch = NULL, *str[MAXLINESIZE] = NULL;
     char strNewName[strlen(fileName)];
 
-    FileList *macroNode;
-    constNode(&macroNode);
+    FileList *macroFileNode;
+    constNode(&macroFileNode);
     /*
-    █▄ ▄█ ▄▀▄ █▄▀ ██▀    ▄▀▀ █   ██▀ ▄▀▄ █▀▄ ██▀ █▀▄ 
-    █ ▀ █ █▀█ █ █ █▄▄    ▀▄▄ █▄▄ █▄▄ █▀█ █▀▄ █▄▄ █▀▄ 
+    █▄ ▄█ ▄▀▄ █▄▀ ██▀    ▄▀▀ █   ██▀ ▄▀▄ █▀▄ ██▀ █▀▄
+    █ ▀ █ █▀█ █ █ █▄▄    ▀▄▄ █▄▄ █▄▄ █▀█ █▀▄ █▄▄ █▀▄
     */
     strcpy(strNewName, fileName);
     strNewName[strlen(strNewName) - 1] = 'm';
-    macroNode->fileName = (char *)malloc(strlen(strNewName) * sizeof(char));
-    strcpy(macroNode->fileName, strNewName);
+    macroFileNode->fileName = (char *)malloc(strlen(strNewName) * sizeof(char));
+    strcpy(macroFileNode->fileName, strNewName);
     /*to change*/
-    macroNode->file = fopen(strNewName, "w");
-    if (fp == NULL ||macroNode->file== NULL)
+    macroFileNode->file = fopen(strNewName, "w");
+    if (fp == NULL || macroFileNode->file == NULL)
     {
-        macroNode->file=NULL;
+        macroFileNode->file = NULL;
         printf("File is not correct");
-        return macroNode;
+        return macroFileNode;
     }
 
-    while (fgets(line, 85, f))
+    while (fgets(str, 85, fp) != NULL)
     {
-        pch = strtok(line, "    \t \f \r");
-        i = 0;
-        while (pch != NULL)
+        /*skip lines of comments*/
+        sscanf(str, "%c", &bit);
+        if ((int)bit == ((int)coment))
+            skp = TRUE;
+
+        pch = strtok(str, delimints); /*start strtok*/
+
+        if (strcmp(pch, "endmcr") == 0 || strcmp(pch, "endmcr\n") == 0)
         {
-            if (i == 0)
-            {
-                if (pch[0] == ';')
-                {
-                    printf("first note is ; %c\n", pch[0]);
-                    skp = 1;
-                }
-            }
+            skp = TRUE;
+            macroCollectionStarted = FALSE;
+        }
+
+        if (macroCollectionStarted == TRUE)
+        {
+            addLineToNode(curMacro, str);
+            skp = TRUE;
+        }
+
+        while ((pch != NULL) && (skp != TRUE) && (macroCollectionStarted == FALSE))
+        {
+            /*checking for mactros*/
             if (strcmp(pch, "mcr") == 0)
             {
-                printf("mcr started");
-                skp = 1;
+                macroCollectionStarted = TRUE;
+                pch = strtok(NULL, delimints);
+                curMacro = addMacroToList(header, pch, NULL);
+                skp = TRUE;
             }
-            if (strcmp(pch, "endmcr") == 0)
-            {
-                printf("mcr ended");
-                skp = 1;
-            }
-            if (skp == 0)
-                printf("%s\n", pch);
 
-            pch = strtok(NULL, "    \t \f \r");
-            i++;
-            skp = 0;
+            if (skp == FALSE)
+            {
+                if (dumpIfexistsInMacro(header, hasher(pch)) == 0)
+                {
+                    fprintf(macroFileNode->file,"%s ", pch);
+                }
+            }
+
+            pch = strtok(NULL, delimints);
         }
+        skp = FALSE;
     }
 
-    
-    return macroNode; /*tochange*/
+    freeList(header);
+
+    return macroFileNode; /*tochange*/
 }
