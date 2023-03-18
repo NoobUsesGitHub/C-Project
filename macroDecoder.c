@@ -1,7 +1,5 @@
 #include <stdio.h>
 #include <string.h>
-#include "struct.h"
-#include "helpers.c"
 
 #define coment ';'
 #define delimints "    \t \f \r"
@@ -9,8 +7,7 @@
 MacroList* addMacroToList(MacroList*, char*, char**);
 double hasher(char*);
 
-
-FileList* macroDecoder(FILE *fp, char *fileName)
+FileList *macroDecoder(FILE *fp, char *fileName)
 {
 
     int i = 0;
@@ -73,7 +70,7 @@ FileList* macroDecoder(FILE *fp, char *fileName)
 
             if (skp == FALSE)
             {
-                if (dumpIfexistsInMacro(header, hasher(pch),macroFileNode->file) == 0)
+                if (dumpIfexistsInMacro(header, hasher(pch)) == 0)
                 {
                     fprintf(macroFileNode->file,"%s ", pch);
                 }
@@ -87,12 +84,4 @@ FileList* macroDecoder(FILE *fp, char *fileName)
     freeList(header);
 
     return macroFileNode; /*tochange*/
-}
-
-int main()
-{
-    FILE *f=fopen("test.as","r");
-    macroDecoder(f,"test.as");
-    return 1;    
-
 }
