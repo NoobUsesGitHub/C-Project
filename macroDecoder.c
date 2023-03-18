@@ -3,8 +3,6 @@
 #include "struct.h"
 #include "helpers.c"
 
-#define MAXLINESIZE 85
-
 #define coment ';'
 #define delimints "    \t \f \r"
 
@@ -93,8 +91,8 @@ FileList* macroDecoder(FILE *fp, char *fileName)
 
 int main()
 {
-    FILE *f=fopen("f1.as","r");
-    macroDecoder(f,"f1.as");
+    FILE *f=fopen("test.as","r");
+    macroDecoder(f,"test.as");
     return 1;    
 
 }
