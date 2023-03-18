@@ -13,7 +13,7 @@ FileList *macroDecoder(FILE *fp, char *fileName)
     bool macroCollectionStarted = FALSE, skp = FALSE;
     MacroList *header, *curMacro;
     constMacroList(&header);
-    char bit = ' ' * line[MAXLINESIZE] = NULL, *pch = NULL, *str[MAXLINESIZE] = NULL;
+    char bit = ' ',*line[MAXLINESIZE] = NULL, *pch = NULL, *str[MAXLINESIZE] = NULL;
     char strNewName[strlen(fileName)];
 
     FileList *macroFileNode;
