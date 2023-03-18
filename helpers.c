@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAXLINESIZE 85
-
 /*
  * input: a pointer for a file node object
  * output: the node
