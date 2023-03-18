@@ -8,17 +8,17 @@
 
 MacroList* addMacroToList(MacroList*, char*, char**);
 double hasher(char*);
-
+FileList* macroDecoder(FILE*, char*);
 
 int main()
 {
     FILE *fp=fopen("f1.as","r");
-    macroDecoder(fp, "f1.as")
+    macroDecoder(fp, "f1.as");
     return 1;
 }
 
 
-FileList *macroDecoder(FILE *fp, char *fileName)
+FileList* macroDecoder(FILE *fp, char *fileName)
 {
 
     int i = 0;
