@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-MacroList *addMacroToList(MacroList*, char*, char**);
-double hasher(char*);
 
 /*
  * input: a pointer for a file node object

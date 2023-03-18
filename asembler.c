@@ -1,7 +1,10 @@
 #include <stdio.h>
 #include <string.h>
-#include "macroDecoder.c"
 #include "helpers.c"
+#include "macroDecoder.c"
+
+
+
 
 int main(int argc, char *argv[])
 {
