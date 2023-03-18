@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include "struct.h"
 #include "macroDecoder.c"
 #include "helpers.c"
 
