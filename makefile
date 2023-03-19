@@ -1,8 +1,8 @@
-asembler.out: helper.o macroDecoder.o 
-	gcc -g -Wall -ansi asembler.o helper.o macroDecoder.o -o asembler.out
+asembler.out: helpers.o macroDecoder.o 
+	gcc -g -Wall -ansi asembler.o helpers.o macroDecoder.o -o asembler.out
 
-helper.o:
-	gcc -g -Wall -ansi helper.c -o helper.o
+helpers.o:
+	gcc -g -Wall -ansi helpers.c -o helpers.o
 
 
 macroDecoder.o:
