@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
         tempNode=tempNode->next;/*going forward with the list*/
     }
     closeFileList(inputFilesHead);/*to do- check this really cleans the whole file list*/
-
+    closeFileList(tempMacroNode);
     /*//open file
     //parse it 
     //pre process
