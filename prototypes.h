@@ -6,10 +6,6 @@
 /*helpers*/
 void constNode(FileList**);
 
-double hasher(char*);
-
-MacroList* addMacroToList(MacroList*, char*, char**);
-
 void addToList(FileList*, FILE*, char*);
 
 void closeFileList(FileList*);
@@ -31,3 +27,9 @@ int dumpIfexistsInMacro(MacroList*, double,FILE*);
 MacroList* addMacroToList(MacroList*, char*, char**);
 
 double hasher(char*);
+
+FileList* macroDecoder(FILE*, char*);
+
+FileList* toOutput(FILE*, char*);
+
+void binaryTranslate(char**);
