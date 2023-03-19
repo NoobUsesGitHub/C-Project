@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
         return 1; 
     }
     
-    stringToFiles(argc,argv,&outputFilesHead);
+    stringToFiles(argc,argv,&macroFilesHead);
 
     tempNode=macroFilesHead;
     constNode(&outputFilesHead);
