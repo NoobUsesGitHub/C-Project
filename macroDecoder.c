@@ -4,8 +4,6 @@
 #define coment ';'
 #define delimints "    \t \f \r"
 
-MacroList* addMacroToList(MacroList*, char*, char**);
-double hasher(char*);
 
 FileList* macroDecoder(FILE *fp, char *fileName)
 {
