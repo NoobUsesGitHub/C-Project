@@ -8,7 +8,7 @@
 int main(int argc, char *argv[])
 {
     int i=0;
-    FileList *macroNode,*tempNode,*inputFilesHead,*macroFilesHead,*tempMacroNode;
+    FileList *macroNode=NULL,*tempNode=NULL,*inputFilesHead=NULL,*macroFilesHead=NULL,*tempMacroNode=NULL;
     
     /*get input*/
     if(argc<=1)
@@ -21,6 +21,7 @@ int main(int argc, char *argv[])
     
     tempNode=inputFilesHead;
     constNode(&macroFilesHead);
+    constNode(&tempMacroNode);
     macroNode=macroFilesHead;
     for (i=1;i<=argc-1;i++)
     {
