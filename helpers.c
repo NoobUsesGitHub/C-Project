@@ -236,5 +236,6 @@ int dumpIfexistsInMacro(MacroList *header, double hash,FILE *fp)
     return found == TRUE ? 1 : 0;
 }
 
-
+FileList* toOutput(FILE *fp, char *fileName)
+{
 
