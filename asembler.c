@@ -5,7 +5,7 @@
 int main(int argc, char *argv[])
 {
     int i=0;
-    FileList *tempNode=NULL,*inputFilesHead=NULL,*macroFilesHead=NULL,*tempMacroNode=NULL,*binaryFilesHead=NULL;
+    FileList *tempNode=NULL,*inputFilesHead=NULL,*macroFilesHead=NULL,*tempMacroNode=NULL,*binaryFilesHead=NULL,*outputFilesHead=NULL;
     
     /*get input*/
     if(argc<=1)
@@ -31,11 +31,6 @@ int main(int argc, char *argv[])
     }
     closeFileList(inputFilesHead);/*to do- check this really cleans the whole file list*/
     
-    /*//open file
-    //parse it 
-    //pre process
-    //start parsing it to binary/././././../././
-    /push back to file*/
     
     tempNode=macroFilesHead;
     constNode(&binaryFilesHead);

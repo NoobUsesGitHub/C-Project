@@ -1,60 +1,36 @@
-/* strtok example */
 #include <stdio.h>
 #include <string.h>
+#include "prototypes.h"
 
-#define MAXLINESIZE 85
-
-
-
-
-int main()
+int main(int argc, char *argv[])
 {
-
-  while (fgets(str, 85, f) != NULL)
-  {
-    /*skip lines of comments*/
-    sscanf(str, "%c", &bit);
-    if ((int)bit == ((int)coment))
-      skp = TRUE;
-
-    pch = strtok(str, delimints); /*start strtok*/
-
-    if (strcmp(pch, "endmcr") == 0 || strcmp(pch, "endmcr\n") == 0)
+    int i=0;
+    FileList *tempNode=NULL,*outputFilesHead=NULL,*macroFilesHead=NULL,*tempMacroNode=NULL,*binaryFilesHead=NULL;
+    
+    /*get input*/
+    if(argc<=1)
     {
-      skp = TRUE;
-      macroCollectionStarted = FALSE;
+        printf("please input file names");
+        return 1; 
     }
+    
+    stringToFiles(argc,argv,&outputFilesHead);
 
-    if (macroCollectionStarted == TRUE)
+    tempNode=macroFilesHead;
+    constNode(&outputFilesHead);
+    tempMacroNode=outputFilesHead;
+    for (i=1;i<=argc-1;i++)
     {
-      addLineToNode(curMacro, str);
-      skp = TRUE;
-    }
-
-    while ((pch != NULL) && (skp != TRUE) && (macroCollectionStarted == FALSE))
-    {
-      /*checking for mactros*/
-      if (strcmp(pch, "mcr") == 0)
-      {
-        macroCollectionStarted = TRUE;
-        pch = strtok(NULL, delimints);
-        curMacro = addMacroToList(header, pch, NULL);
-        skp = TRUE;
-      }
-
-      if (skp == FALSE)
-      {
-        if (dumpIfexistsInMacro(header, hasher(pch)) == 0)
+        tempMacroNode=toOutput(tempNode->file,tempNode->fileName);
+        if(tempMacroNode->file==NULL)/*assuming that the Macro decoder has found some error and finished early, after printing them*/
         {
-          printf("%s ", pch);
+            return 1;
         }
-      }
-
-      pch = strtok(NULL, delimints);
+        addToList(outputFilesHead,tempMacroNode->file,tempMacroNode->fileName);
+        tempNode=tempNode->next;/*going forward with the list*/
     }
-    skp = FALSE;
-  }
+    closeFileList(outputFilesHead);
 
-  freeList(header);
-  return 0;
+    return 1;
 }
+
