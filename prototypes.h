@@ -28,8 +28,11 @@ MacroList* addMacroToList(MacroList*, char*, char**);
 
 double hasher(char*);
 
+/*macro decoder*/
 FileList* macroDecoder(FILE*, char*);
 
-FileList* toOutput(FILE*, char*);
-
+/*to binary*/
 void binaryTranslate(char**);
+
+/*outputMaker*/
+FileList* toOutput(FILE*, char*);
