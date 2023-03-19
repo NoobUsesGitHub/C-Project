@@ -69,7 +69,7 @@ FileList* macroDecoder(FILE *fp, char *fileName)
 
             if (skp == FALSE)
             {
-                if (dumpIfexistsInMacro(header, hasher(pch)) == 0)
+                if (dumpIfexistsInMacro(header, hasher(pch),macroFileNode->file) == 0)
                 {
                     fprintf(macroFileNode->file,"%s ", pch);
                 }
