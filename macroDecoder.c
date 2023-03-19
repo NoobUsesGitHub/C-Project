@@ -7,7 +7,7 @@
 MacroList* addMacroToList(MacroList*, char*, char**);
 double hasher(char*);
 
-FileList *macroDecoder(FILE *fp, char *fileName)
+FileList* macroDecoder(FILE *fp, char *fileName)
 {
 
     int i = 0;

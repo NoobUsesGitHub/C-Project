@@ -14,7 +14,6 @@ void constNode(FileList **f)
     (*(f))->next = NULL;
 }
 
-
 /*
 input: a string that we want to hash
 output: a double that is the encoded string
