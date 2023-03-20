@@ -37,9 +37,8 @@ FileList *toOutput(FILE *fp, char *fileName)
     printf("File is not correct");
     return outputFile;
   }
-  c = fgetc(outputFile->file);
-  printf("%c ",c);
-  while (c != EOF)
+
+  while (c = fgetc(fp) != EOF)
   {
     if (sawTab == TRUE)
     {
@@ -59,8 +58,6 @@ FileList *toOutput(FILE *fp, char *fileName)
         sawTab = TRUE;
       fputc(outputFile->file, c);
     }
-    c = fgetc(outputFile->file);
-    printf("%c ",c);
   }
 
   return outputFile; /*tochange*/
