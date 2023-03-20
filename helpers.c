@@ -233,8 +233,3 @@ int dumpIfexistsInMacro(MacroList *header, double hash, FILE *fp)
     }
     return found == TRUE ? 1 : 0;
 }
-
-int isspace(char *c)
-{
-    return (strcmp(c, " ") || strcmp(c, "\t") || strcmp(c, "\r") || strcmp(c, "\n") || strcmp(c, "\f") || strcmp(c, "\v"));
-}
