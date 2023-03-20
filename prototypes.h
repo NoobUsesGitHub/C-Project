@@ -32,7 +32,7 @@ double hasher(char*);
 FileList* macroDecoder(FILE*, char*);
 
 /*to binary*/
-void binaryTranslate(char**);
+char binaryTranslate(char);
 
 /*outputMaker*/
 FileList* toOutput(FILE*, char*);
