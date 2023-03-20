@@ -15,7 +15,7 @@ FileList* toOutput(FILE *fp, char *fileName)
     constNode(&outputFile);
 
     strcpy(strNewName, fileName);
-    strNewName[strlen(strNewName) - 2]= "bin\0";
+    strNewName[strlen(strNewName) - 4]= "bin\0";
     outputFile->fileName = (char *)malloc(strlen(strNewName) * sizeof(char));
     strcpy(outputFile->fileName, strNewName);
 
