@@ -43,6 +43,7 @@ double hasher(char *str)
 MacroList *addMacroToList(MacroList *header, char *macroName, char **macroList)
 {
     char *str = (char *)malloc(strlen(macroName) * (sizeof(char) + 1));
+    MacroList *current_node=header;
     strcpy(str, macroName);
     if (header->macroName == NULL)
     {
@@ -52,7 +53,6 @@ MacroList *addMacroToList(MacroList *header, char *macroName, char **macroList)
     }
     else
     {
-        MacroList *current_node = header;
         while (current_node->next != NULL)
         {
             current_node = current_node->next;
@@ -63,6 +63,7 @@ MacroList *addMacroToList(MacroList *header, char *macroName, char **macroList)
         current_node->next->macroName = str;
         return current_node->next;
     }
+    return current_node;
 }
 
 void addToList(FileList *header, FILE *fp, char *fileName)
