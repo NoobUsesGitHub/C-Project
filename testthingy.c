@@ -50,13 +50,13 @@ FileList *toOutput(FILE *fp, char *fileName)
       {
         c = binaryTranslate(c);
       }
-      fputc(outputFile->file, c);
+      fputc(c,outputFile->file);
     }
     else
     {
       if (c == '\t')
         sawTab = TRUE;
-      fputc(outputFile->file, c);
+      fputc(c,outputFile->file);
     }
   }
 
