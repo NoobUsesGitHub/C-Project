@@ -38,7 +38,8 @@
     "testThingy2.C": "cpp",
     "stdlib.h": "c",
     "stdio.h": "c",
-    "struct.h": "c"
+    "struct.h": "c",
+    "prototypes.h": "c"
   },
   "C_Cpp.errorSquiggles": "disabled"
 }
