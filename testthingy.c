@@ -10,7 +10,7 @@ FileList* toOutput(FILE *fp, char *fileName)
     char *str[MAXLINESIZE];
     char strNewName[strlen(fileName) + 1];
     char lineNum[MAXLINESIZE];
-    int lineNum = 0;
+    /*nt lineNum = 0;*/
     char* change="bin\0";
 
     FileList *outputFile;
