@@ -30,8 +30,6 @@ double hasher(char*);
 
 void constMacroList(MacroList**);
 
-int isspace(char*);
-
 /*macro decoder*/
 FileList* macroDecoder(FILE*, char*);
 
