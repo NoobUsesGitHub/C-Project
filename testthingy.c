@@ -9,6 +9,7 @@ FileList* toOutput(FILE *fp, char *fileName)
 {
     char *str[MAXLINESIZE];
     char strNewName[strlen(fileName) + 1];
+    char lineNum[MAXLINESIZE];
     int lineNum = 0;
     char* change="bin\0";
 
@@ -36,7 +37,7 @@ FileList* toOutput(FILE *fp, char *fileName)
         return outputFile;
     }
 
-    while (fscanf(outputFile->file,"%d\t%s", &lineNum, str) != 2)
+    while (fscanf(outputFile->file,"%s\t%s", lineNum, str) != 2)
     {
         binaryTranslate(&str);
         fprintf(outputFile->file, "%d\t%s ",lineNum,str);
