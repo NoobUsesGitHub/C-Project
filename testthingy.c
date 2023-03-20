@@ -36,7 +36,7 @@ FileList* toOutput(FILE *fp, char *fileName)
         return outputFile;
     }
 
-    while (fscanf(outputFile->file,"%d %s", &lineNum, &str) != 2)
+    while (fscanf(outputFile->file,"%d %s", &lineNum, str) != 2)
     {
         binaryTranslate(&str);
         fprintf(outputFile->file, "%d\t%s ",lineNum,str);
