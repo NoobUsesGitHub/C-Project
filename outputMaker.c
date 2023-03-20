@@ -4,45 +4,68 @@
 
 #define coment ';'
 #define delimints "    \t \f \r"
-
-FileList* toOutput(FILE *fp, char *fileName)
+FileList *toOutput(FILE *fp, char *fileName)
 {
-    char *str[MAXLINESIZE];
-    char strNewName[strlen(fileName) + 1];
-    int lineNum = 0;
+  char c = ' ';
+  char strNewName[strlen(fileName) + 1];
+  bool sawTab = FALSE;
+  /*nt lineNum = 0;*/
+  char *change = "bin\0";
 
-    FileList *outputFile;
-    constNode(&outputFile);
+  FileList *outputFile;
+  constNode(&outputFile);
 
-    strcpy(strNewName, fileName);
-    strcpy(strNewName[strlen(strNewName) - 2], "bin");
-    outputFile->fileName = (char *)malloc(strlen(strNewName) * sizeof(char));
-    strcpy(outputFile->fileName, strNewName);
+  strcpy(strNewName, fileName);
+  char *bit = strNewName + (strlen(strNewName) - 2);
+  while (*change != '\0')
+  {
+    *bit = *change;
+    bit++;
+    change++;
+  }
+  *bit = '\0';
+  outputFile->fileName = (char *)malloc(strlen(strNewName) * sizeof(char));
+  strcpy(outputFile->fileName, strNewName);
 
-    outputFile->file = fopen(strNewName, "w");
-    if (fp == NULL || outputFile->file == NULL)
+  outputFile->file = fopen(strNewName, "w");
+  if (fp == NULL || outputFile->file == NULL)
+  {
+    outputFile->file = NULL;
+    printf("File is not correct");
+    return outputFile;
+  }
+  c = (char)fgetc(fp);
+  while (c != EOF)
+  {
+    if (sawTab == TRUE)
     {
-        outputFile->file = NULL;
-        printf("File is not correct");
-        return outputFile;
+      if (c == '\n')
+      {
+        sawTab = FALSE;
+      }
+      else
+      {
+        c = binaryTranslate(c);
+      }
+      fputc(c,outputFile->file);
     }
-
-    while (fscanf("%d %s", &lineNum, &str) != 2)
+    else
     {
-        binaryTranslate(&str);
-        fprintf(outputFile->file, "%d\t%s ",lineNum,str);
+      if (c == '\t')
+        sawTab = TRUE;
+      fputc(c,outputFile->file);
     }
+    c = (char)fgetc(fp);
+  }
 
-    return outputFile; /*tochange*/
+  return outputFile; /*tochange*/
 }
 
-void binaryTranslate(char **str)
+char binaryTranslate(char c)
 {
-    char *bit=*str[0];
-    while(*bit!='\0')
-    {  
-        if(bit=='0')bit='.';
-        if(bit=='1')bit='/';
-        bit++;
-    }
+  if (c == '0')
+    c = '.';
+  if (c == '1')
+    c = '/';
+  return c;
 }
