@@ -5,86 +5,100 @@
 #define coment ';'
 #define delimints "    \t \f \r"
 
-FileList* toOutput(FILE *fp, char *fileName)
+FileList *toOutput(FILE *fp, char *fileName)
 {
-    char *str[MAXLINESIZE];
-    char strNewName[strlen(fileName) + 1];
-    char lineNum[MAXLINESIZE];
-    /*nt lineNum = 0;*/
-    char* change="bin\0";
+  char c;
+  char strNewName[strlen(fileName) + 1];
+  bool sawTab=FALSE;
+  /*nt lineNum = 0;*/
+  char *change = "bin\0";
 
-    FileList *outputFile;
-    constNode(&outputFile);
+  FileList *outputFile;
+  constNode(&outputFile);
 
-    strcpy(strNewName, fileName);
-    char* bit=strNewName+ (strlen(strNewName) - 2);
-    printf("%c",*change);
-    printf("%c",*bit);
-    while(*change!='\0'){
-      *bit=*change;
-      bit++;
-      change++;
-    }
-    *bit='\0';
-    outputFile->fileName = (char *)malloc(strlen(strNewName) * sizeof(char));
-    strcpy(outputFile->fileName, strNewName);
+  strcpy(strNewName, fileName);
+  char *bit = strNewName + (strlen(strNewName) - 2);
+  printf("%c", *change);
+  printf("%c", *bit);
+  while (*change != '\0')
+  {
+    *bit = *change;
+    bit++;
+    change++;
+  }
+  *bit = '\0';
+  outputFile->fileName = (char *)malloc(strlen(strNewName) * sizeof(char));
+  strcpy(outputFile->fileName, strNewName);
 
-    outputFile->file = fopen(strNewName, "w");
-    if (fp == NULL || outputFile->file == NULL)
+  outputFile->file = fopen(strNewName, "w");
+  if (fp == NULL || outputFile->file == NULL)
+  {
+    outputFile->file = NULL;
+    printf("File is not correct");
+    return outputFile;
+  }
+
+  while (c = fgetc(outputFile->file) != EOF)
+  {
+    if (sawTab == TRUE)
     {
-        outputFile->file = NULL;
-        printf("File is not correct");
-        return outputFile;
-    }
-
-    while (fscanf(outputFile->file,"%s\t%s", lineNum, str) != 2)
+      if (c == '\n')
+      {
+        sawTab = FALSE;
+      }
+      else
+      {
+       c=binaryTranslate(c);
+      }
+      fputc(outputFile->file, c);
+    }else
     {
-        binaryTranslate(&str);
-        fprintf(outputFile->file, "%d\t%s ",lineNum,str);
+      if(c=='\t')
+        sawTab=TRUE;
+      fputc(outputFile->file, c);
     }
+  }
 
-    return outputFile; /*tochange*/
+  return outputFile; /*tochange*/
 }
 
-void binaryTranslate(char **str)
+char binaryTranslate(char c)
 {
-    char *bit=*str[0];
-    while(*bit!='\0')
-    {  
-        if(bit=='0')bit='.';
-        if(bit=='1')bit='/';
-        bit++;
-    }
+    if (c == '0')
+      c = '.';
+    if (c == '1')
+      c = '/';
+  return c;
 }
 
 int main(int argc, char *argv[])
 {
-    int i=0;
-    FileList *tempNode=NULL,*outputFilesHead=NULL,*macroFilesHead=NULL,*tempMacroNode=NULL,*binaryFilesHead=NULL;
-    
-    /*get input*/
-    if(argc<=1)
-    {
-        printf("please input file names");
-        return 1; 
-    }
-    
-    stringToFiles(argc,argv,&macroFilesHead);
+  int i = 0;
+  FileList *tempNode = NULL, *outputFilesHead = NULL, *macroFilesHead = NULL, *tempMacroNode = NULL, *binaryFilesHead = NULL;
 
-    tempNode=macroFilesHead;
-    constNode(&outputFilesHead);
-    tempMacroNode=outputFilesHead;
-    for (i=1;i<=argc-1;i++)
-    {
-        tempMacroNode=toOutput(tempNode->file,tempNode->fileName);
-        if(tempMacroNode->file==NULL)/*assuming that the Macro decoder has found some error and finished early, after printing them*/
-        {
-            return 1;
-        }
-        addToList(outputFilesHead,tempMacroNode->file,tempMacroNode->fileName);
-        tempNode=tempNode->next;/*going forward with the list*/
-    }
-    closeFileList(outputFilesHead);
-
+  /*get input*/
+  if (argc <= 1)
+  {
+    printf("please input file names");
     return 1;
+  }
+
+  stringToFiles(argc, argv, &macroFilesHead);
+
+  tempNode = macroFilesHead;
+  constNode(&outputFilesHead);
+  tempMacroNode = outputFilesHead;
+  for (i = 1; i <= argc - 1; i++)
+  {
+    tempMacroNode = toOutput(tempNode->file, tempNode->fileName);
+    if (tempMacroNode->file == NULL) /*assuming that the Macro decoder has found some error and finished early, after printing them*/
+    {
+      return 1;
+    }
+    addToList(outputFilesHead, tempMacroNode->file, tempMacroNode->fileName);
+    tempNode = tempNode->next; /*going forward with the list*/
+  }
+  closeFileList(outputFilesHead);
+
+  return 1;
 }
