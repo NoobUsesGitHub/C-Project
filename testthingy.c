@@ -7,9 +7,9 @@
 
 FileList *toOutput(FILE *fp, char *fileName)
 {
-  char c;
+  char c = ' ';
   char strNewName[strlen(fileName) + 1];
-  bool sawTab=FALSE;
+  bool sawTab = FALSE;
   /*nt lineNum = 0;*/
   char *change = "bin\0";
 
@@ -37,8 +37,9 @@ FileList *toOutput(FILE *fp, char *fileName)
     printf("File is not correct");
     return outputFile;
   }
-
-  while (c = fgetc(outputFile->file) != EOF)
+  c = fgetc(outputFile->file);
+  printf("%c ",c);
+  while (c != EOF)
   {
     if (sawTab == TRUE)
     {
@@ -48,15 +49,18 @@ FileList *toOutput(FILE *fp, char *fileName)
       }
       else
       {
-       c=binaryTranslate(c);
+        c = binaryTranslate(c);
       }
       fputc(outputFile->file, c);
-    }else
+    }
+    else
     {
-      if(c=='\t')
-        sawTab=TRUE;
+      if (c == '\t')
+        sawTab = TRUE;
       fputc(outputFile->file, c);
     }
+    c = fgetc(outputFile->file);
+    printf("%c ",c);
   }
 
   return outputFile; /*tochange*/
@@ -64,10 +68,10 @@ FileList *toOutput(FILE *fp, char *fileName)
 
 char binaryTranslate(char c)
 {
-    if (c == '0')
-      c = '.';
-    if (c == '1')
-      c = '/';
+  if (c == '0')
+    c = '.';
+  if (c == '1')
+    c = '/';
   return c;
 }
 
