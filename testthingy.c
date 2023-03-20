@@ -2,9 +2,6 @@
 #include <string.h>
 #include "prototypes.h"
 
-
-
-
 #define coment ';'
 #define delimints "    \t \f \r"
 
@@ -18,7 +15,7 @@ FileList* toOutput(FILE *fp, char *fileName)
     constNode(&outputFile);
 
     strcpy(strNewName, fileName);
-    strcpy(strNewName[strlen(strNewName) - 2], "bin");
+    strNewName[strlen(strNewName) - 2]= "bin";
     outputFile->fileName = (char *)malloc(strlen(strNewName) * sizeof(char));
     strcpy(outputFile->fileName, strNewName);
 
