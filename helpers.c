@@ -21,21 +21,20 @@ output: a double that is the encoded string
 */
 double hasher(char *str)
 {
-  double size = strlen(str);
-  double hash = 0;
-  int i = 0;
-  /*maybe change to while*/
-  if (str[((int)size) - 1] == '\n')
-    size--;
-  while (str[i] != '\0')
-  {
-    if (str[i] != '\n')
-      hash += ((int)(str[i])) / (size - i) * 7.0; /*hashing func- takes every letter and its place and calculates a key for it, adding them together*/
-    i++;
-  }
-  return hash;
+    double size = strlen(str);
+    double hash = 0;
+    int i = 0;
+    /*maybe change to while*/
+    if (str[((int)size) - 1] == '\n')
+        size--;
+    while (str[i] != '\0')
+    {
+        if (str[i] != '\n')
+            hash += ((int)(str[i])) / (size - i) * 7.0; /*hashing func- takes every letter and its place and calculates a key for it, adding them together*/
+        i++;
+    }
+    return hash;
 }
-
 
 /*
     input: a header node, a name for the new macro and it's list of strings that it unfolds to
@@ -177,7 +176,6 @@ void freeMacro(char **head, int size)
     free(head);
 }
 
-
 /*
  * input: a pointer for a macro node object, a string
  * will take the string and add it to the node' internal node list
@@ -205,12 +203,12 @@ void addLineToNode(MacroList *m, char *str)
     input: a list of strings and their size
     will go through the list and print them
 */
-void printList(char **macro, int size,FILE *fp)
+void printList(char **macro, int size, FILE *fp)
 {
 
     while (size != 0)
     {
-        fprintf(fp,"%s", *macro);
+        fprintf(fp, "%s", *macro);
         macro++;
         size--;
     }
@@ -221,14 +219,14 @@ input: a header node of a macro list and a double of a hash
 output: 1 if a node with this hash was found, 0 if not
 will also print the list of said node
 */
-int dumpIfexistsInMacro(MacroList *header, double hash,FILE *fp)
+int dumpIfexistsInMacro(MacroList *header, double hash, FILE *fp)
 {
     bool found = FALSE;
     while (header != NULL && found == FALSE)
     {
         if (header->hash == hash)
         {
-            printList(header->macro, header->size,fp);
+            printList(header->macro, header->size, fp);
             found = TRUE;
         }
         header = header->next;
@@ -236,3 +234,7 @@ int dumpIfexistsInMacro(MacroList *header, double hash,FILE *fp)
     return found == TRUE ? 1 : 0;
 }
 
+int isspace(char *c)
+{
+    return (strcmp(c, " ") || strcmp(c, "\t") || strcmp(c, "\r") || strcmp(c, "\n") || strcmp(c, "\f") || strcmp(c, "\v"));
+}
