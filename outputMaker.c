@@ -4,7 +4,7 @@
 
 #define coment ';'
 #define delimints "    \t \f \r"
-FileList *toOutput(FILE *fp, char *fileName)
+FileList* toOutput(FILE *fp, char *fileName)
 {
   char c = ' ';
   char strNewName[strlen(fileName) + 1];
