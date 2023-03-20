@@ -26,7 +26,7 @@ FileList* toBinary(FILE *fp, char *fileName)
     strNewName[strlen(strNewName) - 1] = 'm';
     macroFileNode->fileName = (char *)malloc(strlen(strNewName) * sizeof(char));
     strcpy(macroFileNode->fileName, strNewName);
-    /*to change
+    to change
     macroFileNode->file = fopen(strNewName, "w");
     if (fp == NULL || macroFileNode->file == NULL)
     {
@@ -37,7 +37,7 @@ FileList* toBinary(FILE *fp, char *fileName)
 
     while (fgets(str, 85, fp) != NULL)
     {
-        /*skip lines of comments
+        skip lines of comments
         sscanf(str, "%c", &bit);
         if ((int)bit == ((int)coment))
             skp = TRUE;
