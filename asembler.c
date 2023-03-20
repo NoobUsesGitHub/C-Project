@@ -47,21 +47,21 @@ int main(int argc, char *argv[])
     }
     closeFileList(macroFilesHead);
 
-    tempNode=macroFilesHead;
-    constNode(&outputFilesHead);
-    tempMacroNode=outputFilesHead;
-    for (i=1;i<=argc-1;i++)
+   
+  tempNode = macroFilesHead;
+  constNode(&outputFilesHead);
+  tempMacroNode = outputFilesHead;
+  for (i = 1; i <= argc - 1; i++)
+  {
+    tempMacroNode = toOutput(tempNode->file, tempNode->fileName);
+    if (tempMacroNode->file == NULL) /*assuming that the Macro decoder has found some error and finished early, after printing them*/
     {
-        tempMacroNode=toOutput(tempNode->file,tempNode->fileName);
-        if(tempMacroNode->file==NULL)/*assuming that the Macro decoder has found some error and finished early, after printing them*/
-        {
-            return 1;
-        }
-        addToList(outputFilesHead,tempMacroNode->file,tempMacroNode->fileName);
-        tempNode=tempNode->next;/*going forward with the list*/
+      return 1;
     }
-    closeFileList(outputFilesHead);
-
+    addToList(outputFilesHead, tempMacroNode->file, tempMacroNode->fileName);
+    tempNode = tempNode->next; /*going forward with the list*/
+  }
+  closeFileList(outputFilesHead);
     return 1;
 }
 
