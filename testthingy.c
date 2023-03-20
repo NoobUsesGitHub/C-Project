@@ -10,12 +10,18 @@ FileList* toOutput(FILE *fp, char *fileName)
     char *str[MAXLINESIZE];
     char strNewName[strlen(fileName) + 1];
     int lineNum = 0;
+    char* change="bin\0";
 
     FileList *outputFile;
     constNode(&outputFile);
 
     strcpy(strNewName, fileName);
-    strNewName[strlen(strNewName) - 4]= "bin\0";
+    char* bit=strNewName[strlen(strNewName) - 4];
+    while(change!='\0'){
+      *bit=*change;
+      bit++;
+      change++;
+    }
     outputFile->fileName = (char *)malloc(strlen(strNewName) * sizeof(char));
     strcpy(outputFile->fileName, strNewName);
 
