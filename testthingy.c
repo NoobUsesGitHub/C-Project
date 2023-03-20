@@ -16,7 +16,7 @@ FileList* toOutput(FILE *fp, char *fileName)
     constNode(&outputFile);
 
     strcpy(strNewName, fileName);
-    char* bit=strNewName[strlen(strNewName) - 4];
+    char* bit=strNewName+ (strlen(strNewName) - 4);
     printf("%c",*change);
     printf("%c",*bit);
     while(*change!='\0'){
