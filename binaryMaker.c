@@ -2,76 +2,83 @@
 #include <string.h>
 #include "prototypes.h"
 
-#define coment ';'
-#define delimints "    \t \f \r"
 
 
 FileList* toBinary(FILE *fp, char *fileName)
-{/*
-
-    int i = 0;
-    bool macroCollectionStarted = FALSE, skp = FALSE;
-    MacroList *header, *curMacro;
-    constMacroList(&header);
-    char bit = ' ',*line[MAXLINESIZE], *pch = NULL, *str[MAXLINESIZE];
+{
+    int IC=0,DC=0,wordCount=0;/*wordCount=L*/
+    bool skp = FALSE,signal=FALSE,foundErr=FALSE;
+    char bit = ' ',label, *pch = NULL, str[MAXLINESIZE];
     char strNewName[strlen(fileName)];
 
-    FileList *macroFileNode;
-    constNode(&macroFileNode);
-    
+    FileList *binaryFileNode;
+    constNode(&binaryFileNode);
+    /*
     █▄ ▄█ ▄▀▄ █▄▀ ██▀    ▄▀▀ █   ██▀ ▄▀▄ █▀▄ ██▀ █▀▄
     █ ▀ █ █▀█ █ █ █▄▄    ▀▄▄ █▄▄ █▄▄ █▀█ █▀▄ █▄▄ █▀▄
-    
+    */
     strcpy(strNewName, fileName);
     strNewName[strlen(strNewName) - 1] = 'm';
-    macroFileNode->fileName = (char *)malloc(strlen(strNewName) * sizeof(char));
-    strcpy(macroFileNode->fileName, strNewName);
-    to change
-    macroFileNode->file = fopen(strNewName, "w");
-    if (fp == NULL || macroFileNode->file == NULL)
+    binaryFileNode->fileName = (char *)malloc(strlen(strNewName) * sizeof(char));
+    strcpy(binaryFileNode->fileName, strNewName);
+    /*to change*/
+    binaryFileNode->file = fopen(strNewName, "w");
+    if (fp == NULL || binaryFileNode->file == NULL)
     {
-        macroFileNode->file = NULL;
-        printf("File is not correct");
-        return macroFileNode;
+        binaryFileNode->file = NULL;
+        printf("File is not correct");/*need to print out to STDOUT and say which line*/
+        return binaryFileNode;
     }
 
     while (fgets(str, 85, fp) != NULL)
     {
-        skip lines of comments
-        sscanf(str, "%c", &bit);
-        if ((int)bit == ((int)coment))
-            skp = TRUE;
+        
 
-        pch = strtok(str, delimints); start strtok
+        /*might need to skip here on comments, not in macro decoder*/
+        
+        /* instruction label: opcode source-operand, target-operand
+            label: opcode target-operand
+            label: opcode 
 
-        if (strcmp(pch, "endmcr") == 0 || strcmp(pch, "endmcr\n") == 0)
+        
+        */
+
+        pch = strtok(str, delimints); /*start strtok*/
+        /*need to check for labels first LABELS MAX SIZE=30(+1 for :)
+            insturction LABEL will receive Instruction Counter
+        */
+        while ((pch != NULL) && (skp != TRUE))
         {
-            skp = TRUE;
-            macroCollectionStarted = FALSE;
-        }
-
-        if (macroCollectionStarted == TRUE)
-        {
-            addLineToNode(curMacro, str);
-            skp = TRUE;
-        }
-
-        while ((pch != NULL) && (skp != TRUE) && (macroCollectionStarted == FALSE))
-        {
-            checking for mactros
-            if (strcmp(pch, "mcr") == 0)
+            if(isSignal(pch))
             {
-                macroCollectionStarted = TRUE;
-                pch = strtok(NULL, delimints);
-                curMacro = addMacroToList(header, pch, NULL);
-                skp = TRUE;
+                signal=TRUE;
             }
+
+            sscanf(str, "%c", &bit);
+            if ((int)bit == ((int)suggest))
+            {    
+                /* data and string LABEL will recieve Data Counter*/
+                /*check if data or string*/
+                /*if entry has label, ignore label*/
+                /*check if external*/
+                /*if external has label, ignore label*/
+                continue;
+            }
+
+
+            
+
+
+
+
+
+
 
             if (skp == FALSE&&isspace(pch)==0)
             {
-                if (dumpIfexistsInMacro(header, hasher(pch),macroFileNode->file) == 0)
+                if (dumpIfexistsInMacro(header, hasher(pch),binaryFileNode->file) == 0)
                 {
-                    fprintf(macroFileNode->file,"%s ", pch);
+                    fprintf(binaryFileNode->file,"%s ", pch);
                 }
             }
 
@@ -80,9 +87,11 @@ FileList* toBinary(FILE *fp, char *fileName)
         skp = FALSE;
     }
 
+    if(foundErr==TRUE)
+    {
+        binaryFileNode->file=NULL;
+    }
+    /*create .ent .ext*/
     freeList(header);
-
-     tochange*/
-     printf("yeah");
-     return NULL;
+    return binaryFileNode; /*tochange*/  
 }

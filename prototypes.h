@@ -3,7 +3,7 @@
 #include <string.h>
 #include "struct.h"
 
-/*helpers*/
+/*fileListFuncs*/
 void constNode(FileList**);
 
 void addToList(FileList*, FILE*, char*);
@@ -12,6 +12,7 @@ void closeFileList(FileList*);
 
 void stringToFiles(int, char **, FileList**);
 
+/*MacroListFuncs*/
 void constMacroList(MacroList**);
 
 void freeList(MacroList*);
@@ -26,9 +27,10 @@ int dumpIfexistsInMacro(MacroList*, double,FILE*);
 
 MacroList* addMacroToList(MacroList*, char*, char**);
 
-double hasher(char*);
-
 void constMacroList(MacroList**);
+
+/*helpers*/
+double hasher(char*);
 
 /*macro decoder*/
 FileList* macroDecoder(FILE*, char*);

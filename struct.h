@@ -1,5 +1,8 @@
 #include <stdio.h>
-#define MAXLINESIZE 85
+#define MAXLINESIZE 81
+#define coment ';'
+#define suggest '.' /* hanhaya- direction? idk*/
+#define delimints "    \t \f \r"
 
 typedef struct FileList
 {
@@ -17,5 +20,13 @@ typedef struct MacroList
     struct MacroList* next;
 }MacroList;
 
+typedef struct Symbol
+{
+    char* name;
+    double hash;
+    int size;
+    int line;
+    struct Symbol* next;
+}Symbol;
 
 typedef enum bool{TRUE=1, FALSE= 0}bool; 

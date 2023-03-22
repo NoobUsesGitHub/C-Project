@@ -7,10 +7,10 @@
 FileList* toOutput(FILE *fp, char *fileName)
 {
   char c = ' ';
-  char strNewName[strlen(fileName) + 1];
+  char *change = "ob\0";
+  char strNewName[strlen(fileName)];
   bool sawTab = FALSE;
   /*nt lineNum = 0;*/
-  char *change = "bin\0";
 
   FileList *outputFile;
   constNode(&outputFile);
