@@ -4,18 +4,6 @@
 #include "prototypes.h"
 
 /*
- * input: a pointer for a file node object
- * output: the node
- */
-void constNode(FileList **f)
-{
-    *f = (FileList *)malloc(sizeof(FileList));
-    (*(f))->file = NULL;
-    (*(f))->fileName = NULL;
-    (*(f))->next = NULL;
-}
-
-/*
 input: a string that we want to hash
 output: a double that is the encoded string
 */
@@ -37,200 +25,54 @@ double hasher(char *str)
 }
 
 /*
-    input: a header node, a name for the new macro and it's list of strings that it unfolds to
-    output: the new macro node already connected to the list
+    input: a string pointer
+    will fill it with spaces
 */
-MacroList *addMacroToList(MacroList *header, char *macroName, char **macroList)
+void clearStr(char *str, int size)
 {
-    char *str = (char *)malloc(strlen(macroName) * (sizeof(char) + 1));
-    MacroList *current_node=header;
-    strcpy(str, macroName);
-    if (header->macroName == NULL)
+    int i = size;
+    while (i >= 0)
     {
-        header->macro = macroList;
-        header->hash = hasher(str);
-        header->macroName = str;
-    }
-    else
-    {
-        while (current_node->next != NULL)
-        {
-            current_node = current_node->next;
-        }
-        constMacroList(&(current_node->next));
-        current_node->next->macro = macroList;
-        current_node->next->hash = hasher(str);
-        current_node->next->macroName = str;
-        return current_node->next;
-    }
-    return current_node;
-}
-
-void addToList(FileList *header, FILE *fp, char *fileName)
-{
-    char *str = (char *)malloc(strlen(fileName) * (sizeof(char) + 1));
-    strcpy(str, fileName);
-    if (header->file == NULL)
-    {
-        header->file = fp;
-        header->fileName = str;
-    }
-    else
-    {
-        FileList *current_node = header;
-        while (current_node->next != NULL)
-        {
-            current_node = current_node->next;
-        }
-        constNode(&(current_node->next));
-        current_node->next->file = fp;
-        current_node->next->fileName = str;
+        str[i] = ' ';
     }
 }
 
 /*
- * input:a file node header
- * will close all file objects
- */
-void closeFileList(FileList *head)
+    input: a pointer to a char
+    output: false if it is a space character, otherwise true
+*/
+bool isLetter(char *bit)
 {
-    FileList *next = head;
-    while (next->next != NULL)
-    {
-        fclose(head->file);
-        free(head->fileName);
-        next = head->next;
-        free(head);
-        head = next;
-    }
-    fclose(head->file);
-    free(head->fileName);
-    free(head->next);
-    free(head);
-}
-
-void stringToFiles(int argc, char *argv[], FileList **header)
-{
-    int i, maxSize = 0;
-    static char *asmblrType = ".as";
-    i = 1;
-    for (; i <= argc - 1; i++)
-    {
-        if (maxSize < strlen(argv[i]))
-            maxSize = strlen(argv[i]);
-    }
-    char *str = (char *)malloc(maxSize * (sizeof(char) + 1));
-    FILE *temp;
-    i = 1;
-    constNode(header);
-    for (; i <= argc - 1; i++)
-    {
-        strcpy(str, argv[i]);
-        strcat(str, asmblrType);
-        temp = fopen(str, "r");
-        addToList(*header, temp, str);
-    }
-    free(str);
-}
-
-/*
- * input: a pointer for null macro node object
- * output: the node
- */
-void constMacroList(MacroList **m)
-{
-    *m = (MacroList *)malloc(sizeof(MacroList));
-    (*(m))->macroName = NULL;
-    (*(m))->macro = NULL;
-    (*(m))->size = 0;
-    (*(m))->next = NULL;
-}
-
-/*
- * input:a file node header
- * will close all file objects
- */
-void freeList(MacroList *head)
-{
-    MacroList *next = head;
-    while (next != NULL)
-    {
-        free(head->macroName);
-        freeMacro(head->macro, head->size);
-        next = head->next;
-        free(head);
-        head = next;
-    }
-}
-
-/*
- * input:a macro node header
- * will free all nodes
- */
-void freeMacro(char **head, int size)
-{
-    int i = 0;
-    for (; i < size; i++)
-    {
-        free(head[i]);
-    }
-    free(head);
-}
-
-/*
- * input: a pointer for a macro node object, a string
- * will take the string and add it to the node' internal node list
- */
-void addLineToNode(MacroList *m, char *str)
-{
-    m->size++;
-    if (m->size > 1)
-    {
-        m->macro = (char **)realloc(m->macro, m->size * sizeof(char) * MAXLINESIZE);
-    }
-    else
-    {
-        m->macro = (char **)malloc(m->size * sizeof(char) * MAXLINESIZE);
-        if (m->macro == NULL)
-            printf("can't allocate memory.."); /*add to errors?*/
-    }
-
-    m->macro[m->size - 1] = (char *)malloc(MAXLINESIZE * sizeof(char));
-
-    strcpy(m->macro[m->size - 1], str);
+    return (*bit != '\n' && isspace(*bit) == 0) ? TRUE : FALSE;
 }
 
 /*
     input: a list of strings and their size
     will go through the list and print them
 */
-void printList(char **macro, int size, FILE *fp)
+void printList(char **str, int size, FILE *fp)
 {
 
     while (size != 0)
     {
-        fprintf(fp, "%s", *macro);
-        macro++;
+        fprintf(fp, "%s", *str);
+        str++;
         size--;
     }
 }
 
 /*
-input: a header node of a macro list and a double of a hash
-output: 1 if a node with this hash was found, 0 if not
-will also print the list of said node
+    input: a string of .data's input
+    output: the number of words it will take
 */
-int dumpIfexistsInMacro(MacroList *header, double hash, FILE *fp)
+int dataLength(char *str)
 {
-    bool found = FALSE;
-    while (header != NULL && found == FALSE)
+    int i = 0;
+    while (*str != '\n'&&isLetter(str)==TRUE)
     {
-        if (header->hash == hash)
-        {
-            printList(header->macro, header->size, fp);
-            found = TRUE;
-        }
-        header = header->next;
+        if (*str == ',')
+            i++;
+        str++;
     }
-    return found == TRUE ? 1 : 0;
+    return i + 1;
 }
