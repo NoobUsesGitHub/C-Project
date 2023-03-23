@@ -77,6 +77,24 @@ int dataLength(char *str)
     return i + 1;
 }
 
+/*
+    input: a string
+    output: the number of spaces in it
+*/
+int countSpace(char *str)
+{
+    int i = 0;
+    while (*str != '\n' && isLetter(str) == TRUE)
+    {
+        if (*str == ' ')
+            i++;
+        str++;
+    }
+    return i + 1;
+}
+
+
+
 void removeRedundantSpaces(char *str)
 {
     int i, j, len;
@@ -100,5 +118,7 @@ void removeRedundantSpaces(char *str)
             j++;
         }
     }
+    if(str[j-1]==' '||str[j-1]=='\t')
+        j--;
     str[j] = '\0';
 }

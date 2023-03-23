@@ -4,7 +4,8 @@
 
 FileList *toBinary(FILE *fp, char *fileName)
 {
-    int IC = -1, DC = 0, wordCount = 0, stype = 0; /*wordCount=L*/
+    int IC = -1, DC = 0, wordCount = 0,operCount=0; /*wordCount=L*/
+    Stype stype = 0;
     bool skp = FALSE, foundSymbol = FALSE, foundErr = FALSE, foundLabel = FALSE;
     char bit = ' ', label[MAXLABELSIZE], dataTester[7], opcode[4], oper1[MAXLABELSIZE], oper2[MAXLABELSIZE], *pch = NULL, str[MAXLINESIZE];
     char strNewName[strlen(fileName)];
@@ -187,7 +188,20 @@ FileList *toBinary(FILE *fp, char *fileName)
          */
 
         pch = strtok(str, delimints); /*start strtok*/
+        operCount=countSpace(str);
+        switch (operCount)
+        {
 
+
+        case 0:
+            /* code */
+            break;
+            
+        case 1:
+            /* code */
+            break;
+            
+        }
         if (foundLabel == TRUE) /*skiping label*/
             pch = strtok(NULL, delimints);
 
