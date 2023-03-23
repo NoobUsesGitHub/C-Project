@@ -34,6 +34,7 @@ FileList *toBinary(FILE *fp, char *fileName)
 
     while (fgets(str, 85, fp) != NULL)
     {
+        removeRedundantSpaces(str);
         IC++;
         clearStr(label, MAXLABELSIZE); /*clearing label*/
         clearStr(dataTester, 7);
@@ -166,13 +167,10 @@ FileList *toBinary(FILE *fp, char *fileName)
             continue;
         }
 
-
         
         if(foundLabel==TRUE)/*if we have label, and still here, make it a code symbol*/
             dataNode=addSymbolToList(dataHeader,label,CODE,IC);
-        
-
-
+ 
         /*breaking here for a moment, we have the instruction part of the first pass*/
 
 
@@ -193,6 +191,8 @@ FileList *toBinary(FILE *fp, char *fileName)
         if (foundLabel == TRUE) /*skiping label*/
             pch = strtok(NULL, delimints);
 
+
+        /*with or without the label, we have at max 3 words now, the only thing is if the , is a word for itself*/
         while ((pch != NULL) && (skp != TRUE))
         {
             if (isSignal(pch))
