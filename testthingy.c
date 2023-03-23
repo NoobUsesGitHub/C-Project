@@ -12,7 +12,7 @@ void removeRedundantSpaces(char *str)
     {
         if (str[i] != ' ' && str[i] != '\t')
         {
-          if(i>0 &&str[i]==',' && str[i - 1] == ' ' && str[i - 1] == '\t')
+          if(i>0 &&str[i]==',' && isspace(str[i - 1]) !=0)
           {
             str[j-1]=',';
             continue;  
