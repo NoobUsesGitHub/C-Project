@@ -94,32 +94,30 @@ int countSpace(char *str)
 }
 
 
-
 void removeRedundantSpaces(char *str)
 {
-    int i, j, len;
-    len = strlen(str); /*to change*/
-    j = 0;
-    for (i = 0; i < len; i++)
+  int i, j, len;
+  len = strlen(str); /*to change*/
+  j = 0;
+  for (i = 0; i < len; i++)
+  {
+    if (isspace(str[i]) == 0)
     {
-        if (str[i] != ' ' && str[i] != '\t')
-        {
-          if(i>0 &&str[i]==',' && isspace(str[i - 1]) !=0)
-          {
-            str[j-1]=',';
-            continue;  
-          }
-
-            str[j] = str[i];
-            j++;
-        }
-        else if (i > 0 && str[i - 1] != ' ' && str[i - 1] != '\t')
-        {
-            str[j] = ' ';
-            j++;
-        }
+      if (i > 0 && str[i] == ',' && isspace(str[j - 1]))
+      {
+        str[j - 1] = str[i];
+        continue;
+      }
+      str[j] = str[i];
+      j++;
     }
-    if(str[j-1]==' '||str[j-1]=='\t')
-        j--;
-    str[j] = '\0';
+    else if (i > 0 && isspace(str[i - 1]) == 0)
+    {
+      str[j] = ' ';
+      j++;
+    }
+  }
+  if (str[j - 1] == ' ' || str[j - 1] == '\t')
+    j--;
+  str[j] = '\0';
 }
