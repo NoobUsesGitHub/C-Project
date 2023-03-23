@@ -4,46 +4,60 @@
 #include "prototypes.h"
 
 /*
-    input: a header node, a name for the new macro and it's list of strings that it unfolds to
-    output: the new macro node already connected to the list
-*/
-Symbol *addMacroToList(Symbol *header, char *macroName, char **Symbol)
-{
-    char *str = (char *)malloc(strlen(macroName) * (sizeof(char) + 1));
-    Symbol *current_node=header;
-    strcpy(str, macroName);
-    if (header->macroName == NULL)
-    {
-        header->macro = Symbol;
-        header->hash = hasher(str);
-        header->macroName = str;
-    }
-    else
-    {
-        while (current_node->next != NULL)
-        {
-            current_node = current_node->next;
-        }
-        constSymbol(&(current_node->next));
-        current_node->next->macro = Symbol;
-        current_node->next->hash = hasher(str);
-        current_node->next->macroName = str;
-        return current_node->next;
-    }
-    return current_node;
-}
-
-/*
  * input: a pointer for null macro node object
  * output: the node
  */
-void constSymbol(Symbol **m)
+void constSymbol(Symbol **s)
 {
-    *m = (Symbol *)malloc(sizeof(Symbol));
-    (*(m))->macroName = NULL;
-    (*(m))->macro = NULL;
-    (*(m))->size = 0;
-    (*(m))->next = NULL;
+    *s = (Symbol *)malloc(sizeof(Symbol));
+    (*(s))->name = NULL;
+    (*(s))->hash = 0.0;
+    (*(s))->type = CODE;
+    (*(s))->line = 0;
+    (*(s))->next = NULL;
+}
+
+/*
+    input: a header node, a nase for the new macro and it's list of strings that it unfolds to
+    output: the new macro node already connected to the list
+*/
+Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line)
+{ /*do i need to return here?*/
+    char *str = (char *)malloc(strlen(name) * (sizeof(char) + 1));
+    Symbol *current_node = header;
+    bool existsAlready = FALSE;
+    strcpy(str, name);
+    if (header->name == NULL)
+    {
+        header->name = str;
+        header->hash = hasher(str);
+        header->type = type;
+        header->line = type;
+    }
+    else
+    {
+        while (current_node->next != NULL && existsAlready == FALSE)
+        {
+            if (type != EXTERN && strcmp(current_node->name, name))
+                existsAlready = TRUE;
+            current_node = current_node->next;
+        }
+        if (existsAlready == FALSE)
+        {
+            constSymbol(&(current_node->next));
+            current_node->next->name = str;
+            current_node->next->hash = hasher(str);
+            current_node->next->type = type;
+            current_node->next->line = type;
+        }
+        else
+        {
+            current_node->name = NULL;
+            printf("%s exists already!!", name);
+            return current_node->next;
+        }
+    }
+    return current_node;
 }
 
 /*
@@ -55,8 +69,7 @@ void freeList(Symbol *head)
     Symbol *next = head;
     while (next != NULL)
     {
-        free(head->macroName);
-        freeMacro(head->macro, head->size);
+        free(head->name);
         next = head->next;
         free(head);
         head = next;
@@ -64,38 +77,30 @@ void freeList(Symbol *head)
 }
 
 /*
- * input:a macro node header
- * will free all nodes
- */
-void freeMacro(char **head, int size)
+    input: a string to check which type it is
+    output: it's type
+*/
+Stype checkSymbolType(char *str)
 {
-    int i = 0;
-    for (; i < size; i++)
+    if (strcmp(str, ".data"))
     {
-        free(head[i]);
-    }
-    free(head);
-}
-
-/*
- * input: a pointer for a macro node object, a string
- * will take the string and add it to the node' internal node list
- */
-void addLineToNode(Symbol *m, char *str)
-{
-    m->size++;
-    if (m->size > 1)
-    {
-        m->macro = (char **)realloc(m->macro, m->size * sizeof(char) * MAXLINESIZE);
-    }
-    else
-    {
-        m->macro = (char **)malloc(m->size * sizeof(char) * MAXLINESIZE);
-        if (m->macro == NULL)
-            printf("can't allocate memory.."); /*add to errors?*/
+        return DATA;
     }
 
-    m->macro[m->size - 1] = (char *)malloc(MAXLINESIZE * sizeof(char));
+    if (strcmp(str, ".string"))
+    {
+        return STRING;
+    }
 
-    strcpy(m->macro[m->size - 1], str);
+    if (strcmp(str, ".entry"))
+    {
+        return ENTRY;
+    }
+
+    if (strcmp(str, ".extern"))
+    {
+        return EXTERN;
+    }
+
+    return CODE;
 }

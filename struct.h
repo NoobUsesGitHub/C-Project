@@ -1,8 +1,12 @@
 #include <stdio.h>
 #define MAXLINESIZE 81
-#define coment ';'
-#define suggest '.' /* hanhaya- direction? idk*/
+#define MAXLABELSIZE 31
+#define LABELEND ':'
+#define comment ';'
+#define symbolMarker '.' /* hanhaya- direction? idk*/
+#define stringMarker '"' /* "abcd"*/
 #define delimints "    \t \f \r"
+
 
 typedef struct FileList
 {
@@ -24,9 +28,11 @@ typedef struct Symbol
 {
     char* name;
     double hash;
-    int size;
+    Stype type;
     int line;
     struct Symbol* next;
 }Symbol;
+
+typedef enum Stype{CODE=0, DATA=1,EXTERN=2,ENTRY=3,STRING=4}Stype;
 
 typedef enum bool{TRUE=1, FALSE= 0}bool; 

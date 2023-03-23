@@ -21,16 +21,27 @@ void freeMacro(char **, int);
 
 void addLineToNode(MacroList*, char*);
 
-void printList(char**, int,FILE*);
-
 int dumpIfexistsInMacro(MacroList*, double,FILE*);
 
 MacroList* addMacroToList(MacroList*, char*, char**);
 
 void constMacroList(MacroList**);
 
+
+/*SymbolListFuncs*/
+int checkSymbolType(string*);
+Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line)
+
 /*helpers*/
 double hasher(char*);
+
+void clearStr(char*,int);
+
+void printList(char**, int , FILE*);
+
+bool isLetter(char*);
+
+int dataLength(char*);
 
 /*macro decoder*/
 FileList* macroDecoder(FILE*, char*);

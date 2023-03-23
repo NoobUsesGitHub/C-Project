@@ -24,6 +24,27 @@ double hasher(char *str)
     return hash;
 }
 
+/*
+    input: a string pointer
+    will fill it with spaces
+*/
+void clearStr(char *str, int size)
+{
+    int i = size;
+    while (i >= 0)
+    {
+        str[i] = ' ';
+    }
+}
+
+/*
+    input: a pointer to a char
+    output: false if it is a space character, otherwise true
+*/
+bool isLetter(char *bit)
+{
+    return (*bit != '\n' && isspace(*bit) == 0) ? TRUE : FALSE;
+}
 
 /*
     input: a list of strings and their size
@@ -38,4 +59,20 @@ void printList(char **str, int size, FILE *fp)
         str++;
         size--;
     }
+}
+
+/*
+    input: a string of .data's input
+    output: the number of words it will take
+*/
+int dataLength(char *str)
+{
+    int i = 0;
+    while (*str != '\n'&&isLetter(str)==TRUE)
+    {
+        if (*str == ',')
+            i++;
+        str++;
+    }
+    return i + 1;
 }

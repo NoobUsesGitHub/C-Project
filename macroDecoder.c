@@ -12,7 +12,7 @@ FileList* macroDecoder(FILE *fp, char *fileName)
     bool macroCollectionStarted = FALSE, skp = FALSE;
     MacroList *header, *curMacro;
     constMacroList(&header);
-    char bit = ' ', *pch = NULL, str[MAXLINESIZE];
+    char *pch = NULL, str[MAXLINESIZE];
     char strNewName[strlen(fileName)];
 
     FileList *macroFileNode;
@@ -36,11 +36,6 @@ FileList* macroDecoder(FILE *fp, char *fileName)
 
     while (fgets(str, 85, fp) != NULL)
     {
-        /*skip lines of comments*/
-        sscanf(str, "%c", &bit);
-        if ((int)bit == ((int)coment))
-            skp = TRUE;
-
         pch = strtok(str, delimints); /*start strtok*/
 
         if (strcmp(pch, "endmcr") == 0 || strcmp(pch, "endmcr\n") == 0)

@@ -2,14 +2,16 @@
 #include <string.h>
 #include "prototypes.h"
 
-
-
-FileList* toBinary(FILE *fp, char *fileName)
+FileList *toBinary(FILE *fp, char *fileName)
 {
-    int IC=0,DC=0,wordCount=0;/*wordCount=L*/
-    bool skp = FALSE,signal=FALSE,foundErr=FALSE;
-    char bit = ' ',label, *pch = NULL, str[MAXLINESIZE];
+    int IC = -1, DC = 0, wordCount = 0, stype = 0; /*wordCount=L*/
+    bool skp = FALSE, foundSymbol = FALSE, foundErr = FALSE, foundLabel = FALSE;
+    char bit = ' ', label[MAXLABELSIZE], dataTester[7], opcode[4], oper1[MAXLABELSIZE], oper2[MAXLABELSIZE], *pch = NULL, str[MAXLINESIZE];
     char strNewName[strlen(fileName)];
+    Symbol *dataHeader, *dataNode;
+
+    constSymbol(&dataHeader);
+    constSymbol(&dataHeader);
 
     FileList *binaryFileNode;
     constNode(&binaryFileNode);
@@ -18,7 +20,7 @@ FileList* toBinary(FILE *fp, char *fileName)
     █ ▀ █ █▀█ █ █ █▄▄    ▀▄▄ █▄▄ █▄▄ █▀█ █▀▄ █▄▄ █▀▄
     */
     strcpy(strNewName, fileName);
-    strNewName[strlen(strNewName) - 1] = 'm';
+    strNewName[strlen(strNewName) - 1] = 'n'; /*change the name create function for concat*/
     binaryFileNode->fileName = (char *)malloc(strlen(strNewName) * sizeof(char));
     strcpy(binaryFileNode->fileName, strNewName);
     /*to change*/
@@ -26,72 +28,193 @@ FileList* toBinary(FILE *fp, char *fileName)
     if (fp == NULL || binaryFileNode->file == NULL)
     {
         binaryFileNode->file = NULL;
-        printf("File is not correct");/*need to print out to STDOUT and say which line*/
+        printf("File is not correct"); /*need to print out to STDOUT and say which line*/
         return binaryFileNode;
     }
 
     while (fgets(str, 85, fp) != NULL)
     {
+        IC++;
+        clearStr(label, MAXLABELSIZE); /*clearing label*/
+        clearStr(dataTester, 7);
+        clearStr(oper1, MAXLABELSIZE);
+        i = 0;
+        bit = str;
+
+        /*checking for comment*/
+        if (*bit == comment)
+            continue; /*skiiiiip*/
+
+        /*checking for a label*/
+        while (isLetter(*bit) == TRUE)
+        {
+            if (*bit == LABELEND)
+            {
+                label[i] = '\0';
+                foundLabel = TRUE; /*will be used later*/
+            }
+            label[i] = *bit;
+            i++;
+        }
+
+        if (foundLabel == FALSE)
+        {
+            bit = str;       /*reseting point*/
+            clearStr(label); /*clearing label*/
+        }
+
+        /*jumping for the next word*/
+        /*checking for symbols first*/
+        while (isLetter(*bit) == FALSE)
+            bit++;
+        if (*bit == '\0' || bit != '\n')
+            printf("weldp");
+
+        i = 0;
+        if (*bit == symbolMarker)/*we met a sybol!*/
+        {
+            bit++; /*skipping the dot!*/
+            while (isLetter(*bit) == TRUE)
+            {
+                dataTester[i] = *bit;
+                i++;
+                bit++;
+            }
+            stype = checkSymbolType(dataTester);
+
+            /*jumping for the next word*/
+            while (isLetter(*bit) == TRUE)
+                bit++;
+
+            if (*bit == '\0' || bit != '\n')
+                printf("weldp");
+
+            i = 0;
+            switch (stype)
+            {
+            case STRING:
+                bit++; /*skipping the "*/
+                while (*bit != '"')
+                {
+                    if (*bit == '\n')
+                    {
+                        printf("string finished with no end");
+                        break;
+                    }
+                    oper1[i] = *bit;
+                    i++;
+                    bit++;
+                }
+                bit++;
+                oper1[i] = '\0';
+
+                /*
+
+                    WTF AM I DOING
+
+                    WITH THE OPERANDS?
+                */
+
+                if (foundLabel == FALSE)
+                {
+                    clearStr(label, MAXLABELSIZE);
+                    sprintf(label, "X DC: %d", DC); /*adding a dummy name*/
+                }
+                dataNode = addSymbolToList(dataHeader, label, stype, DC);
+                DC = DC + strlen(oper1) + 1;
+                break;
+            case EXTERN:
+            case ENTRY:
+                clearStr(label, MAXLABELSIZE);
+                /*collecting label, we ignore the first label*/
+                while (isLetter(*bit) == TRUE)
+                {
+                    label[i] = *bit;
+                    i++;
+                }
+                label[i] = '\0';
+                dataNode = addSymbolToList(dataHeader, label, stype, DC);
+                DC++;
+                break;
+
+            case DATA:
+                i = 0;
+                while (*bit != '\n')
+                {
+                    if (isLetter(*bit) == TRUE)
+                    {
+                        oper1[i] = *bit;
+                        i++;
+                    }
+                    bit++;
+                }
+                /*
+
+                WTF AM I DOING WITH OPERANDS
+
+                */
+                if (foundLabel == FALSE)
+                {
+                    clearStr(label, MAXLABELSIZE);
+                    sprintf(label, "X DC: %d", DC); /*adding a dummy name*/
+                }
+
+                dataNode = addSymbolToList(dataHeader, label, stype, DC);
+                DC = DC + dataLength(oper1) + 1;
+                break;
+            }
+            continue;
+        }
+
+
+        
+        if(foundLabel==TRUE)/*if we have label, and still here, make it a code symbol*/
+            dataNode=addSymbolToList(dataHeader,label,CODE,IC);
         
 
-        /*might need to skip here on comments, not in macro decoder*/
-        
+
+        /*breaking here for a moment, we have the instruction part of the first pass*/
+
+
+
         /* instruction label: opcode source-operand, target-operand
-            label: opcode target-operand
-            label: opcode 
+        label: opcode target-operand
+        label: opcode
 
-        
-        */
+
+    */
+
+        /*
+             insturction LABEL will receive Instruction Counter
+         */
 
         pch = strtok(str, delimints); /*start strtok*/
-        /*need to check for labels first LABELS MAX SIZE=30(+1 for :)
-            insturction LABEL will receive Instruction Counter
-        */
+
+        if (foundLabel == TRUE) /*skiping label*/
+            pch = strtok(NULL, delimints);
+
         while ((pch != NULL) && (skp != TRUE))
         {
-            if(isSignal(pch))
+            if (isSignal(pch))
             {
-                signal=TRUE;
-            }
-
-            sscanf(str, "%c", &bit);
-            if ((int)bit == ((int)suggest))
-            {    
-                /* data and string LABEL will recieve Data Counter*/
-                /*check if data or string*/
-                /*if entry has label, ignore label*/
-                /*check if external*/
-                /*if external has label, ignore label*/
-                continue;
+                signal = TRUE;
             }
 
 
-            
-
-
-
-
-
-
-
-            if (skp == FALSE&&isspace(pch)==0)
-            {
-                if (dumpIfexistsInMacro(header, hasher(pch),binaryFileNode->file) == 0)
-                {
-                    fprintf(binaryFileNode->file,"%s ", pch);
-                }
-            }
 
             pch = strtok(NULL, delimints);
         }
         skp = FALSE;
     }
 
-    if(foundErr==TRUE)
+    if (foundErr == TRUE)
     {
-        binaryFileNode->file=NULL;
+        binaryFileNode->file = NULL;
+    }else
+    {
+        /*dump symbol tables*/
     }
     /*create .ent .ext*/
     freeList(header);
-    return binaryFileNode; /*tochange*/  
+    return binaryFileNode; /*tochange*/
 }
