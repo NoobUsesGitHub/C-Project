@@ -23,7 +23,7 @@ void removeRedundantSpaces(char* str) {
 }
 
 int main() {
-    char str[100]="LABEL: OPCODE OPER1 OPER2";
+    char str[100]="LABEL: OPCODE OPER1  , OPER2   ";
     
     removeRedundantSpaces(str);
     printf("Modified string: %s", str);
