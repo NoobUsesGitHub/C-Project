@@ -29,7 +29,8 @@ void constMacroList(MacroList**);
 
 
 /*SymbolListFuncs*/
-int checkSymbolType(string*);
+int checkSymbolType(char*);
+
 Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line)
 
 /*helpers*/
