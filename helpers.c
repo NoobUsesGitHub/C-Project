@@ -68,11 +68,37 @@ void printList(char **str, int size, FILE *fp)
 int dataLength(char *str)
 {
     int i = 0;
-    while (*str != '\n'&&isLetter(str)==TRUE)
+    while (*str != '\n' && isLetter(str) == TRUE)
     {
         if (*str == ',')
             i++;
         str++;
     }
     return i + 1;
+}
+
+void removeRedundantSpaces(char *str)
+{
+    int i, j, len;
+    len = strlen(str); /*to change*/
+    j = 0;
+    for (i = 0; i < len; i++)
+    {
+        if (str[i] != ' ' && str[i] != '\t')
+        {
+            str[j] = str[i];
+            j++;
+        }
+        else if (i > 0 && str[i - 1] != ' ' && str[i - 1] != '\t')
+        {
+            str[j] = ' ';
+            j++;
+        }
+        else if (i > 0 && str[i] != ',' && str[i - 1] != ' ' && str[i - 1] != '\t')
+        {
+            str[j] = ',';
+            j++;
+        }
+    }
+    str[j] = '\0';
 }
