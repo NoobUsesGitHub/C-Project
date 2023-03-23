@@ -1,10 +1,5 @@
 #include <stdio.h>
 #include <string.h>
-#include "prototypes.h"
-
-
-#include <stdio.h>
-#include <string.h>
 
 void removeRedundantSpaces(char* str) {
     int i, j, len;
