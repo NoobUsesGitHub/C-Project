@@ -21,7 +21,7 @@ void removeRedundantSpaces(char *str)
             str[j] = str[i];
             j++;
         }
-        else if (i > 0 &&&& isspace(str[i-1])==1)
+        else if (i > 0 && isspace(str[i-1])==1)
         {
             str[j] = ' ';
             j++;
