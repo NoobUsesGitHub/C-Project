@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "prototypes.h"
+#include "helpers.h"
 
 
 
@@ -89,16 +89,16 @@ void addLineToNode(MacroList *m, char *str)
     m->size++;
     if (m->size > 1)
     {
-        m->macro = (char **)realloc(m->macro, m->size * sizeof(char) * MAXLINESIZE);
+        m->macro = (char **)realloc(m->macro, m->size * sizeof(char) * MAX_LINE_SIZE);
     }
     else
     {
-        m->macro = (char **)malloc(m->size * sizeof(char) * MAXLINESIZE);
+        m->macro = (char **)malloc(m->size * sizeof(char) * MAX_LINE_SIZE);
         if (m->macro == NULL)
             printf("can't allocate memory.."); /*add to errors?*/
     }
 
-    m->macro[m->size - 1] = (char *)malloc(MAXLINESIZE * sizeof(char));
+    m->macro[m->size - 1] = (char *)malloc(MAX_LINE_SIZE * sizeof(char));
 
     strcpy(m->macro[m->size - 1], str);
 }

@@ -1,13 +1,15 @@
 #include <stdio.h>
 #include <string.h>
-#include "prototypes.h"
+#include "helpers.h"
 
 FileList *toBinary(FILE *fp, char *fileName)
 {
-    int IC = -1, DC = 0, wordCount = 0,operCount=0; /*wordCount=L*/
+    HashTable table[16];
+    initHashTable(&table);
+    int IC = -1, DC = 0, wordCount = 0, spaceCount = 0; /*wordCount=L*/
     Stype stype = 0;
     bool skp = FALSE, foundSymbol = FALSE, foundErr = FALSE, foundLabel = FALSE;
-    char bit = ' ', label[MAXLABELSIZE], dataTester[7], opcode[4], oper1[MAXLABELSIZE], oper2[MAXLABELSIZE], *pch = NULL, str[MAXLINESIZE];
+    char bit = ' ', label[MAX_LABEL_SIZE], dataTester[7], opcode[5], oper1[MAX_LABEL_SIZE], oper2[MAX_LABEL_SIZE], *pch = NULL, str[MAX_LINE_SIZE];
     char strNewName[strlen(fileName)];
     Symbol *dataHeader, *dataNode;
 
@@ -33,24 +35,26 @@ FileList *toBinary(FILE *fp, char *fileName)
         return binaryFileNode;
     }
 
-    while (fgets(str, 85, fp) != NULL)
+    while (fgets(str, 85, fp) != NULL)/*first pass*/
     {
         removeRedundantSpaces(str);
         IC++;
-        clearStr(label, MAXLABELSIZE); /*clearing label*/
+        clearStr(label, MAX_LABEL_SIZE); /*clearing label*/
         clearStr(dataTester, 7);
-        clearStr(oper1, MAXLABELSIZE);
+        clearStr(opcode, 5);
+        clearStr(oper1, MAX_LABEL_SIZE);
+        clearStr(oper2, MAX_LABEL_SIZE);
         i = 0;
         bit = str;
 
         /*checking for comment*/
-        if (*bit == comment)
+        if (*bit == COMMENT)
             continue; /*skiiiiip*/
 
         /*checking for a label*/
         while (isLetter(*bit) == TRUE)
         {
-            if (*bit == LABELEND)
+            if (*bit == LABEL_END)
             {
                 label[i] = '\0';
                 foundLabel = TRUE; /*will be used later*/
@@ -73,7 +77,7 @@ FileList *toBinary(FILE *fp, char *fileName)
             printf("weldp");
 
         i = 0;
-        if (*bit == symbolMarker)/*we met a sybol!*/
+        if (*bit == symbolMarker) /*we met a sybol!*/
         {
             bit++; /*skipping the dot!*/
             while (isLetter(*bit) == TRUE)
@@ -96,7 +100,7 @@ FileList *toBinary(FILE *fp, char *fileName)
             {
             case STRING:
                 bit++; /*skipping the "*/
-                while (*bit != '"')
+                while (*bit != '"')/*check how many "" you have*/
                 {
                     if (*bit == '\n')
                     {
@@ -110,16 +114,11 @@ FileList *toBinary(FILE *fp, char *fileName)
                 bit++;
                 oper1[i] = '\0';
 
-                /*
-
-                    WTF AM I DOING
-
-                    WITH THE OPERANDS?
-                */
+                dumpStr(oper,&IC);
 
                 if (foundLabel == FALSE)
                 {
-                    clearStr(label, MAXLABELSIZE);
+                    clearStr(label, MAX_LABEL_SIZE);
                     sprintf(label, "X DC: %d", DC); /*adding a dummy name*/
                 }
                 dataNode = addSymbolToList(dataHeader, label, stype, DC);
@@ -127,7 +126,7 @@ FileList *toBinary(FILE *fp, char *fileName)
                 break;
             case EXTERN:
             case ENTRY:
-                clearStr(label, MAXLABELSIZE);
+                clearStr(label, MAX_LABEL_SIZE);
                 /*collecting label, we ignore the first label*/
                 while (isLetter(*bit) == TRUE)
                 {
@@ -150,85 +149,99 @@ FileList *toBinary(FILE *fp, char *fileName)
                     }
                     bit++;
                 }
-                /*
 
-                WTF AM I DOING WITH OPERANDS
-
-                */
                 if (foundLabel == FALSE)
                 {
-                    clearStr(label, MAXLABELSIZE);
+                    clearStr(label, MAX_LABEL_SIZE);
                     sprintf(label, "X DC: %d", DC); /*adding a dummy name*/
                 }
 
                 dataNode = addSymbolToList(dataHeader, label, stype, DC);
-                DC = DC + dataLength(oper1) + 1;
+                dumpDataOpers(oper1,&DC);
+                DC = DC + 1;
                 break;
             }
             continue;
         }
 
-        
-        if(foundLabel==TRUE)/*if we have label, and still here, make it a code symbol*/
-            dataNode=addSymbolToList(dataHeader,label,CODE,IC);
- 
-        /*breaking here for a moment, we have the instruction part of the first pass*/
-
-
+        if (foundLabel == TRUE) /*if we have label, and still here, make it a code symbol*/
+            dataNode = addSymbolToList(dataHeader, label, CODE, IC);
 
         /* instruction label: opcode source-operand, target-operand
         label: opcode target-operand
-        label: opcode
-
-
-    */
-
-        /*
-             insturction LABEL will receive Instruction Counter
-         */
+        label: opcode*/
 
         pch = strtok(str, delimints); /*start strtok*/
-        operCount=countSpace(str);
-        switch (operCount)
+        spaceCount = countSpace(str);
+        if (foundLabel == TRUE) /*skipping labels*/
         {
-
-
-        case 0:
-            /* code */
-            break;
-            
-        case 1:
-            /* code */
-            break;
-            
-        }
-        if (foundLabel == TRUE) /*skiping label*/
             pch = strtok(NULL, delimints);
-
-
-        /*with or without the label, we have at max 3 words now, the only thing is if the , is a word for itself*/
-        while ((pch != NULL) && (skp != TRUE))
+            spaceCount--;
+        }
+        if (spaceCount > 2)
         {
-            if (isSignal(pch))
-            {
-                signal = TRUE;
-            }
-
-
-
-            pch = strtok(NULL, delimints);
+            printf("what??");
+            continue;
         }
-        skp = FALSE;
+        switch (spaceCount)
+        {
+        case 0: /*opcode*/
+            dumpOpCode(pch, IC);
+            break;
+
+        case 1: /*opcode oper1*/
+            strcpy(opcode, pch);
+            pch = strtok(NULL, delimints);
+            strcpy(oper1, pch);
+            break;
+
+        case 2:
+            /*opcode oper1, oper 2*/
+            strcpy(opcode, pch);
+            pch = strtok(NULL, delimints);
+            strcpy(oper1, pch);
+            oper1[strlen(oper1) - 1] = '\0'; /*skipping the ,*/
+            pch = strtok(NULL, delimints);
+            strcpy(oper2, pch);
+            break;
+        }
+
+        /*now we have the opcode, the two operators and the label if any,*/
+
+        /*keep an eye open for jmp jsr and bne*/
+
+        if (realOpCode(opcode) == -1) /*if opcode a real opcode*/
+            printf("nope, not right");
+
+        if (realOpCode(oper1) != -1 || realOpCode(oper2) != -1) /*if any operator is a name of an opecode*/
+            printf("nope, not right");
+
+        if (spaceCount != numOfOpers(realOpCode(opcode, table), table)) /*do we have more than required operators*/
+            printf("nope, not right");
+
+
+        /*
+             WTF AM I DOING WITH OPERANDS
+        */
     }
+
+    /*rewind(fp) / fseek(fptr, 0, SEEK_SET);
+
+    
+    and start the second pass
+    */
 
     if (foundErr == TRUE)
     {
         binaryFileNode->file = NULL;
-    }else
+    }
+    else
     {
+        addToData(dataHeader, IC);
         /*dump symbol tables*/
     }
     /*create .ent .ext*/
     freeList(header);
+    freeTable(table);
     return binaryFileNode; /*tochange*/
 }

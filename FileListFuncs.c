@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "prototypes.h"
-
+#include "helpers.h"
 
 /*
  * input: a pointer for a file node object
@@ -37,7 +36,6 @@ void addToList(FileList *header, FILE *fp, char *fileName)
         current_node->next->fileName = str;
     }
 }
-
 
 /*
  * input:a file node header
