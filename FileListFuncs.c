@@ -3,7 +3,6 @@
 #include <string.h>
 #include "helpers.h"
 
-
 /*
  * input: a pointer for a file node object
  * output: the node
@@ -37,7 +36,6 @@ void addToList(FileList *header, FILE *fp, char *fileName)
         current_node->next->fileName = str;
     }
 }
-
 
 /*
  * input:a file node header

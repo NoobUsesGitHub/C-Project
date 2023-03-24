@@ -12,7 +12,7 @@ FileList* macroDecoder(FILE *fp, char *fileName)
     bool macroCollectionStarted = FALSE, skp = FALSE;
     MacroList *header, *curMacro;
     constMacroList(&header);
-    char *pch = NULL, str[MAXLINESIZE];
+    char *pch = NULL, str[MAX_LINE_SIZE];
     char strNewName[strlen(fileName)];
 
     FileList *macroFileNode;

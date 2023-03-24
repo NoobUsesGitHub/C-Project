@@ -1,11 +1,11 @@
 #ifndef FILELISTFUNCS_H
 #define FILELISTFUNCS_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "helpers.h"
+#include "struct_h"
 
-/*fileListFuncs*/
 void constNode(FileList**);
 
 void addToList(FileList*, FILE*, char*);
@@ -13,4 +13,5 @@ void addToList(FileList*, FILE*, char*);
 void closeFileList(FileList*);
 
 void stringToFiles(int, char **, FileList**);
-#endif
+
+#endif // FILELISTFUNCS_H
