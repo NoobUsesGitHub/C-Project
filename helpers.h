@@ -6,15 +6,18 @@
 #include <string.h>
 #include "struct.h"
 
-/*helpers*/
-double hasher(char*);
+double hasher(char *);
 
-void clearStr(char*,int);
+void clearStr(char *, int);
 
-void printList(char**, int , FILE*);
+void printList(char **, int, FILE *);
 
-bool isLetter(char*);
+bool isLetter(char *);
 
-int dataLength(char*);
+int dataLength(char *);
 
-#endif
+char *opcodeToBinary(char *pch);
+
+int realOpCode(char *pch, HashTable table[]);
+
+#endif // HELPERS_H

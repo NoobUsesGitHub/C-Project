@@ -9,7 +9,7 @@ FileList *toBinary(FILE *fp, char *fileName)
     int IC = -1, DC = 0, wordCount = 0, spaceCount = 0; /*wordCount=L*/
     Stype stype = 0;
     bool skp = FALSE, foundSymbol = FALSE, foundErr = FALSE, foundLabel = FALSE;
-    char bit = ' ', label[MAXLABELSIZE], dataTester[7], opcode[5], oper1[MAXLABELSIZE], oper2[MAXLABELSIZE], *pch = NULL, str[MAXLINESIZE];
+    char bit = ' ', label[MAX_LABEL_SIZE], dataTester[7], opcode[5], oper1[MAX_LABEL_SIZE], oper2[MAX_LABEL_SIZE], *pch = NULL, str[MAX_LINE_SIZE];
     char strNewName[strlen(fileName)];
     Symbol *dataHeader, *dataNode;
 
@@ -39,22 +39,22 @@ FileList *toBinary(FILE *fp, char *fileName)
     {
         removeRedundantSpaces(str);
         IC++;
-        clearStr(label, MAXLABELSIZE); /*clearing label*/
+        clearStr(label, MAX_LABEL_SIZE); /*clearing label*/
         clearStr(dataTester, 7);
         clearStr(opcode, 5);
-        clearStr(oper1, MAXLABELSIZE);
-        clearStr(oper2, MAXLABELSIZE);
+        clearStr(oper1, MAX_LABEL_SIZE);
+        clearStr(oper2, MAX_LABEL_SIZE);
         i = 0;
         bit = str;
 
         /*checking for comment*/
-        if (*bit == comment)
+        if (*bit == COMMENT)
             continue; /*skiiiiip*/
 
         /*checking for a label*/
         while (isLetter(*bit) == TRUE)
         {
-            if (*bit == LABELEND)
+            if (*bit == LABEL_END)
             {
                 label[i] = '\0';
                 foundLabel = TRUE; /*will be used later*/
@@ -123,7 +123,7 @@ FileList *toBinary(FILE *fp, char *fileName)
 
                 if (foundLabel == FALSE)
                 {
-                    clearStr(label, MAXLABELSIZE);
+                    clearStr(label, MAX_LABEL_SIZE);
                     sprintf(label, "X DC: %d", DC); /*adding a dummy name*/
                 }
                 dataNode = addSymbolToList(dataHeader, label, stype, DC);
@@ -131,7 +131,7 @@ FileList *toBinary(FILE *fp, char *fileName)
                 break;
             case EXTERN:
             case ENTRY:
-                clearStr(label, MAXLABELSIZE);
+                clearStr(label, MAX_LABEL_SIZE);
                 /*collecting label, we ignore the first label*/
                 while (isLetter(*bit) == TRUE)
                 {
@@ -161,7 +161,7 @@ FileList *toBinary(FILE *fp, char *fileName)
                 */
                 if (foundLabel == FALSE)
                 {
-                    clearStr(label, MAXLABELSIZE);
+                    clearStr(label, MAX_LABEL_SIZE);
                     sprintf(label, "X DC: %d", DC); /*adding a dummy name*/
                 }
 

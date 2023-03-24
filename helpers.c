@@ -43,6 +43,7 @@ void clearStr(char *str, int size)
 */
 bool isLetter(char *bit)
 {
+    char c = *bit;
     return (*bit != '\n' && isspace(*bit) == 0) ? TRUE : FALSE;
 }
 
@@ -140,7 +141,7 @@ void dumpOpCode(char *pch, int IC)
 void initHashTable(HashTable* table[])
 {
     /*make not trash*/
-    int size=OPCODENUMBER,i=0;
+    int size=OPCODE_NUMBER,i=0;
     char *cmdArray[]={"mov", "cmp", "add", "sub", "not", "clr", "lea", "inc", "dec", "jmp", "bne", "red", "prn", "jsr", "rts", "stop"};
     int operAmount[]={2    ,   2  ,   2  ,    2 ,   1  ,   1  ,   2  ,   1  ,   1  ,   1  ,   1  ,   1  ,   1  ,   1  ,   0  ,   0 };
     table=calloc(size,sizeof(HashTable));
@@ -159,7 +160,7 @@ int realOpCode(char *pch,HashTable table[])
     double hash=hasher(pch);
     int place=-1;
     int i=0;
-    for(;i<OPCODENUMBER;i++)
+    for(;i<OPCODE_NUMBER;i++)
     {
         if(table[i].hash==hash)
             return table[i].place;
@@ -185,7 +186,7 @@ void addToData(Symbol *dataHeader, int IC)
 int numOfOpers(int opcode,HashTable *table)
 {
     int i=0;
-    for(;i<OPCODENUMBER;i++)
+    for(;i<OPCODE_NUMBER;i++)
         if(opcode==*table[i].place)
             return *table[i].numberOfOper;
     return 0;
