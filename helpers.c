@@ -33,7 +33,7 @@ void clearStr(char *str, int size)
     int i = size;
     while (i >= 0)
     {
-        str[i] = ' ';
+        str[i] = spaceChar;
     }
 }
 
@@ -70,7 +70,7 @@ int dataLength(char *str)
     int i = 0;
     while (*str != '\n' && isLetter(str) == TRUE)
     {
-        if (*str == ',')
+        if (*str == comma)
             i++;
         str++;
     }
@@ -86,7 +86,7 @@ int countSpace(char *str)
     int i = 0;
     while (*str != '\n' && isLetter(str) == TRUE)
     {
-        if (*str == ' ')
+        if (*str == spaceChar)
             i++;
         str++;
     }
@@ -102,7 +102,7 @@ void removeRedundantSpaces(char *str)
     {
         if (isspace(str[i]) == 0)
         {
-            if (i > 0 && str[i] == ',' && isspace(str[j - 1]))
+            if (i > 0 && str[i] == comma && isspace(str[j - 1]))
             {
                 str[j - 1] = str[i];
                 continue;
@@ -112,11 +112,11 @@ void removeRedundantSpaces(char *str)
         }
         else if (i > 0 && isspace(str[i - 1]) == 0)
         {
-            str[j] = ' ';
+            str[j] = spaceChar;
             j++;
         }
     }
-    if (str[j - 1] == ' ' || str[j - 1] == '\t')
+    if (str[j - 1] == spaceChar || str[j - 1] == '\t')
         j--;
     str[j] = '\0';
 }
@@ -125,8 +125,8 @@ void removeRedundantSpaces(char *str)
 will print it if it is a real opcode*/
 void dumpOpCode(char *pch, int IC)
 {
-    int opcode=realOpCode(pch);
-    if ( opcode>-1)
+    int opcode = realOpCode(pch);
+    if (opcode > -1)
     {
         printf("%d  %s", IC, opcodeToBinary(pch));
     }
@@ -136,37 +136,39 @@ void dumpOpCode(char *pch, int IC)
     }
 }
 
-
-void initHashTable(HashTable* table[])
+void initHashTable(HashTable *table[])
 {
     /*make not trash*/
-    int size=OPCODENUMBER,i=0;
-    char *cmdArray[]={"mov", "cmp", "add", "sub", "not", "clr", "lea", "inc", "dec", "jmp", "bne", "red", "prn", "jsr", "rts", "stop"};
-    int operAmount[]={2    ,   2  ,   2  ,    2 ,   1  ,   1  ,   2  ,   1  ,   1  ,   1  ,   1  ,   1  ,   1  ,   1  ,   0  ,   0 };
-    table=calloc(size,sizeof(HashTable));
-    for(;i<size;i++)
+    int size = OPCODENUMBER, i = 0;
+    char *cmdArray[] = {"mov", "cmp", "add", "sub", "not", "clr", "lea", "inc", "dec", "jmp", "bne", "red", "prn", "jsr", "rts", "stop"};
+    int operAmount[] = {2, 2, 2, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 0, 0};
+    table = calloc(size, sizeof(HashTable));
+    for (; i < size; i++)
     {
-        *table[i]->hash=hasher(*cmdArray[i]);
-        strcpy(*table[i]->key,*cmdArray[i]);
-        table[i]->place=i;        
-        table[i]->numberOfOper=operAmount[i];
+        *table[i]->hash = hasher(*cmdArray[i]);
+        strcpy(*table[i]->key, *cmdArray[i]);
+        table[i]->place = i;
+        table[i]->numberOfOper = operAmount[i];
     }
-
 }
 
-int realOpCode(char *pch,HashTable table[])
+/*
+    input: a string , the opcode hashtable
+    output: the opcode's place in the table
+
+*/
+int realOpCode(char *pch, HashTable table[])
 {
-    double hash=hasher(pch);
-    int place=-1;
-    int i=0;
-    for(;i<OPCODENUMBER;i++)
+    double hash = hasher(pch);
+    int place = -1;
+    int i = 0;
+    for (; i < OPCODENUMBER; i++)
     {
-        if(table[i].hash==hash)
+        if (table[i].hash == hash)
             return table[i].place;
     }
     return place;
 }
-
 
 /*
     input: the Symbol table, the final number of lines
@@ -174,27 +176,95 @@ int realOpCode(char *pch,HashTable table[])
 */
 void addToData(Symbol *dataHeader, int IC)
 {
-    while(dataHeader->next!=NULL)
+    while (dataHeader->next != NULL)
     {
-        if(dataHeader->type==DATA)
-            dataHeader->line=dataHeader->line+IC;
+        if (dataHeader->type == DATA)
+            dataHeader->line = dataHeader->line + IC;
         dataHeader++;
     }
 }
-
-int numOfOpers(int opcode,HashTable *table)
+/*
+    input: opcode and the hashtable of opcodes
+    output: the number of operators for that opcode
+*/
+int numOfOpers(int opcode, HashTable *table)
 {
-    int i=0;
-    for(;i<OPCODENUMBER;i++)
-        if(opcode==*table[i].place)
+    int i = 0;
+    for (; i < OPCODENUMBER; i++)
+        if (opcode == *table[i].place)
             return *table[i].numberOfOper;
-    return 0;
+    return -1;
 }
 
-char* opcodeToBinary(char *pch)
+void dumpDataOpers(char *str, int *DC)
+{
+    int size = strlen(str);
+    char temp[size];
+    char binaryChar[14];
+    int value, i = 0;
+    while (*str != '\n')
+    {
+        /*will run on the string until i finish the number or meet "," */
+        if (*str == comma)
+        {
+            value = atoi(temp);
+            intToBinary(binaryChar, value);
+            printf("%d  %s", *IC, binaryChar);
+            *DC++;
+            clearStr(temp, size);
+        }
+        else
+        {
+            temp[i] = *str;
+            str++;
+            i++;
+        }
+    }
+    if (*temp != spaceChar)
+    {
+
+        value = atoi(temp);
+        intToBinary(binaryChar, value);
+        printf("%d  %s", *DC, binaryChar);
+        *DC++;
+        clearStr(temp, size);
+        *DC++;
+    }
+}
+}
+
+char *opcodeToBinary(char *pch)
 {
 
-
-
     return "\0";
+}
+
+void dumpStr(char *oper, int *DC)
+{
+    int size = strlen(oper);
+    char binaryChar[14];
+    int value;
+    while (*oper != '\0')
+    {
+        value = (int)(*oper);
+        intToBinary(binaryChar, value);
+        printf("%d  %s", *DC, binaryChar);
+        *IC++;
+        oper++;
+    }
+    printf("%d  %s", *DC, binaryChar);
+    *DC++;
+}
+
+void intToBinary(char *binaryChar, int value)
+{
+    /*make not shit*/
+    int i;
+    for (i = 13; i >= 0; i--)
+    {
+        binaryChar[i] = (value & 1) + '0';
+        value >>= 1;
+    }
+    binaryChar[0] = (value < 0) ? '1' : '0';
+    binaryChar[14] = '\0';
 }

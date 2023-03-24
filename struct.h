@@ -7,6 +7,8 @@
 #define OPCODENUMBER 16
 #define LABELEND ':'
 #define comment ';'
+#define comma ','
+#define spaceChar ' '
 #define symbolMarker '.' /* hanhaya- direction? idk*/
 #define stringMarker '"' /* "abcd"*/
 #define delimints "    \t \f \r"

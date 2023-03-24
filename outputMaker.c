@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "helpers.h"
-FileList* toOutput(FILE *fp, char *fileName)
+FileList *toOutput(FILE *fp, char *fileName)
 {
   char c = ' ';
   char *change = "ob\0";
@@ -32,6 +32,13 @@ FileList* toOutput(FILE *fp, char *fileName)
     return outputFile;
   }
   c = (char)fgetc(fp);
+
+  while (c != '\n' && c != EOF)
+  {
+    fputc(c, outputFile->file);
+    c = (char)fgetc(fp);
+  }
+  
   while (c != EOF)
   {
     if (sawTab == TRUE)
@@ -44,13 +51,13 @@ FileList* toOutput(FILE *fp, char *fileName)
       {
         c = binaryTranslate(c);
       }
-      fputc(c,outputFile->file);
+      fputc(c, outputFile->file);
     }
     else
     {
       if (c == '\t')
         sawTab = TRUE;
-      fputc(c,outputFile->file);
+      fputc(c, outputFile->file);
     }
     c = (char)fgetc(fp);
   }
