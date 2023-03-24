@@ -1,3 +1,5 @@
+#ifndef FILELISTFUNCS_H
+#define FILELISTFUNCS_H
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -11,3 +13,4 @@ void addToList(FileList*, FILE*, char*);
 void closeFileList(FileList*);
 
 void stringToFiles(int, char **, FileList**);
+#endif

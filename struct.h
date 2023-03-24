@@ -1,3 +1,6 @@
+#ifndef STRUCT_H
+#define STRUCT_H
+
 #include <stdio.h>
 #define MAXLINESIZE 81
 #define MAXLABELSIZE 31
@@ -44,3 +47,5 @@ typedef struct HashTable {
 }HashTable;
 
 typedef enum bool{TRUE=1, FALSE= 0}bool; 
+
+#endif

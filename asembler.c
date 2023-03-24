@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <string.h>
 #include "helpers.h"
+#include "outputMaker.h"
+#include "binaryMaker.h"
+#include "macroDecoder.h"
 
 
 int main(int argc, char *argv[])

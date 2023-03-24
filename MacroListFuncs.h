@@ -1,3 +1,6 @@
+#ifndef MACROLISTFUNCS_H
+#define MACROLISTFUNCS_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -18,3 +21,4 @@ MacroList* addMacroToList(MacroList*, char*, char**);
 
 void constMacroList(MacroList**);
 
+#endif
