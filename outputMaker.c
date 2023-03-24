@@ -1,9 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include "prototypes.h"
-
-#define coment ';'
-#define delimints "    \t \f \r"
+#include "helpers.h"
 FileList* toOutput(FILE *fp, char *fileName)
 {
   char c = ' ';

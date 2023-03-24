@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "prototypes.h"
+#include "helpers.h"
 
 /*
 input: a string that we want to hash
@@ -93,31 +93,108 @@ int countSpace(char *str)
     return i + 1;
 }
 
-
 void removeRedundantSpaces(char *str)
 {
-  int i, j, len;
-  len = strlen(str); /*to change*/
-  j = 0;
-  for (i = 0; i < len; i++)
-  {
-    if (isspace(str[i]) == 0)
+    int i, j, len;
+    len = strlen(str); /*to change*/
+    j = 0;
+    for (i = 0; i < len; i++)
     {
-      if (i > 0 && str[i] == ',' && isspace(str[j - 1]))
-      {
-        str[j - 1] = str[i];
-        continue;
-      }
-      str[j] = str[i];
-      j++;
+        if (isspace(str[i]) == 0)
+        {
+            if (i > 0 && str[i] == ',' && isspace(str[j - 1]))
+            {
+                str[j - 1] = str[i];
+                continue;
+            }
+            str[j] = str[i];
+            j++;
+        }
+        else if (i > 0 && isspace(str[i - 1]) == 0)
+        {
+            str[j] = ' ';
+            j++;
+        }
     }
-    else if (i > 0 && isspace(str[i - 1]) == 0)
+    if (str[j - 1] == ' ' || str[j - 1] == '\t')
+        j--;
+    str[j] = '\0';
+}
+
+/*input: an opcode, and the line number
+will print it if it is a real opcode*/
+void dumpOpCode(char *pch, int IC)
+{
+    int opcode=realOpCode(pch);
+    if ( opcode>-1)
     {
-      str[j] = ' ';
-      j++;
+        printf("%d  %s", IC, opcodeToBinary(pch));
     }
-  }
-  if (str[j - 1] == ' ' || str[j - 1] == '\t')
-    j--;
-  str[j] = '\0';
+    else
+    {
+        printf("not a real opcode!!!");
+    }
+}
+
+
+void initHashTable(HashTable* table[])
+{
+    /*make not trash*/
+    int size=OPCODENUMBER,i=0;
+    char *cmdArray[]={"mov", "cmp", "add", "sub", "not", "clr", "lea", "inc", "dec", "jmp", "bne", "red", "prn", "jsr", "rts", "stop"};
+    int operAmount[]={2    ,   2  ,   2  ,    2 ,   1  ,   1  ,   2  ,   1  ,   1  ,   1  ,   1  ,   1  ,   1  ,   1  ,   0  ,   0 };
+    table=calloc(size,sizeof(HashTable));
+    for(;i<size;i++)
+    {
+        *table[i]->hash=hasher(*cmdArray[i]);
+        strcpy(*table[i]->key,*cmdArray[i]);
+        table[i]->place=i;        
+        table[i]->numberOfOper=operAmount[i];
+    }
+
+}
+
+int realOpCode(char *pch,HashTable table[])
+{
+    double hash=hasher(pch);
+    int place=-1;
+    int i=0;
+    for(;i<OPCODENUMBER;i++)
+    {
+        if(table[i].hash==hash)
+            return table[i].place;
+    }
+    return place;
+}
+
+
+/*
+    input: the Symbol table, the final number of lines
+    will add IC to all data lines (step 17)
+*/
+void addToData(Symbol *dataHeader, int IC)
+{
+    while(dataHeader->next!=NULL)
+    {
+        if(dataHeader->type==DATA)
+            dataHeader->line=dataHeader->line+IC;
+        dataHeader++;
+    }
+}
+
+int numOfOpers(int opcode,HashTable *table)
+{
+    int i=0;
+    for(;i<OPCODENUMBER;i++)
+        if(opcode==*table[i].place)
+            return *table[i].numberOfOper;
+    return 0;
+}
+
+char* opcodeToBinary(char *pch)
+{
+
+
+
+    return "\0";
 }

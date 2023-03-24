@@ -1,6 +1,7 @@
 #include <stdio.h>
 #define MAXLINESIZE 81
 #define MAXLABELSIZE 31
+#define OPCODENUMBER 16
 #define LABELEND ':'
 #define comment ';'
 #define symbolMarker '.' /* hanhaya- direction? idk*/
@@ -34,5 +35,12 @@ typedef struct Symbol
 }Symbol;
 
 typedef enum Stype{CODE=0, DATA=1,EXTERN=2,ENTRY=3,STRING=4}Stype;
+
+typedef struct HashTable {
+    char *key;
+    double hash;
+    int place;
+    int numberOfOper;
+}HashTable;
 
 typedef enum bool{TRUE=1, FALSE= 0}bool; 

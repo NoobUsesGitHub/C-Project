@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-#include "prototypes.h"
+#include "helpers.h"
 
 #define coment ';'
 #define delimints "    \t \f \r"
