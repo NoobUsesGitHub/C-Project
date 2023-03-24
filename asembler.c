@@ -5,14 +5,13 @@
 #include "binaryMaker.h"
 #include "macroDecoder.h"
 
-
 int main(int argc, char *argv[])
 {
   int i = 0;
-  FileList *tempNode = NULL;
+  FileList *tempInputNode = NULL;
   FileList *inputFilesHead = NULL;
   FileList *macroFilesHead = NULL;
-  FileList *tempMacroNode = NULL;
+  FileList *tempOutput = NULL;
   FileList *binaryFilesHead = NULL;
   FileList *outputFilesHead = NULL;
 
@@ -26,48 +25,48 @@ int main(int argc, char *argv[])
 
   stringToFiles(argc, argv, &inputFilesHead);
 
-  tempNode = inputFilesHead;
+  tempInputNode = inputFilesHead;
   constNode(&macroFilesHead);
-  tempMacroNode = macroFilesHead;
+  tempOutput = macroFilesHead;
   for (i = 1; i <= argc - 1; i++)
   {
-    tempMacroNode = macroDecoder(tempNode->file, tempNode->fileName);
-    if (tempMacroNode->file == NULL) /*assuming that the Macro decoder has found some error and finished early, after printing them*/
+    tempOutput = macroDecoder(tempInputNode->file, tempInputNode->fileName);
+    if (tempOutput->file == NULL) /*assuming that the Macro decoder has found some error and finished early, after printing them*/
     {
       return 1;
     }
-    addToList(macroFilesHead, tempMacroNode->file, tempMacroNode->fileName);
-    tempNode = tempNode->next; /*going forward with the list*/
+    addToList(macroFilesHead, tempOutput->file, tempOutput->fileName);
+    tempInputNode = tempInputNode->next; /*going forward with the list*/
   }
   closeFileList(inputFilesHead); /*to do- check this really cleans the whole file list*/
 
-  tempNode = macroFilesHead;
+  tempInputNode = macroFilesHead;
   constNode(&binaryFilesHead);
-  tempMacroNode = binaryFilesHead;
+  tempOutput = binaryFilesHead;
   for (i = 1; i <= argc - 1; i++)
   {
-    tempMacroNode = toBinary(tempNode->file, tempNode->fileName);
-    if (tempMacroNode->file == NULL) /*assuming that the Macro decoder has found some error and finished early, after printing them*/
+    tempOutput = toBinary(tempInputNode->file, tempInputNode->fileName);
+    if (tempOutput->file == NULL) /*assuming that the binary file maker has found some error and finished early, after printing them*/
     {
       return 1;
     }
-    addToList(binaryFilesHead, tempMacroNode->file, tempMacroNode->fileName);
-    tempNode = tempNode->next; /*going forward with the list*/
+    addToList(binaryFilesHead, tempOutput->file, tempOutput->fileName);
+    tempInputNode = tempInputNode->next; /*going forward with the list*/
   }
   closeFileList(macroFilesHead);
 
-  tempNode = macroFilesHead;
+  tempInputNode = macroFilesHead;
   constNode(&outputFilesHead);
-  tempMacroNode = outputFilesHead;
+  tempOutput = outputFilesHead;
   for (i = 1; i <= argc - 1; i++)
   {
-    tempMacroNode = toOutput(tempNode->file, tempNode->fileName);
-    if (tempMacroNode->file == NULL) /*assuming that the Macro decoder has found some error and finished early, after printing them*/
+    tempOutput = toOutput(tempInputNode->file, tempInputNode->fileName);
+    if (tempOutput->file == NULL) /*assuming that the output maker has found some error and finished early, after printing them*/
     {
       return 1;
     }
-    addToList(outputFilesHead, tempMacroNode->file, tempMacroNode->fileName);
-    tempNode = tempNode->next; /*going forward with the list*/
+    addToList(outputFilesHead, tempOutput->file, tempOutput->fileName);
+    tempInputNode = tempInputNode->next; /*going forward with the list*/
   }
   closeFileList(outputFilesHead);
   return 1;

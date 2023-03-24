@@ -184,6 +184,7 @@ void addToData(Symbol *dataHeader, int IC)
         dataHeader++;
     }
 }
+
 /*
     input: opcode and the hashtable of opcodes
     output: the number of operators for that opcode
@@ -197,6 +198,11 @@ int numOfOpers(int opcode, HashTable *table)
     return -1;
 }
 
+
+/*
+    input: a string and the Data counter
+    will print the individual numbers as binary and increase the DC
+*/
 void dumpDataOpers(char *str, int *DC)
 {
     int size = strlen(str);
@@ -232,14 +238,11 @@ void dumpDataOpers(char *str, int *DC)
         *DC++;
     }
 }
-}
 
-char *opcodeToBinary(char *pch)
-{
-
-    return "\0";
-}
-
+/*
+    input: a string and the Data counter
+    will print the individual letters as binary and increase the DC
+*/
 void dumpStr(char *oper, int *DC)
 {
     int size = strlen(oper);
@@ -257,6 +260,10 @@ void dumpStr(char *oper, int *DC)
     *DC++;
 }
 
+/*
+    input: a placeholder string and a number to change to binary
+    will leave the number in binary (in 12 bits) in the placeholder str
+*/
 void intToBinary(char *binaryChar, int value)
 {
     /*make not shit*/
@@ -268,4 +275,15 @@ void intToBinary(char *binaryChar, int value)
     }
     binaryChar[0] = (value < 0) ? '1' : '0';
     binaryChar[14] = '\0';
+}
+
+/* 
+    not done yet
+    general Idea- will recieve label, opcode,operator1 operator2 and then code them up to binary 
+
+*/
+char *opcodeToBinary(char *pch)
+{
+
+    return "\0";
 }
