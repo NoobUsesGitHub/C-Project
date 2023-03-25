@@ -2,9 +2,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "helpers.h"
-
-#define coment ';'
-#define delimints "    \t \f \r"
+#include "MacroListFuncs.h"
 
 
 FileList* macroDecoder(FILE *fp, char *fileName)
