@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include "helpers.h"
+#include "struct.h"
 
 /*
 input: a string that we want to hash
@@ -30,10 +32,10 @@ double hasher(char *str)
 */
 void clearStr(char *str, int size)
 {
-    int i = size;
-    while (i >= 0)
+    int i;
+    for (i = size - 1; i >= 0; i--)
     {
-        str[i] = spaceChar;
+        str[i] = SPACE_CHAR;
     }
 }
 
@@ -68,14 +70,14 @@ void printList(char **str, int size, FILE *fp)
 */
 int dataLength(char *str)
 {
-    int i = 0;
+    int character_count = 0;
     while (*str != '\n' && isLetter(str) == TRUE)
     {
-        if (*str == comma)
-            i++;
+        if (*str == COMMA)
+            character_count++;
         str++;
     }
-    return i + 1;
+    return character_count + 1;
 }
 
 /*
@@ -87,7 +89,7 @@ int countSpace(char *str)
     int i = 0;
     while (*str != '\n' && isLetter(str) == TRUE)
     {
-        if (*str == spaceChar)
+        if (*str == SPACE_CHAR)
             i++;
         str++;
     }
@@ -103,7 +105,7 @@ void removeRedundantSpaces(char *str)
     {
         if (isspace(str[i]) == 0)
         {
-            if (i > 0 && str[i] == comma && isspace(str[j - 1]))
+            if (i > 0 && str[i] == COMMA && isspace(str[j - 1]))
             {
                 str[j - 1] = str[i];
                 continue;
@@ -113,20 +115,21 @@ void removeRedundantSpaces(char *str)
         }
         else if (i > 0 && isspace(str[i - 1]) == 0)
         {
-            str[j] = spaceChar;
+            str[j] = SPACE_CHAR;
             j++;
         }
     }
-    if (str[j - 1] == spaceChar || str[j - 1] == '\t')
+    if (str[j - 1] == SPACE_CHAR || str[j - 1] == '\t')
         j--;
     str[j] = '\0';
 }
 
 /*input: an opcode, and the line number
 will print it if it is a real opcode*/
+/*
 void dumpOpCode(char *pch, int *IC, int mode)
 {
-    int opcode = realOpCode(pch);
+    int opcode = realOpCode(pch, table);
     if (opcode > -1 && mode != SIMULATION)
     {
         printf("%d  %s", IC, opcodeToBinary(pch));
@@ -137,6 +140,7 @@ void dumpOpCode(char *pch, int *IC, int mode)
     }
     *IC++;
 }
+*/
 
 void initHashTable(HashTable *table[])
 {
@@ -153,6 +157,8 @@ void initHashTable(HashTable *table[])
         table[i]->numberOfOper = operAmount[i];
     }
 }
+
+void initOperatorsTable(Operator )
 
 /*
     input: a string , the opcode hashtable
@@ -212,7 +218,7 @@ void dumpDataOpers(char *str, int *DC, int mode)
     while (*str != '\n')
     {
         /*will run on the string until i finish the number or meet "," */
-        if (*str == comma)
+        if (*str == COMMA)
         {
             value = atoi(temp);
             intToBinary(binaryChar, value);
@@ -228,7 +234,7 @@ void dumpDataOpers(char *str, int *DC, int mode)
             i++;
         }
     }
-    if (*temp != spaceChar)
+    if (*temp != SPACE_CHAR)
     {
 
         value = atoi(temp);
@@ -250,7 +256,7 @@ void dumpStr(char *oper, int *DC, int mode)
     int size = strlen(oper);
     char binaryChar[14];
     int value;
-    while (*oper != '\0'&&*oper != '\n')
+    while (*oper != '\0' && *oper != '\n')
     {
         value = (int)(*oper);
         intToBinary(binaryChar, value);
@@ -304,22 +310,19 @@ int realRegister(char *str)
 
 */
 
-void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, int opersCnt, int *IC, int mode,HashTable table[])
+void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, int opersCnt, int *IC, int mode, HashTable table[])
 {
-    int adTypeOper1=0,adTypeOper2=0;
+    int adTypeOper1 = 0, adTypeOper2 = 0;
     if (opersCnt != numOfOpers(realOpCode(opcode, table), table)) /*do we have more than required operators*/
         printf("nope, not right");
 
     /*take the types of two opers*/
-    adTypeOper1=checkAddressType(oper1);
-    adTypeOper2=checkAddressType(oper2);
-    if(isAddTypeCorrect(opcode,adTypeOper1,adTypeOper2)==FALSE)
-        printf("incorrect address type for one of the operators for %s in %d",opcode,*IC);
+    adTypeOper1 = checkAddressType(oper1);
+    adTypeOper2 = checkAddressType(oper2);
+    if (isAddTypeCorrect(opcode, adTypeOper1, adTypeOper2) == FALSE)
+        printf("incorrect address type for one of the operators for %s in %d", opcode, *IC);
     /*check if that's in the allowed list*/
     /*print the label binary*/
     /*print the opcode binary*/
     /*print the opers binary*/
-
-
-
 }

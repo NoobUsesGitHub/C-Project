@@ -11,6 +11,37 @@
 #define symbolMarker '.' /* hanhaya- direction? idk*/
 #define stringMarker '"' /* "abcd"*/
 #define delimints "    \t \f \r"
+#define SPACE_CHAR ' '
+#define COMMA ','
+
+typedef enum OperatorType
+{
+    MOV = 0,
+    CMP,
+    ADD,
+    SUB,
+    NOT,
+    CLR,
+    LEA,
+    INC,
+    DEC,
+    JMP,
+    BNE,
+    RED,
+    PRN,
+    JSR,
+    RTS,
+    STOP
+} OperatorType;
+
+typedef struct Operator
+{
+    OperatorType type;
+    int num_of_operands;
+    /*shitot miun*/
+    int src_addressing_methods[4];
+    int dst_addressing_methods[4];
+} Operator;
 
 typedef struct FileList
 {
@@ -46,6 +77,7 @@ typedef struct Symbol
     struct Symbol *next;
 } Symbol;
 
+/*
 typedef struct HashTable
 {
     char *key;
@@ -53,6 +85,7 @@ typedef struct HashTable
     int place;
     int numberOfOper;
 } HashTable;
+*/
 
 typedef enum bool
 {

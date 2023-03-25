@@ -24,7 +24,7 @@ int countSpace(char*);
 
 void removeRedundantSpaces(char *);
 
-void dumpOpCode(char*, int);
+/*void dumpOpCode(char *pch, int *IC, int mode);*/
 
 void initHashTable(HashTable**);
 
@@ -38,6 +38,6 @@ void dumpStr(char*, int*);
 
 void intToBinary(char*,int);
 
-char*opcodeToBinary(char*);
+char *opcodeToBinary(char*);
 
 #endif // HELPERS_H

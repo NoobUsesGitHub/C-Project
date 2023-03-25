@@ -4,9 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "helpers.h"
+#include "struct.h"
 
-/*MacroListFuncs*/
 void constMacroList(MacroList**);
 
 void freeList(MacroList*);
@@ -19,6 +18,4 @@ int dumpIfexistsInMacro(MacroList*, double,FILE*);
 
 MacroList* addMacroToList(MacroList*, char*, char**);
 
-void constMacroList(MacroList**);
-
-#endif
+#endif // MACROLISTFUNCS_H
