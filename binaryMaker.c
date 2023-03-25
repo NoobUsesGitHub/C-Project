@@ -1,15 +1,16 @@
 #include <stdio.h>
 #include <string.h>
 #include "helpers.h"
+#include "binaryMaker.h"
 
 FileList *toBinary(FILE *fp, char *fileName)
 {
     HashTable table[16];
     initHashTable(&table);
-    int IC = -1, DC = 0, wordCount = 0, spaceCount = 0; /*wordCount=L*/
+    int IC = -1, DC = 0, wordCount = 0, spaceCount = 0,i=0; /*wordCount=L*/
     Stype stype = 0;
     bool skp = FALSE, foundSymbol = FALSE, foundErr = FALSE, foundLabel = FALSE;
-    char bit = ' ', label[MAX_LABEL_SIZE], dataTester[7], opcode[5], oper1[MAX_LABEL_SIZE], oper2[MAX_LABEL_SIZE], *pch = NULL, str[MAX_LINE_SIZE];
+    char* bit=NULL, label[MAX_LABEL_SIZE], dataTester[7], opcode[5], oper1[MAX_LABEL_SIZE], oper2[MAX_LABEL_SIZE], *pch = NULL, str[MAX_LINE_SIZE];
     char strNewName[strlen(fileName)];
     Symbol *dataHeader, *dataNode;
 
@@ -52,7 +53,7 @@ FileList *toBinary(FILE *fp, char *fileName)
             continue; /*skiiiiip*/
 
         /*checking for a label*/
-        while (isLetter(*bit) == TRUE)
+        while (isLetter(bit) == TRUE)
         {
             if (*bit == LABEL_END)
             {
@@ -77,16 +78,16 @@ FileList *toBinary(FILE *fp, char *fileName)
 
         /*jumping for the next word*/
         /*checking for symbols first*/
-        while (isLetter(*bit) == FALSE)
+        while (isLetter(bit) == FALSE)
             bit++;
-        if (*bit == '\0' || bit != '\n')
+        if (*bit == '\0' || *bit != '\n')
             printf("weldp");
 
         i = 0;
         if (*bit == symbolMarker) /*we met a sybol!*/
         {
             bit++; /*skipping the dot!*/
-            while (isLetter(*bit) == TRUE)
+            while (isLetter(bit) == TRUE)
             {
                 dataTester[i] = *bit;
                 i++;
@@ -95,7 +96,7 @@ FileList *toBinary(FILE *fp, char *fileName)
             stype = checkSymbolType(dataTester);
 
             /*jumping for the next word*/
-            while (isLetter(*bit) == TRUE)
+            while (isLetter(bit) == TRUE)
                 bit++;
 
             if (*bit == '\0' || bit != '\n')
@@ -120,7 +121,7 @@ FileList *toBinary(FILE *fp, char *fileName)
                 bit++;
                 oper1[i] = '\0';
 
-                dumpStr(oper, &IC, SIMULATION);
+                dumpStr(oper1, &IC, SIMULATION);
 
                 if (foundLabel == FALSE)
                 {
@@ -134,7 +135,7 @@ FileList *toBinary(FILE *fp, char *fileName)
             case ENTRY:
                 clearStr(label, MAX_LABEL_SIZE);
                 /*collecting label, we ignore the first label*/
-                while (isLetter(*bit) == TRUE)
+                while (isLetter(bit) == TRUE)
                 {
                     label[i] = *bit;
                     i++;
@@ -148,7 +149,7 @@ FileList *toBinary(FILE *fp, char *fileName)
                 i = 0;
                 while (*bit != '\n')
                 {
-                    if (isLetter(*bit) == TRUE)
+                    if (isLetter(bit) == TRUE)
                     {
                         oper1[i] = *bit;
                         i++;

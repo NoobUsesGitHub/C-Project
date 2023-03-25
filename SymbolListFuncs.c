@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "helpers.h"
+#include "SymbolListFuncs.h"
 
 /*
  * input: a pointer for null macro node object
