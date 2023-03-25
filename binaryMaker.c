@@ -2,11 +2,12 @@
 #include <string.h>
 #include "helpers.h"
 #include "binaryMaker.h"
+#include "struct.h"
 
 FileList *toBinary(FILE *fp, char *fileName)
 {
-    HashTable table[16];
-    initHashTable(&table);
+    Operator *op_table = createOperatorsTable();
+
     int IC = -1, DC = 0, wordCount = 0, spaceCount = 0,i=0; /*wordCount=L*/
     Stype stype = 0;
     bool skp = FALSE, foundSymbol = FALSE, foundErr = FALSE, foundLabel = FALSE;
@@ -36,7 +37,7 @@ FileList *toBinary(FILE *fp, char *fileName)
         return binaryFileNode;
     }
 
-    while (fgets(str, 85, fp) != NULL) /*first pass*/
+    while (fgets(str, MAX_LINE_SIZE, fp) != NULL) /*first pass*/
     {
         removeRedundantSpaces(str);
         IC++;
@@ -67,7 +68,7 @@ FileList *toBinary(FILE *fp, char *fileName)
         if (foundLabel == FALSE)
         {
             bit = str;       /*reseting point*/
-            clearStr(label); /*clearing label*/
+            clearStr(label,MAX_LABEL_SIZE); /*clearing label*/
         }
         else
         {
@@ -252,6 +253,6 @@ FileList *toBinary(FILE *fp, char *fileName)
         go to second pass*/
 
     freeList(header);
-    freeTable(table);
+    deleteOperatorsTable(op_table);
     return binaryFileNode; /*tochange*/
 }

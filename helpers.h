@@ -8,6 +8,8 @@
 
 Operator *createOperatorsTable();
 
+void deleteOperatorsTable(Operaotr*);
+
 double hasher(char *);
 
 void clearStr(char *, int);
