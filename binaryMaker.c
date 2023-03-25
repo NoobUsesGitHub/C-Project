@@ -53,7 +53,7 @@ FileList *toBinary(FILE *fp, char *fileName)
             continue; /*skiiiiip*/
 
         /*checking for a label*/
-        while (isLetter(*bit) == TRUE)
+        while (isLetter(bit) == TRUE)
         {
             if (*bit == LABEL_END)
             {
@@ -78,7 +78,7 @@ FileList *toBinary(FILE *fp, char *fileName)
 
         /*jumping for the next word*/
         /*checking for symbols first*/
-        while (isLetter(*bit) == FALSE)
+        while (isLetter(bit) == FALSE)
             bit++;
         if (*bit == '\0' || *bit != '\n')
             printf("weldp");
@@ -87,7 +87,7 @@ FileList *toBinary(FILE *fp, char *fileName)
         if (*bit == symbolMarker) /*we met a sybol!*/
         {
             bit++; /*skipping the dot!*/
-            while (isLetter(*bit) == TRUE)
+            while (isLetter(bit) == TRUE)
             {
                 dataTester[i] = *bit;
                 i++;
@@ -96,7 +96,7 @@ FileList *toBinary(FILE *fp, char *fileName)
             stype = checkSymbolType(dataTester);
 
             /*jumping for the next word*/
-            while (isLetter(*bit) == TRUE)
+            while (isLetter(bit) == TRUE)
                 bit++;
 
             if (*bit == '\0' || bit != '\n')
@@ -135,7 +135,7 @@ FileList *toBinary(FILE *fp, char *fileName)
             case ENTRY:
                 clearStr(label, MAX_LABEL_SIZE);
                 /*collecting label, we ignore the first label*/
-                while (isLetter(*bit) == TRUE)
+                while (isLetter(bit) == TRUE)
                 {
                     label[i] = *bit;
                     i++;
@@ -149,7 +149,7 @@ FileList *toBinary(FILE *fp, char *fileName)
                 i = 0;
                 while (*bit != '\n')
                 {
-                    if (isLetter(*bit) == TRUE)
+                    if (isLetter(bit) == TRUE)
                     {
                         oper1[i] = *bit;
                         i++;
