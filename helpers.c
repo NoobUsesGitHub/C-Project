@@ -124,10 +124,10 @@ void removeRedundantSpaces(char *str)
 
 /*input: an opcode, and the line number
 will print it if it is a real opcode*/
-void dumpOpCode(char *pch, int IC)
+void dumpOpCode(char *pch, int *IC, int mode)
 {
     int opcode = realOpCode(pch);
-    if (opcode > -1)
+    if (opcode > -1 && mode != SIMULATION)
     {
         printf("%d  %s", IC, opcodeToBinary(pch));
     }
@@ -135,16 +135,17 @@ void dumpOpCode(char *pch, int IC)
     {
         printf("not a real opcode!!!");
     }
+    *IC++;
 }
 
 void initHashTable(HashTable *table[])
 {
     /*make not trash*/
-    int size=OPCODE_NUMBER,i=0;
-    char *cmdArray[]={"mov", "cmp", "add", "sub", "not", "clr", "lea", "inc", "dec", "jmp", "bne", "red", "prn", "jsr", "rts", "stop"};
-    int operAmount[]={2    ,   2  ,   2  ,    2 ,   1  ,   1  ,   2  ,   1  ,   1  ,   1  ,   1  ,   1  ,   1  ,   1  ,   0  ,   0 };
-    table=calloc(size,sizeof(HashTable));
-    for(;i<size;i++)
+    int size = OPCODE_NUMBER, i = 0;
+    char *cmdArray[] = {"mov", "cmp", "add", "sub", "not", "clr", "lea", "inc", "dec", "jmp", "bne", "red", "prn", "jsr", "rts", "stop"};
+    int operAmount[] = {2, 2, 2, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 0, 0};
+    table = calloc(size, sizeof(HashTable));
+    for (; i < size; i++)
     {
         *table[i]->hash = hasher(*cmdArray[i]);
         strcpy(*table[i]->key, *cmdArray[i]);
@@ -160,10 +161,10 @@ void initHashTable(HashTable *table[])
 */
 int realOpCode(char *pch, HashTable table[])
 {
-    double hash=hasher(pch);
-    int place=-1;
-    int i=0;
-    for(;i<OPCODE_NUMBER;i++)
+    double hash = hasher(pch);
+    int place = -1;
+    int i = 0;
+    for (; i < OPCODE_NUMBER; i++)
     {
         if (table[i].hash == hash)
             return table[i].place;
@@ -191,19 +192,18 @@ void addToData(Symbol *dataHeader, int IC)
 */
 int numOfOpers(int opcode, HashTable *table)
 {
-    int i=0;
-    for(;i<OPCODE_NUMBER;i++)
-        if(opcode==*table[i].place)
+    int i = 0;
+    for (; i < OPCODE_NUMBER; i++)
+        if (opcode == *table[i].place)
             return *table[i].numberOfOper;
     return -1;
 }
-
 
 /*
     input: a string and the Data counter
     will print the individual numbers as binary and increase the DC
 */
-void dumpDataOpers(char *str, int *DC)
+void dumpDataOpers(char *str, int *DC, int mode)
 {
     int size = strlen(str);
     char temp[size];
@@ -216,7 +216,8 @@ void dumpDataOpers(char *str, int *DC)
         {
             value = atoi(temp);
             intToBinary(binaryChar, value);
-            printf("%d  %s", *IC, binaryChar);
+            if (mode != SIMULATION)
+                printf("%d  %s", *DC, binaryChar);
             *DC++;
             clearStr(temp, size);
         }
@@ -232,7 +233,8 @@ void dumpDataOpers(char *str, int *DC)
 
         value = atoi(temp);
         intToBinary(binaryChar, value);
-        printf("%d  %s", *DC, binaryChar);
+        if (mode != SIMULATION)
+            printf("%d  %s", *DC, binaryChar);
         *DC++;
         clearStr(temp, size);
         *DC++;
@@ -243,7 +245,7 @@ void dumpDataOpers(char *str, int *DC)
     input: a string and the Data counter
     will print the individual letters as binary and increase the DC
 */
-void dumpStr(char *oper, int *DC)
+void dumpStr(char *oper, int *DC, int mode)
 {
     int size = strlen(oper);
     char binaryChar[14];
@@ -252,8 +254,9 @@ void dumpStr(char *oper, int *DC)
     {
         value = (int)(*oper);
         intToBinary(binaryChar, value);
-        printf("%d  %s", *DC, binaryChar);
-        *IC++;
+        if (mode != SIMULATION)
+            printf("%d  %s", *DC, binaryChar);
+        *DC++;
         oper++;
     }
     printf("%d  %s", *DC, binaryChar);
@@ -277,13 +280,40 @@ void intToBinary(char *binaryChar, int value)
     binaryChar[14] = '\0';
 }
 
-/* 
+/*
+    input: a string
+    output: the number of register it is if it exists, if not, -1
+*/
+int realRegister(char *str)
+{
+    char reg[2];
+    int i = 0;
+
+    for (; i < 8; i++)
+    {
+        sprintf(reg, "r%d", i);
+        if (strcmp(str, reg) == 0)
+            return i;
+    }
+    return -1;
+}
+
+/*
     not done yet
-    general Idea- will recieve label, opcode,operator1 operator2 and then code them up to binary 
+    general Idea- will recieve label, opcode,operator1 operator2 and then code them up to binary
 
 */
-char *opcodeToBinary(char *pch)
+
+void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, int opersCnt, int *IC, int mode,HashTable table[])
 {
 
-    return "\0";
+    if (opersCnt != numOfOpers(realOpCode(opcode, table), table)) /*do we have more than required operators*/
+        printf("nope, not right");
+
+
+
+
+
+
+        
 }

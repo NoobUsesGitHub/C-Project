@@ -5,6 +5,7 @@
 #define MAX_LINE_SIZE 81
 #define MAX_LABEL_SIZE 31
 #define OPCODE_NUMBER 16
+#define SIMULATION 1
 #define LABEL_END ':'
 #define COMMENT ';'
 #define symbolMarker '.' /* hanhaya- direction? idk*/
