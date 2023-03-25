@@ -4,7 +4,7 @@
 #include <stdio.h>
 #define MAX_LINE_SIZE 81
 #define MAX_LABEL_SIZE 31
-#define OPCODE_NUMBER 16
+#define OPERATORS_AMOUNT 16
 #define SIMULATION 1
 #define LABEL_END ':'
 #define COMMENT ';'
@@ -31,7 +31,8 @@ typedef enum OperatorType
     PRN,
     JSR,
     RTS,
-    STOP
+    STOP,
+    ERROR_NA = -1
 } OperatorType;
 
 typedef struct Operator

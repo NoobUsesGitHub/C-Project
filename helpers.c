@@ -5,6 +5,27 @@
 #include "helpers.h"
 #include "struct.h"
 
+Operator *createOperatorsTable()
+{
+    int j = 0;
+    Operator *op_table = (Operator *)malloc(OPERATORS_AMOUNT * sizeof(Operator));
+    /* Populate the table: */
+    Operator mov =
+        {
+            .type = MOV,
+            .num_of_operands = 2,
+            .src_addressing_methods = {0, 1, 2, 3},
+            .dst_addressing_methods = {1, 2, 3, -1}};
+    memcpy(op_table + MOV, &mov, sizeof(Operator));
+
+    return op_table;
+}
+
+void deleteOperatorsTable(Operator *op_table)
+{
+    free(op_table);
+}
+
 /*
 input: a string that we want to hash
 output: a double that is the encoded string
@@ -124,58 +145,11 @@ void removeRedundantSpaces(char *str)
     str[j] = '\0';
 }
 
-/*input: an opcode, and the line number
-will print it if it is a real opcode*/
-/*
-void dumpOpCode(char *pch, int *IC, int mode)
+OperatorType stringToOperatorType(char *operator_name)
 {
-    int opcode = realOpCode(pch, table);
-    if (opcode > -1 && mode != SIMULATION)
-    {
-        printf("%d  %s", IC, opcodeToBinary(pch));
-    }
-    else
-    {
-        printf("not a real opcode!!!");
-    }
-    *IC++;
-}
-*/
-
-void initHashTable(HashTable *table[])
-{
-    /*make not trash*/
-    int size = OPCODE_NUMBER, i = 0;
-    char *cmdArray[] = {"mov", "cmp", "add", "sub", "not", "clr", "lea", "inc", "dec", "jmp", "bne", "red", "prn", "jsr", "rts", "stop"};
-    int operAmount[] = {2, 2, 2, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 0, 0};
-    table = calloc(size, sizeof(HashTable));
-    for (; i < size; i++)
-    {
-        *table[i]->hash = hasher(*cmdArray[i]);
-        strcpy(*table[i]->key, *cmdArray[i]);
-        table[i]->place = i;
-        table[i]->numberOfOper = operAmount[i];
-    }
-}
-
-void initOperatorsTable(Operator )
-
-/*
-    input: a string , the opcode hashtable
-    output: the opcode's place in the table
-
-*/
-int realOpCode(char *pch, HashTable table[])
-{
-    double hash = hasher(pch);
-    int place = -1;
-    int i = 0;
-    for (; i < OPCODE_NUMBER; i++)
-    {
-        if (table[i].hash == hash)
-            return table[i].place;
-    }
-    return place;
+    OperatorType ret_type;
+    /* TODO: create if else ladder to populate the ret_type, use strcmp */
+    return ret_type;
 }
 
 /*
@@ -196,13 +170,11 @@ void addToData(Symbol *dataHeader, int IC)
     input: opcode and the hashtable of opcodes
     output: the number of operators for that opcode
 */
-int numOfOpers(int opcode, HashTable *table)
+int getNumOfOperands(OperatorType type, Operator *op_table)
 {
-    int i = 0;
-    for (; i < OPCODE_NUMBER; i++)
-        if (opcode == *table[i].place)
-            return *table[i].numberOfOper;
-    return -1;
+    if (type == ERROR_NA)
+        return -1;
+    return op_table[type].num_of_operands;
 }
 
 /*

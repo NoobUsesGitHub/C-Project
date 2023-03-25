@@ -6,6 +6,8 @@
 #include <string.h>
 #include "struct.h"
 
+Operator *createOperatorsTable();
+
 double hasher(char *);
 
 void clearStr(char *, int);
@@ -23,10 +25,6 @@ int realOpCode(char*,HashTable[]);
 int countSpace(char*);
 
 void removeRedundantSpaces(char *);
-
-/*void dumpOpCode(char *pch, int *IC, int mode);*/
-
-void initHashTable(HashTable**);
 
 void addToData(Symbol*, int);
 

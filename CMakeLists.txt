@@ -7,6 +7,8 @@ enable_testing()
 add_executable(oz_project asembler.c binaryMaker.c FileListFuncs.c helpers.c
 macroDecoder.c MacroListFuncs.c outputMaker.c SymbolListFuncs.c)
 
+# add_executable(oz_project testthingy.c)
+
 set_property(TARGET oz_project PROPERTY C_STANDARD 90)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})

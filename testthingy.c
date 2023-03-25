@@ -1,39 +1,55 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+#include "struct.h"
 
-void removeRedundantSpaces(char *str)
+Operator *createOperatorsTable()
 {
-  int i, j, len;
-  len = strlen(str); /*to change*/
-  j = 0;
-  for (i = 0; i < len; i++)
-  {
-    if (isspace(str[i]) == 0)
-    {
-      if (i > 0 && str[i] == ',' && isspace(str[j - 1]))
+  int j = 0;
+  Operator *op_table = (Operator *)malloc(OPERATORS_AMOUNT * sizeof(Operator));
+  /* Populate the table: */
+  Operator mov =
       {
-        str[j - 1] = str[i];
-        continue;
-      }
-      str[j] = str[i];
-      j++;
-    }
-    else if (i > 0 && isspace(str[i - 1]) == 0)
-    {
-      str[j] = ' ';
-      j++;
-    }
+          .type = MOV,
+          .num_of_operands = 2,
+          .src_addressing_methods = {0, 1, 2, 3},
+          .dst_addressing_methods = {1, 2, 3, -1}};
+  memcpy(op_table + MOV, &mov, sizeof(Operator));
+  printf("Printing mov struct:\n");
+  printf("type=%d, num_of_ops=%d\n", op_table[MOV].type, op_table[MOV].num_of_operands);
+  printf("src arr:\n");
+  for (j = 0; j < 4; j++)
+  {
+    printf("%d ", op_table[MOV].src_addressing_methods[j]);
   }
-  if (str[j - 1] == ' ' || str[j - 1] == '\t')
-    j--;
-  str[j] = '\0';
+  printf("\ndst arr:\n");
+  for (j = 0; j < 4; j++)
+  {
+    printf("%d ", op_table[MOV].dst_addressing_methods[j]);
+  }
+  return NULL;
+
+  // /* mov */
+  // op_table[MOV].type = MOV;
+  // op_table[MOV].num_of_operands = 2;
+  // op_table[MOV].src_addressing_methods = {0,1,2,3};
+
+  // Operator cmp =
+  // {
+  //     .type = CMP,
+  //     .num_of_operands = 2,
+  //     .src_addressing_methods = {0,1,2,3},
+  //     .dst_addressing_methods = {0,1,2,3}
+  // };
+  // for ( i = 0; i < OPERATORS_AMOUNT; i++)
+  // {
+  //     op_table[i] =
+  // }
+  // */
 }
 
 int main()
 {
-  char str[100] = "LABEL: OPCODE OPER1  , OPER2   ";
-
-  removeRedundantSpaces(str);
-  printf("Modified string: %s", str);
+  Operator *ops_table = createOperatorsTable();
   return 0;
 }
