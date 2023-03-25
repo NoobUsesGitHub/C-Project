@@ -47,8 +47,8 @@ FileList *toBinary(FILE *fp, char *fileName)
         i = 0;
         bit = str;
 
-        /*checking for comment*/
-        if (*bit == COMMENT)
+        /*checking for comment or empty*/
+        if (*bit == COMMENT||*bit=='\n')
             continue; /*skiiiiip*/
 
         /*checking for a label*/

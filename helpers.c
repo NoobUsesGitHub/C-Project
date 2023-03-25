@@ -217,7 +217,7 @@ void dumpDataOpers(char *str, int *DC, int mode)
             value = atoi(temp);
             intToBinary(binaryChar, value);
             if (mode != SIMULATION)
-                printf("%d  %s", *DC, binaryChar);
+                printf("%s  %s", *DC, binaryChar);
             *DC++;
             clearStr(temp, size);
         }
@@ -250,7 +250,7 @@ void dumpStr(char *oper, int *DC, int mode)
     int size = strlen(oper);
     char binaryChar[14];
     int value;
-    while (*oper != '\0')
+    while (*oper != '\0'&&*oper != '\n')
     {
         value = (int)(*oper);
         intToBinary(binaryChar, value);
@@ -306,14 +306,20 @@ int realRegister(char *str)
 
 void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, int opersCnt, int *IC, int mode,HashTable table[])
 {
-
+    int adTypeOper1=0,adTypeOper2=0;
     if (opersCnt != numOfOpers(realOpCode(opcode, table), table)) /*do we have more than required operators*/
         printf("nope, not right");
 
+    /*take the types of two opers*/
+    adTypeOper1=checkAddressType(oper1);
+    adTypeOper2=checkAddressType(oper2);
+    if(isAddTypeCorrect(opcode,adTypeOper1,adTypeOper2)==FALSE)
+        printf("incorrect address type for one of the operators for %s in %d",opcode,*IC);
+    /*check if that's in the allowed list*/
+    /*print the label binary*/
+    /*print the opcode binary*/
+    /*print the opers binary*/
 
 
 
-
-
-        
 }
