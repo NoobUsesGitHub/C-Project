@@ -11,6 +11,9 @@
 #define symbolMarker '.' /* hanhaya- direction? idk*/
 #define stringMarker '"' /* "abcd"*/
 #define delimints "    \t \f \r"
+#define SPACE_CHAR ' '
+#define COMMA ','
+
 
 typedef struct FileList
 {
