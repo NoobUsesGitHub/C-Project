@@ -32,7 +32,7 @@ void addToData(Symbol*, int);
 
 int numOfOpers(int,HashTable*);
 
-void dumpDataOpers(char*, int*);
+void dumpDataOpers(char*, int*,int);
 
 void dumpStr(char*, int*);
 

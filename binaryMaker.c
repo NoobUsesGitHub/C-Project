@@ -121,7 +121,7 @@ FileList *toBinary(FILE *fp, char *fileName)
                 bit++;
                 oper1[i] = '\0';
 
-                dumpStr(oper, &IC, SIMULATION);
+                dumpStr(oper1, &IC, SIMULATION);
 
                 if (foundLabel == FALSE)
                 {
