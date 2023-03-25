@@ -158,6 +158,8 @@ void initHashTable(HashTable *table[])
     }
 }
 
+void initOperatorsTable(Operator )
+
 /*
     input: a string , the opcode hashtable
     output: the opcode's place in the table
