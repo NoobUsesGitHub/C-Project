@@ -7,10 +7,10 @@ FileList *toBinary(FILE *fp, char *fileName)
 {
     HashTable table[16];
     initHashTable(&table);
-    int IC = -1, DC = 0, wordCount = 0, spaceCount = 0; /*wordCount=L*/
+    int IC = -1, DC = 0, wordCount = 0, spaceCount = 0,i=0; /*wordCount=L*/
     Stype stype = 0;
     bool skp = FALSE, foundSymbol = FALSE, foundErr = FALSE, foundLabel = FALSE;
-    char bit = ' ', label[MAX_LABEL_SIZE], dataTester[7], opcode[5], oper1[MAX_LABEL_SIZE], oper2[MAX_LABEL_SIZE], *pch = NULL, str[MAX_LINE_SIZE];
+    char* bit=NULL, label[MAX_LABEL_SIZE], dataTester[7], opcode[5], oper1[MAX_LABEL_SIZE], oper2[MAX_LABEL_SIZE], *pch = NULL, str[MAX_LINE_SIZE];
     char strNewName[strlen(fileName)];
     Symbol *dataHeader, *dataNode;
 
@@ -80,7 +80,7 @@ FileList *toBinary(FILE *fp, char *fileName)
         /*checking for symbols first*/
         while (isLetter(*bit) == FALSE)
             bit++;
-        if (*bit == '\0' || bit != '\n')
+        if (*bit == '\0' || *bit != '\n')
             printf("weldp");
 
         i = 0;
