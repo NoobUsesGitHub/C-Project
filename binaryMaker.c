@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "helpers.h"
+#include "binaryMaker.h"
 
 FileList *toBinary(FILE *fp, char *fileName)
 {
