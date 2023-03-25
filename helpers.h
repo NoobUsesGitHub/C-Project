@@ -16,8 +16,28 @@ bool isLetter(char *);
 
 int dataLength(char *);
 
-char *opcodeToBinary(char *pch);
+char *opcodeToBinary(char*);
 
-int realOpCode(char *pch, HashTable table[]);
+int realOpCode(char*,HashTable[]);
+
+int countSpace(char*);
+
+void removeRedundantSpaces(char *);
+
+void dumpOpCode(char*, int);
+
+void initHashTable(HashTable**);
+
+void addToData(Symbol*, int);
+
+int numOfOpers(int,HashTable*);
+
+void dumpDataOpers(char*, int*);
+
+void dumpStr(char*, int*);
+
+void intToBinary(char*,int);
+
+char*opcodeToBinary(char*);
 
 #endif // HELPERS_H
