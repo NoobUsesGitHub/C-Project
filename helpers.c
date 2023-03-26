@@ -558,7 +558,7 @@ void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, in
     int adTypeOper1 = 0, adTypeOper2 = 0;
     OperatorType op_type = stringToOperatorType(opcode);
     if (opersCnt != getNumOfOperands(op_type, op_table)) /*do we have more than required operators*/
-        printf(stderr, "opcode %s has more operators than expected",opcode);
+        printf(stderr, "opcode %s has more operators than expected", opcode);
 
     /*take the types of two opers*/
 
@@ -892,19 +892,19 @@ void dumpSymbols(Symbols *header, char *fileName, Stype stype, char *extention)
 {
     char newName[strlen(fileName)];
     char binary[15];
-    bool found_any=FALSE;
+    bool found_any = FALSE;
     char *bit = NULL;
     strcpy(binary, "00000000000000\0");
     strcpy(newName, fileName);
     strcpyBySteps(newName + strlen(newName) - strlen(extention), extention, 3);
     FILE *fp = fopen(newName, "w");
-    if(fp==NULL)
-        fprintf(stderr, "we had trouble opening a %s file",extention);
+    if (fp == NULL)
+        fprintf(stderr, "we had trouble opening a %s file", extention);
     while (header->next != NULL)
     {
         if (header->type == stype)
         {
-            found_any=TRUE;
+            found_any = TRUE;
             intToBinary(binary, header->line);
             bit = binary;
             while (*bit != '\0')
@@ -918,6 +918,35 @@ void dumpSymbols(Symbols *header, char *fileName, Stype stype, char *extention)
         header = header->next;
     }
     fclose(fp);
-    if(!found_any)
-    remove(newName);
+    if (!found_any)
+        remove(newName);
 }
+
+/*
+input: the header of the list of symbols, the Instruction counter and file to print to
+will create an array and print the symbols ordered by line
+*/
+void dumpSymbolsToMainFile(Symbol *header, int IC, FILE *fp)
+{
+    int numOfSymbols = countSymbols(header), i = 0;
+    Symbol* arr[numOfSymbols];
+    fillSymArr(arr, numOfSymbols, header);
+    qsort(arr,numOfSymbols,sizeof(Symbol),SymbolCompare);
+
+    for(;i<numOfSymbols;i++)
+    {
+        switch (arr[i]->type)
+        {
+        case STRING:
+            dumpStr(arr[i]->input, &IC, EXECUTION);
+            break;
+        
+        case DATA:
+            dumpDataOpers(arr[i]->input, &IC, EXECUTION);
+            break;
+        }
+    }
+}
+
+
+

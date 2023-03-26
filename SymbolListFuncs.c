@@ -154,3 +154,46 @@ int symbolTypeFromTable(char *oper, Symbol *sym_list)
     }
     return sym_list->type;
 }
+
+/*
+    input: the header of a symbol list
+    output: how many symbols aren't code
+*/
+int countSymbols(Symbol *header)
+{
+    int i = 0;
+    while (header->input != NULL)
+    {
+        if (header->type != CODE)
+            i++;
+        header = header->next;
+    }
+    return i;
+}
+
+/*
+    input: an array, number of symbols should be filled there and the symbol list header
+    will fill the array with only the symbols that aren't codes
+*/
+void fillSymArr(Symbol *arr[], int numOfSymbols, Symbol *header)
+{
+    int i = 0;
+    while (header->input != NULL && i < numOfSymbols)
+    {
+        if (header->type != CODE)
+        {
+            arr[i] = header;
+            i++;
+        }
+        header = header->next;
+    }
+}
+
+/*
+    input: two pointers
+    output: 1 if as symbols a's line position is greater than b's line position
+*/
+int SymbolCompare(const void *a, const void *b)
+{
+    return ((Symbol *)a)->line > ((Symbol *)b)->line;
+}

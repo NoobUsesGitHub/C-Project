@@ -10,7 +10,7 @@ FileList *toBinary(FILE *fp, char *fileName)
 {
     Operator *op_table = createOperatorsTable();
 
-    int IC = -1, DC = 0, wordCount = 0, spaceCount = 0, i = 0; /*wordCount=L*/
+    int IC = 99, DC = 0, wordCount = 0, spaceCount = 0, i = 0; /*wordCount=L*/
     Stype stype = 0;
     bool skp = FALSE, foundSymbol = FALSE, foundErr = FALSE, foundLabel = FALSE;
     char *bit = NULL, label[MAX_LABEL_SIZE], dataTester[7], opcode[5], oper1[MAX_LABEL_SIZE], oper2[MAX_LABEL_SIZE], *pch = NULL, str[MAX_LINE_SIZE];
@@ -257,8 +257,10 @@ FileList *toBinary(FILE *fp, char *fileName)
         addToData(dataHeader, IC);
     }
     rewind(fp);
-    IC = 0;
 
+    fprintf(binaryFileNode->file,"%d %d",IC,DC);
+    IC = 0;
+    
     while (fgets(str, MAX_LINE_SIZE, fp) != NULL) /*second pass*/
     {
         removeRedundantSpaces(str);
@@ -300,7 +302,7 @@ FileList *toBinary(FILE *fp, char *fileName)
 
         i = 0;
         if (*bit == symbolMarker) /*we met a sybol!*/
-        {
+        {/*to do -decide if extern and entry stay*/
             continue; /*we skip those, we collected them all*/
         }
 
@@ -360,6 +362,7 @@ FileList *toBinary(FILE *fp, char *fileName)
 
         dumpFullInstruction(label, opcode, oper1, oper2, spaceCount, &IC, EXECUTION, op_table);
     }
+    dumpSymbolsToMainFile(dataHeader,IC,binaryFileNode->file);
     /*to do, dump correctly the symbols*/
     if (!foundErr)
     {
