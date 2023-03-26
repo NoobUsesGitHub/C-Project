@@ -4,6 +4,7 @@
 #include <ctype.h>
 #include "helpers.h"
 #include "struct.h"
+#include "outputMaker.h"
 #include "SymbolListFuncs.h"
 
 /*
@@ -574,7 +575,7 @@ void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, in
     /*print the opcode binary*/
     calculateOpcodeBinaryAndPrint(op_type, adTypeOper1, adTypeOper2, mode, IC, sym_table, label);
     /*print the opers binary*/
-    calculateOperatorsBinaryAndPrint(oper1,oper2,adTypeOper1, adTypeOper2, mode, IC,sym_table);
+    calculateOperatorsBinaryAndPrint(oper1, oper2, adTypeOper1, adTypeOper2, mode, IC, sym_table);
 }
 
 void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1, int adTypeOper2, int mode, int *IC, Symbol *sym_table)
@@ -881,4 +882,42 @@ int breakDownJumps(char *oper1, char *oper2, char label)
     }
 
     return turn_to_second_oper ? 2 : 1;
+}
+
+/*
+    input: a header of the symbols table, the file name, a data symbol type, and the extention
+    will push all the data symbols of that type to a file
+*/
+void dumpSymbols(Symbols *header, char *fileName, Stype stype, char *extention)
+{
+    char newName[strlen(fileName)];
+    char binary[15];
+    bool found_any=FALSE;
+    char *bit = NULL;
+    strcpy(binary, "00000000000000\0");
+    strcpy(newName, fileName);
+    strcpyBySteps(newName + strlen(newName) - strlen(extention), extention, 3);
+    FILE *fp = fopen(newName, "w");
+    if(fp==NULL)
+        printf("we had trouble opening a %s file",extention);
+    while (header->next != NULL)
+    {
+        if (header->type == stype)
+        {
+            found_any=TRUE;
+            intToBinary(binary, header->line);
+            bit = binary;
+            while (*bit != '\0')
+            {
+                *bit = binaryTranslate(*bit);
+                bit++;
+            }
+            fprintf(fp, "%s  %s\n", header->name, binary);
+            strcpy(binary, "00000000000000\0");
+        }
+        header = header->next;
+    }
+    fclose(fp);
+    if(!found_any)
+    remove(newName);
 }
