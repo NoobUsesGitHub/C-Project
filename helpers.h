@@ -28,9 +28,9 @@ void removeRedundantSpaces(char *);
 
 void addToData(Symbol *, int);
 
-void dumpDataOpers(char *, int *, int);
+void dumpDataOpers(char *, int *, int,FILE*);
 
-void dumpStr(char *, int *,int);
+void dumpStr(char *, int *,int,FILE*);
 
 void intToBinary(char *, int);
 

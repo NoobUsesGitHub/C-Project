@@ -135,7 +135,7 @@ FileList *toBinary(FILE *fp, char *fileName)
                 bit++;
                 oper1[i] = '\0';
 
-                dumpStr(oper1, &IC, SIMULATION);
+                dumpStr(oper1, &IC, SIMULATION,NULL);
 
                 if (foundLabel == FALSE)
                 {
@@ -178,7 +178,7 @@ FileList *toBinary(FILE *fp, char *fileName)
                 }
 
                 dataNode = addSymbolToList(dataHeader, label, stype, DC,oper1);
-                dumpDataOpers(oper1, &DC, SIMULATION); /*maybe not?*/
+                dumpDataOpers(oper1, &DC, SIMULATION,NULL); /*maybe not?*/
                 break;
             }
             continue;

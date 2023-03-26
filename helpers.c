@@ -384,7 +384,7 @@ int getNumOfOperands(OperatorType type, Operator *op_table)
     input: a string and the Data counter
     will print the individual numbers as binary and increase the DC
 */
-void dumpDataOpers(char *str, int *cnt, int mode)
+void dumpDataOpers(char *str, int *cnt, int mode,FILE* fp)
 {
 
     int size = strlen(str);
@@ -427,7 +427,7 @@ void dumpDataOpers(char *str, int *cnt, int mode)
     input: a string and the Data counter
     will print the individual letters as binary and increase the DC
 */
-void dumpStr(char *oper, int *cnt, int mode)
+void dumpStr(char *oper, int *cnt, int mode,FILE *fp)
 {
     int size = strlen(oper);
     char binaryChar[14];
@@ -938,11 +938,11 @@ void dumpSymbolsToMainFile(Symbol *header, int IC, FILE *fp)
         switch (arr[i]->type)
         {
         case STRING:
-            dumpStr(arr[i]->input, &IC, EXECUTION);
+            dumpStr(arr[i]->input, &IC, EXECUTION,fp);
             break;
         
         case DATA:
-            dumpDataOpers(arr[i]->input, &IC, EXECUTION);
+            dumpDataOpers(arr[i]->input, &IC, EXECUTION,fp);
             break;
         }
     }
