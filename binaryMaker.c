@@ -73,7 +73,7 @@ FileList *toBinary(FILE *fp, char *fileName)
         else
         {
             /*check if label is a real register or opcode*/
-            if (realOpCode(label, table) != -1 || realRegister(label) != -1)
+            if (stringToOperatorType(label) != ERROR_NA || realRegister(label) != -1)
                 printf("label %s is a register or opcode!", label);
         }
 
@@ -215,15 +215,15 @@ FileList *toBinary(FILE *fp, char *fileName)
         }
 
          /*keep an eye open for jmp jsr and bne*/
-        if (realOpCode(opcode, table) == realOpCode("jmp", table) || realOpCode(opcode, table) == realOpCode("jsr", table) || realOpCode(opcode, table) == realOpCode("bne", table))
+        if (stringToOperatorType(opcode) == JMP || stringToOperatorType(opcode) == JSR || stringToOperatorType(opcode, table) == BNE)
             breakDownJumps(opcode, oper1, oper2);
 
         /*now we have the opcode, the two operators and the label if any,*/
 
-        if (realOpCode(opcode) == -1) /*if opcode a real opcode*/
+        if (stringToOperatorType(opcode) == ERROR_NA) /*if opcode a real opcode*/
             printf("nope, not right");
 
-        if (realOpCode(oper1) != -1 || realOpCode(oper2) != -1) /*if any operator is a name of an opecode*/
+        if (stringToOperatorType(oper1) != ERROR_NA || stringToOperatorType(oper1) != ERROR_NA) /*if any operator is a name of an opecode*/
             printf("nope, not right");
 
 
@@ -252,7 +252,7 @@ FileList *toBinary(FILE *fp, char *fileName)
         close them
         go to second pass*/
 
-    freeList(header);
+    freeList(binaryFileNode);
     deleteOperatorsTable(op_table);
     return binaryFileNode; /*tochange*/
 }

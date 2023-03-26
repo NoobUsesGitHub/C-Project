@@ -8,7 +8,7 @@
 
 Operator *createOperatorsTable();
 
-void deleteOperatorsTable(Operaotr*);
+void deleteOperatorsTable(Operaotr *);
 
 double hasher(char *);
 
@@ -20,24 +20,32 @@ bool isLetter(char *);
 
 int dataLength(char *);
 
-char *opcodeToBinary(char*);
+char *opcodeToBinary(char *);
 
-int realOpCode(char*,HashTable[]);
-
-int countSpace(char*);
+int countSpace(char *);
 
 void removeRedundantSpaces(char *);
 
-void addToData(Symbol*, int);
+void addToData(Symbol *, int);
 
-int numOfOpers(int,HashTable*);
+void dumpDataOpers(char *, int *, int);
 
-void dumpDataOpers(char*, int*,int);
+void dumpStr(char *, int *);
 
-void dumpStr(char*, int*);
+void intToBinary(char *, int);
 
-void intToBinary(char*,int);
+char *opcodeToBinary(char *);
 
-char *opcodeToBinary(char*);
+OperatorType stringToOperatorType(char*);
+
+int getNumOfOperands(OperatorType, Operator*);
+
+int realRegister(char*);
+
+bool isAddTypeCorrect(OperatorType,int, int, Operator*);
+
+bool existInAddressType(int, int[]);
+
+void dumpFullInstruction(char*,char*,char*,char*,int,int*,int,Operator*);
 
 #endif // HELPERS_H

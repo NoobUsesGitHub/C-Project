@@ -5,9 +5,12 @@
 #include "helpers.h"
 #include "struct.h"
 
+/*
+    input:nothing
+    output: the operators info table(van be seen on page 32)
+*/
 Operator *createOperatorsTable()
 {
-    int j = 0;
     Operator *op_table = (Operator *)malloc(OPERATORS_AMOUNT * sizeof(Operator));
     /* Populate the table: */
     Operator mov =
@@ -18,9 +21,133 @@ Operator *createOperatorsTable()
             .dst_addressing_methods = {1, 2, 3, -1}};
     memcpy(op_table + MOV, &mov, sizeof(Operator));
 
+    Operator cmp =
+        {
+            .type = CMP,
+            .num_of_operands = 2,
+            .src_addressing_methods = {0, 1, 2, 3},
+            .dst_addressing_methods = {0, 1, 2, 3}};
+    memcpy(op_table + CMP, &cmp, sizeof(Operator));
+
+    Operator add =
+        {
+            .type = ADD,
+            .num_of_operands = 2,
+            .src_addressing_methods = {0, 1, 2, 3},
+            .dst_addressing_methods = {1, 2, 3, -1}};
+    memcpy(op_table + ADD, &add, sizeof(Operator));
+
+    Operator sub =
+        {
+            .type = SUB,
+            .num_of_operands = 2,
+            .src_addressing_methods = {0, 1, 2, 3},
+            .dst_addressing_methods = {1, 2, 3, -1}};
+    memcpy(op_table + SUB, &sub, sizeof(Operator));
+
+    Operator not =
+        {
+            .type = NOT,
+            .num_of_operands = 1,
+            .src_addressing_methods = {-1, -1, -1, -1},
+            .dst_addressing_methods = {1, 2, 3, -1}};
+    memcpy(op_table + NOT, &not, sizeof(Operator));
+
+    Operator clr =
+        {
+            .type = CLR,
+            .num_of_operands = 1,
+            .src_addressing_methods = {-1, -1, -1, -1},
+            .dst_addressing_methods = {1, 2, 3, -1}};
+    memcpy(op_table + CLR, &clr, sizeof(Operator));
+
+    Operator lea =
+        {
+            .type = LEA,
+            .num_of_operands = 2,
+            .src_addressing_methods = {1, 2, -1, -1},
+            .dst_addressing_methods = {1, 2, 3, -1}};
+    memcpy(op_table + LEA, &lea, sizeof(Operator));
+
+    Operator inc =
+        {
+            .type = INC,
+            .num_of_operands = 1,
+            .src_addressing_methods = {-1, -1, -1, -1},
+            .dst_addressing_methods = {1, 2, 3, -1}};
+    memcpy(op_table + INC, &inc, sizeof(Operator));
+
+    Operator dec =
+        {
+            .type = DEC,
+            .num_of_operands = 1,
+            .src_addressing_methods = {-1, -1, -1, -1},
+            .dst_addressing_methods = {1, 2, 3, -1}};
+    memcpy(op_table + DEC, &dec, sizeof(Operator));
+
+    Operator jmp =
+        {
+            .type = JMP,
+            .num_of_operands = 1,
+            .src_addressing_methods = {-1, -1, -1, -1},
+            .dst_addressing_methods = {1, 2, 3, -1}};
+    memcpy(op_table + JMP, &jmp, sizeof(Operator));
+
+    Operator bne =
+        {
+            .type = BNE,
+            .num_of_operands = 1,
+            .src_addressing_methods = {-1, -1, -1, -1},
+            .dst_addressing_methods = {1, 2, 3, -1}};
+    memcpy(op_table + BNE, &bne, sizeof(Operator));
+
+    Operator red =
+        {
+            .type = RED,
+            .num_of_operands = 1,
+            .src_addressing_methods = {-1, -1, -1, -1},
+            .dst_addressing_methods = {1, 2, 3, -1}};
+    memcpy(op_table + RED, &red, sizeof(Operator));
+
+    Operator prn =
+        {
+            .type = PRN,
+            .num_of_operands = 1,
+            .src_addressing_methods = {-1, -1, -1, -1},
+            .dst_addressing_methods = {0, 1, 2, 3}};
+    memcpy(op_table + PRN, &prn, sizeof(Operator));
+
+    Operator jsr =
+        {
+            .type = JSR,
+            .num_of_operands = 1,
+            .src_addressing_methods = {-1, -1, -1, -1},
+            .dst_addressing_methods = {1, 2, 3, -1}};
+    memcpy(op_table + JSR, &jsr, sizeof(Operator));
+
+    Operator rts =
+        {
+            .type = RTS,
+            .num_of_operands = 0,
+            .src_addressing_methods = {-1, -1, -1, -1},
+            .dst_addressing_methods = {-1, -1, -1, -1}};
+    memcpy(op_table + RTS, &rts, sizeof(Operator));
+
+    Operator stop =
+        {
+            .type = STOP,
+            .num_of_operands = 0,
+            .src_addressing_methods = {-1, -1, -1, -1},
+            .dst_addressing_methods = {-1, -1, -1, -1}};
+    memcpy(op_table + STOP, &stop, sizeof(Operator));
+
     return op_table;
 }
 
+/*
+    input: the operators info table
+    will free the table
+*/
 void deleteOperatorsTable(Operator *op_table)
 {
     free(op_table);
@@ -145,11 +272,85 @@ void removeRedundantSpaces(char *str)
     str[j] = '\0';
 }
 
+/*
+    input: a string that should represent a operator
+    output: the operator type of it, if it doesnt exist, ERROR_NA=-1
+*/
 OperatorType stringToOperatorType(char *operator_name)
 {
-    OperatorType ret_type;
-    /* TODO: create if else ladder to populate the ret_type, use strcmp */
-    return ret_type;
+    int i = strlen(operator_name);
+    char str[strlen(operator_name)];
+    strcpy(str, operator_name);
+    for (; i >= 0; i--)
+    {
+        str[i] = tolower(str[i]);
+    }
+
+    if (strcmp(operator_name, "mov") || strcmp(str, "mov"))
+    {
+        return MOV;
+    }
+    else if (strcmp(operator_name, "cmp") || strcmp(str, "cmp"))
+    {
+        return CMP;
+    }
+    else if (strcmp(operator_name, "add") || strcmp(str, "add"))
+    {
+        return ADD;
+    }
+    else if (strcmp(operator_name, "sub") || strcmp(str, "sub"))
+    {
+        return SUB;
+    }
+    else if (strcmp(operator_name, "not") || strcmp(str, "not"))
+    {
+        return NOT;
+    }
+    else if (strcmp(operator_name, "clr") || strcmp(str, "clr"))
+    {
+        return CLR;
+    }
+    else if (strcmp(operator_name, "lea") || strcmp(str, "lea"))
+    {
+        return LEA;
+    }
+    else if (strcmp(operator_name, "inc") || strcmp(str, "inc"))
+    {
+        return INC;
+    }
+    else if (strcmp(operator_name, "dec") || strcmp(str, "dec"))
+    {
+        return DEC;
+    }
+    else if (strcmp(operator_name, "jmp") || strcmp(str, "jmp"))
+    {
+        return JMP;
+    }
+    else if (strcmp(operator_name, "bne") || strcmp(str, "bne"))
+    {
+        return BNE;
+    }
+    else if (strcmp(operator_name, "red") || strcmp(str, "red"))
+    {
+        return RED;
+    }
+    else if (strcmp(operator_name, "prn") || strcmp(str, "prn"))
+    {
+        return PRN;
+    }
+    else if (strcmp(operator_name, "jsr") || strcmp(str, "jsr"))
+    {
+        return JSR;
+    }
+    else if (strcmp(operator_name, "rts") || strcmp(str, "rts"))
+    {
+        return RTS;
+    }
+    else if (strcmp(operator_name, "stop") || trcmp(ostr "stop"))
+    {
+        return STOP;
+    }
+    return ERROR_NA;
 }
 
 /*
@@ -183,6 +384,7 @@ int getNumOfOperands(OperatorType type, Operator *op_table)
 */
 void dumpDataOpers(char *str, int *DC, int mode)
 {
+
     int size = strlen(str);
     char temp[size];
     char binaryChar[14];
@@ -277,21 +479,57 @@ int realRegister(char *str)
 }
 
 /*
+    input: An operator, the two operands adresstypes and the Operator info table
+    output: true if the operands accsespts these operands, else false
+
+*/
+bool isAddTypeCorrect(OperatorType op_type, int adTypeOper1, int adTypeOper2, Operator *op_table)
+{
+    if (op_type == ERROR_NA)
+        return FALSE;
+    if (existInAddressType(adTypeOper1, op_table[op_type].src_addressing_methods) && existInAddressType(adTypeOper2, op_table[op_type].dest_addressing_methods))
+    {
+        return TRUE;
+    }
+    return FALSE;
+}
+
+/*
+    input: an addressing type and an array of addressing types
+    output: true if this address type exists, else false
+    will run until end of array or it meets a -1 (which means end of array instead of a certain address type)
+*/
+bool existInAddressType(int ad_type, int addressing_methods[])
+{
+    int i = 0;
+    while (i < 4 && addressing_methods[i] != -1)
+    {
+        if (ad_type == addressing_methods[i])
+            return TRUE;
+        else
+            i++;
+    }
+    return FALSE;
+}
+
+/*
     not done yet
     general Idea- will recieve label, opcode,operator1 operator2 and then code them up to binary
 
 */
 
-void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, int opersCnt, int *IC, int mode, HashTable table[])
+void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, int opersCnt, int *IC, int mode, Operator *op_table)
 {
     int adTypeOper1 = 0, adTypeOper2 = 0;
-    if (opersCnt != numOfOpers(realOpCode(opcode, table), table)) /*do we have more than required operators*/
+    OperatorType op_type = stringToOperatorType(opcode);
+    if (opersCnt != getNumOfOperands(op_type, op_table)) /*do we have more than required operators*/
         printf("nope, not right");
 
     /*take the types of two opers*/
+
     adTypeOper1 = checkAddressType(oper1);
     adTypeOper2 = checkAddressType(oper2);
-    if (isAddTypeCorrect(opcode, adTypeOper1, adTypeOper2) == FALSE)
+    if (!isAddTypeCorrect(op_type, adTypeOper1, adTypeOper2, op_table))
         printf("incorrect address type for one of the operators for %s in %d", opcode, *IC);
     /*check if that's in the allowed list*/
     /*print the label binary*/
