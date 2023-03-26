@@ -14,7 +14,8 @@ FileList *toBinary(FILE *fp, char *fileName)
     bool skp = FALSE, foundSymbol = FALSE, foundErr = FALSE, foundLabel = FALSE;
     char* bit=NULL, label[MAX_LABEL_SIZE], dataTester[7], opcode[5], oper1[MAX_LABEL_SIZE], oper2[MAX_LABEL_SIZE], *pch = NULL, str[MAX_LINE_SIZE];
     char strNewName[strlen(fileName)];
-    Symbol *dataHeader, *dataNode;
+    Symbol *dataHeader=NULL;
+    Symbol *dataNode=NULL;
 
     constSymbol(&dataHeader);
     constSymbol(&dataHeader);
