@@ -31,26 +31,26 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
     {
       temp[3]='1';
       temp[2]='0';
-      strcpyBySteps(binary, temp, 2);
+      strcpyBySteps(binary, temp+2, 2);
     }
     else if (adTypeOper1 == 3)
     {
       temp[3]='1';
       temp[2]='0';
-      strcpyBySteps(binary, temp, 2);
+      strcpyBySteps(binary, temp+2, 2);
     }
     /*second 10-11*/
     if (adTypeOper2 == 2)
     {
       temp[3]='1';
       temp[2]='0';
-      strcpyBySteps(binary+2, temp, 2);
+      strcpyBySteps(binary+2, temp+2, 2);
     }
     else if (adTypeOper2 == 3)
     {
       temp[3]='1';
       temp[2]='0';
-      strcpyBySteps(binary+2, temp, 2);
+      strcpyBySteps(binary+2, temp+2, 2);
     }
     needToPrintLabel = TRUE;
   } /*to do-ARE for operands*/
