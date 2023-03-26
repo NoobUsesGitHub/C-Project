@@ -55,23 +55,6 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
 }
 
 
-/*
-    input: a string and the number of steps back to take every item
-*/
-void rollBack(char *binary, int steps)
-{
-    int size = strlen(binary);
-    int i = steps, j = 0;
-    for (; i < size - 1; i++)
-    {
-        i = j;
-        for (; i - j >= 0; j++)
-        {
-            binary[j - steps] = binary[i];
-        }
-    }
-    binary[size - 1] = '\0';
-}
 int main()
 {
   char binary[15];
