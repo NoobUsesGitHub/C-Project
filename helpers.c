@@ -452,17 +452,12 @@ void intToBinary(char *binaryChar, int value)
 {
     int bufferSize=strlen(binaryChar);
 
-    if (value < 0) {
-        binaryChar[0] = '1';
-        value = -value;
-    }
-
-    
-    int i = bufferSize - 2;
-    while (i >= 0 && value > 0) {
-        binaryChar[i] = (value & 1) + '0';
-        value >>= 1;
-        i--;
+    for (int i = bufferSize - 1; i >= 0; i--) {
+        if ((value >> i) & 1) {
+            binaryChar[i]='1';
+        } else {
+            binaryChar[i]='0';
+        }
     }
 }
 
