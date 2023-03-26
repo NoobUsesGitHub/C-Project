@@ -97,7 +97,7 @@ void addLineToNode(MacroList *m, char *str)
     {
         m->macro = (char **)malloc(m->size * sizeof(char) * MAX_LINE_SIZE);
         if (m->macro == NULL)
-            printf("can't allocate memory.."); /*add to errors?*/
+            fprintf(stderr, "can't allocate memory.."); 
     }
 
     m->macro[m->size - 1] = (char *)malloc(MAX_LINE_SIZE * sizeof(char));

@@ -54,7 +54,7 @@ Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line)
         else
         {
             current_node->name = NULL;
-            printf("%s exists already!!", name);
+            fprintf(stderr, "Symbol%s exists already!!", name);
             return current_node->next;
         }
     }
@@ -110,21 +110,21 @@ Stype checkSymbolType(char *str)
     input: a string, the symbol table
     output: the line where the symbol appeared, if it doesn't exist,-1
 */
-Stype existInSymbolTable(char *oper, Symbol *sym_table)
+Stype existInSymbolTable(char *oper, Symbol *sym_list)
 {
     double hsh = hasher(oper);
 
-    while (sym_table->next != NULL)
+    while (sym_list->next != NULL)
     {
-        if (sym_table->hash == hsh)
-            return sym_table->line;
-        sym_table = sym_table->next;
+        if (sym_list->hash == hsh)
+            return sym_list->line;
+        sym_list = sym_list->next;
     }
-    if (sym_table != NULL && sym_table->hash != 0 && sym_table->hash != hsh)
+    if (sym_list != NULL && sym_list->hash != 0 && sym_list->hash != hsh)
     {
         return -1;
     }
-    return sym_table->line;
+    return sym_list->line;
 }
 
 /*
@@ -132,19 +132,19 @@ Stype existInSymbolTable(char *oper, Symbol *sym_table)
     output: the symobol's type appeared, if it doesn't exist default CODE
     we assume we check before if it exists, but we have defualt anyway
 */
-int symbolTypeFromTable(char *oper, Symbol *sym_table)
+int symbolTypeFromTable(char *oper, Symbol *sym_list)
 {
     double hsh = hasher(oper);
 
-    while (sym_table->next != NULL)
+    while (sym_list->next != NULL)
     {
-        if (sym_table->hash == hsh)
-            return sym_table->type;
-        sym_table = sym_table->next;
+        if (sym_list->hash == hsh)
+            return sym_list->type;
+        sym_list = sym_list->next;
     }
-    if (sym_table != NULL && sym_table->hash != 0 && sym_table->hash != hsh)
+    if (sym_list != NULL && sym_list->hash != 0 && sym_list->hash != hsh)
     {
         return CODE;
     }
-    return sym_table->type;
+    return sym_list->type;
 }

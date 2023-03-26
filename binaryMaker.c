@@ -36,7 +36,7 @@ FileList *toBinary(FILE *fp, char *fileName)
     if (fp == NULL || binaryFileNode->file == NULL)
     {
         binaryFileNode->file = NULL;
-        printf("File is not correct"); /*need to print out to STDOUT and say which line*/
+        fprintf(stderr, "File is not correct"); /*need to print out to STDOUT and say which line*/
         return binaryFileNode;
     }
 
@@ -77,7 +77,10 @@ FileList *toBinary(FILE *fp, char *fileName)
         {
             /*check if label is a real register or opcode*/
             if (stringToOperatorType(label) != ERROR_NA || realRegister(label) != -1)
+            {
                 printf("label %s is a register or opcode!", label);
+                foundErr = TRUE;
+            }
         }
 
         /*jumping for the next word*/
@@ -85,7 +88,10 @@ FileList *toBinary(FILE *fp, char *fileName)
         while (isLetter(bit) == FALSE)
             bit++;
         if (*bit == '\0' || *bit != '\n')
-            printf("weldp");
+        {
+            fprintf(stderr, "line %d eneded unexpectandly", IC);
+            foundErr = TRUE;
+        }
 
         i = 0;
         if (*bit == symbolMarker) /*we met a sybol!*/
@@ -104,7 +110,10 @@ FileList *toBinary(FILE *fp, char *fileName)
                 bit++;
 
             if (*bit == '\0' || *bit != '\n')
-                printf("weldp");
+            {
+                fprintf(stderr, "line %d eneded unexpectandly", IC);
+                foundErr = TRUE;
+            }
 
             i = 0;
             switch (stype)
@@ -115,7 +124,8 @@ FileList *toBinary(FILE *fp, char *fileName)
                 {
                     if (*bit == '\n')
                     {
-                        printf("string finished with no end");
+                        fprintf(stderr, "string finished with no end");
+                        foundErr = TRUE;
                         break;
                     }
                     oper1[i] = *bit;
@@ -190,7 +200,8 @@ FileList *toBinary(FILE *fp, char *fileName)
         }
         if (spaceCount > 2)
         {
-            printf("what??");
+            fprintf(stderr, "operator %s was found with too many operands", opcode);
+            foundErr = TRUE;
             continue;
         }
         switch (spaceCount)
@@ -223,17 +234,23 @@ FileList *toBinary(FILE *fp, char *fileName)
 
         /*now we have the opcode, the two operators and the label if any,*/
 
-        if (op_code_type == ERROR_NA) /*if opcode a real opcode*/
-            printf("nope, not right");
+        if (op_code_type == ERROR_NA)
+        { /*if opcode a real opcode*/
+            fprintf(stderr, "opcode %s not found",opcode);
+            foundErr = TRUE;
+        }
 
-        if (stringToOperatorType(oper1) != ERROR_NA || stringToOperatorType(oper1) != ERROR_NA) /*if any operator is a name of an opecode*/
-            printf("nope, not right");
+        if (stringToOperatorType(oper1) != ERROR_NA || stringToOperatorType(oper1) != ERROR_NA)
+        { /*if any operator is a name of an opecode*/
+            fprintf(stderr, "operator src %s not found",oper1);
+            foundErr = TRUE;
+        }
 
         dumpFullInstruction(label, opcode, oper1, oper2, spaceCount, &IC, SIMULATION, op_table);
     }
     if (foundErr == TRUE) /*to do - implement finding errors*/
     {
-        printf("there are error's in the first pass!");
+        fprintf(stderr, "there are error's in the first pass!");
     }
     else
     {
@@ -280,8 +297,6 @@ FileList *toBinary(FILE *fp, char *fileName)
         /*checking for symbols first*/
         while (isLetter(bit) == FALSE)
             bit++;
-        if (*bit == '\0' || *bit != '\n')
-            printf("weldp");
 
         i = 0;
         if (*bit == symbolMarker) /*we met a sybol!*/
@@ -332,10 +347,16 @@ FileList *toBinary(FILE *fp, char *fileName)
         /*now we have the opcode, the two operators and the label if any,*/
 
         if (op_code_type == ERROR_NA) /*if opcode a real opcode*/
-            printf("nope, not right");
+             { /*if opcode a real opcode*/
+            fprintf(stderr, "opcode %s not found",opcode);
+            foundErr = TRUE;
+        }
 
         if (stringToOperatorType(oper1) != ERROR_NA || stringToOperatorType(oper1) != ERROR_NA) /*if any operator is a name of an opecode*/
-            printf("nope, not right");
+            { /*if any operator is a name of an opecode*/
+            fprintf(stderr, "operator src %s not found",oper1);
+            foundErr = TRUE;
+        }
 
         dumpFullInstruction(label, opcode, oper1, oper2, spaceCount, &IC, EXECUTION, op_table);
     }

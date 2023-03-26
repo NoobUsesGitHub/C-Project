@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
   int not_enough_args = (argc <= 1);
   if (not_enough_args)
   {
-    printf("Please input file names");
+    fprintf(stderr, "Please input file names");
     return 1;
   }
 
@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
     addToList(macroFilesHead, tempOutput->file, tempOutput->fileName);
     tempInputNode = tempInputNode->next; /*going forward with the list*/
   }
-  closeFileList(inputFilesHead); /*to do- check this really cleans the whole file list*/
+  closeFileList(inputFilesHead);
 
   tempInputNode = macroFilesHead;
   constNode(&binaryFilesHead);
@@ -71,3 +71,4 @@ int main(int argc, char *argv[])
   closeFileList(outputFilesHead);
   return 1;
 }
+ /*to do- valgrind*/

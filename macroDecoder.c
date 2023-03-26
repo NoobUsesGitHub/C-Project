@@ -29,7 +29,7 @@ FileList* macroDecoder(FILE *fp, char *fileName)
     if (fp == NULL || macroFileNode->file == NULL)
     {
         macroFileNode->file = NULL;
-        printf("File is not correct");
+        fprintf(stderr, "Couldn't create a decoded macro file");
         return macroFileNode;
     }
 
@@ -58,7 +58,7 @@ FileList* macroDecoder(FILE *fp, char *fileName)
                 pch = strtok(NULL, delimints);
                 curMacro = addMacroToList(header, pch, NULL);
                 if(stringToOperatorType(pch)!=-1)
-                    printf("%s can't be a name of a macro!");
+                    fprintf(stderr, "%s can't be a name of a macro!");
                 skp = TRUE;
             }
 
