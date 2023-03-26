@@ -572,75 +572,81 @@ void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, in
     /*check if we have a jump, cause they work diffrent*/
 
     /*print the opcode binary*/
-    calculateOpcodeBinaryAndPrint(op_type, adTypeOper1, adTypeOper2, mode, IC,sym_table,label);
+    calculateOpcodeBinaryAndPrint(op_type, adTypeOper1, adTypeOper2, mode, IC, sym_table, label);
     /*print the opers binary*/
     calculateOperatorsBinaryAndPrint();
 }
 
+/*
+    input: the type of the operator, the address types of the operands, the mode, the instruction counter, the symbol info table and the label
+    will turn the opcode to binary, if there is a label(aka we are jumping, will print that too)
+*/
 void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int adTypeOper2, int mode, int *IC, Symbol *sy_table, char *label)
 {
-  bool needToPrintLabel = FALSE;
-  char binary[15];
-  strcpy(binary, "00000000000000\0");
-  char temp[5];
-  strcpy(temp, "0000\0");
-  /*first, the opcode 8-10*/
-  intToBinary(temp, (int)op_type);
-  strcpyBySteps(binary + 4, temp, 4);
-  strcpy(temp, "0000\0");
+    bool needToPrintLabel = FALSE;
+    char binary[15], temp[5];
+    strcpy(binary, "00000000000000\0");
+    strcpy(temp, "0000\0");
 
-  /*2-3 dst operand*/
-  intToBinary(temp, adTypeOper2);
-  strcpyBySteps(binary + 10, temp + 2, 2);
-  strcpy(temp, "0000\0");
-  /*4-5 src operand*/
-  intToBinary(temp, adTypeOper1);
-  strcpyBySteps(binary + 8, temp + 2, 2);
-  strcpy(temp, "0000\0");
-  /*10-13 is for only address type 2 JMPS*/
-  if (op_type == JMP || op_type == JSR || op_type == BNE)
-  {
-    /*first 12-13*/
-    if (adTypeOper1 == 2)
-    {
-      temp[3]='1';
-      temp[2]='0';
-      strcpyBySteps(binary, temp+2, 2);
-    }
-    else if (adTypeOper1 == 3)
-    {
-      temp[3]='1';
-      temp[2]='1';
-      strcpyBySteps(binary, temp+2, 2);
-    }
-    /*second 10-11*/
-    if (adTypeOper2 == 2)
-    {
-      temp[3]='1';
-      temp[2]='0';
-      strcpyBySteps(binary+2, temp+2, 2);
-    }
-    else if (adTypeOper2 == 3)
-    {
-      temp[3]='1';
-      temp[2]='1';
-      strcpyBySteps(binary+2, temp+2, 2);
-    }
-    needToPrintLabel = TRUE;
-  } /*to do-ARE for operands*/
+    /*first, the opcode 8-10*/
+    intToBinary(temp, (int)op_type);
+    strcpyBySteps(binary + 4, temp, 4);
+    strcpy(temp, "0000\0");
 
-  printf("%d  %s\n", *IC, binary);
-  *IC=*IC+1;
-  strcpy(binary, "00000000000000\0");
-  if (needToPrintLabel)
-  {
-    intToBinary(binary, existInSymbolTable(label, sy_table));
-    shiftLeftChar(binary, 2);
-    strcpy(binary + 12, "10");
+    /*2-3 dst operand*/
+    intToBinary(temp, adTypeOper2);
+    strcpyBySteps(binary + 10, temp + 2, 2);
+    strcpy(temp, "0000\0");
 
-    printf("%d  %s", *IC, binary);
-    *IC=*IC+1;
-  }
+    /*4-5 src operand*/
+    intToBinary(temp, adTypeOper1);
+    strcpyBySteps(binary + 8, temp + 2, 2);
+    strcpy(temp, "0000\0");
+
+    /*10-13 is for only address type 2 JMPS*/
+    if (op_type == JMP || op_type == JSR || op_type == BNE)
+    {
+        /*first 12-13*/
+        if (adTypeOper1 == 2)
+        {
+            temp[3] = '1';
+            temp[2] = '0';
+            strcpyBySteps(binary, temp + 2, 2);
+        }
+        else if (adTypeOper1 == 3)
+        {
+            temp[3] = '1';
+            temp[2] = '1';
+            strcpyBySteps(binary, temp + 2, 2);
+        }
+        /*second 10-11*/
+        if (adTypeOper2 == 2)
+        {
+            temp[3] = '1';
+            temp[2] = '0';
+            strcpyBySteps(binary + 2, temp + 2, 2);
+        }
+        else if (adTypeOper2 == 3)
+        {
+            temp[3] = '1';
+            temp[2] = '1';
+            strcpyBySteps(binary + 2, temp + 2, 2);
+        }
+        needToPrintLabel = TRUE;
+    } /*to do-ARE for operands*/
+    if (mode != SIMULATION)
+        printf("%d  %s\n", *IC, binary);
+    *IC = *IC + 1;
+    strcpy(binary, "00000000000000\0");
+    if (needToPrintLabel)
+    {
+        intToBinary(binary, existInSymbolTable(label, sy_table));
+        shiftLeftChar(binary, 2);
+        strcpy(binary + 12, "10");
+        if (mode != SIMULATION)
+            printf("%d  %s", *IC, binary);
+        *IC = *IC + 1;
+    }
 }
 
 /*
@@ -659,7 +665,7 @@ void shiftLeftChar(char *binary, int steps)
         j++;
     }
     memcpy(binary, temp, (size + 1) * sizeof(char));
-    binary[size+1]='\0';
+    binary[size + 1] = '\0';
 }
 /*
     input: the string of the operand, the type of the operator, the mode and the symbol table
@@ -683,17 +689,29 @@ int checkAddressType(char *oper, OperatorType opcode, int mode, Symbol *sym_tabl
 }
 
 /*
-    input: the string for the operator that we recieved and a placeholder for the next
+    input: the string for the operator that we recieved and a placeholder for the next and the label
     output: the number of operands we have if we need to split the operands
 */
-int breakDownJumps(char *oper1, char *oper2)
+int breakDownJumps(char *oper1, char *oper2, char label)
 {
     /*if this a normal jump, will be not split because it has a label, else split to two operands */
     bool turn_to_second_oper = FALSE;
     char *bit = oper1;
+    char *label_pointer = label;
+    memset(label, '\0', MAX_LABEL_SIZE * sizeof(char));
+    /*collecting a label, we have one for sure*/
+    while (*bit != '(' && *bit != '\n')
+    {
+        *label_pointer = *bit;
+        bit++;
+        label_pointer++;
+    }
+    /*checking if we have operands*/
     if (*bit == '(')
         bit++;
-
+    else
+        return 1;
+    
     int i = 0, j = 0;
     while (*bit != '\n')
     {
@@ -718,11 +736,13 @@ int breakDownJumps(char *oper1, char *oper2)
 
         bit++;
     }
+
     if (j > 0)
     {
         if (oper2[j - 1] == ')')
             j--;
         oper2[j] = '\0';
     }
+    
     return turn_to_second_oper ? 2 : 1;
 }

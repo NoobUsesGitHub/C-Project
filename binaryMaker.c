@@ -221,7 +221,7 @@ FileList *toBinary(FILE *fp, char *fileName)
 
          /*keep an eye open for jmp jsr and bne NEED TO FIX STILL*/
         if (op_code_type == JMP || op_code_type == JSR || op_code_type == BNE)
-            spaceCount =breakDownJumps(oper1, oper2);
+            spaceCount =breakDownJumps(oper1, oper2,label);
 
         /*now we have the opcode, the two operators and the label if any,*/
 
