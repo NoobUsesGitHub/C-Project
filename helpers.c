@@ -632,7 +632,7 @@ void shiftLeftChar(char *binary, int steps)
 {
     int size = strlen(binary);
     int i=steps-1;
-    for(;i<=size;i++)
+    for(;i<size;i++)
     	binary[i-1]=binary[i];
     i=size-steps;
     for(;i<=size;i++)
