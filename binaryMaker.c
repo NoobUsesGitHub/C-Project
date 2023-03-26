@@ -20,7 +20,6 @@ FileList *toBinary(FILE *fp, char *fileName)
     OperatorType op_code_type;
 
     constSymbol(&dataHeader);
-    constSymbol(&dataHeader);
 
     FileList *binaryFileNode;
     constNode(&binaryFileNode);

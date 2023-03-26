@@ -452,7 +452,7 @@ void intToBinary(char *binaryChar, int value)
 {
     /*make not shit*/
     int size = strlen(binaryChar);
-    int i = size - 2;
+    int i = size - 1;
     for (; i >= 0; i--)
     {
         binaryChar[i] = (value & 1) + '0';
@@ -599,22 +599,22 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
 */
 /*
     input: a string and the number of steps back to take every item
-
+*/
 void rollBack(char *binary, int steps)
 {
     int size = strlen(binary);
-    int i = steps, j = 0;
-    for (; i < size - 1; i++)
+    int i, j;
+    char temp;
+    for (i = 0; i < size; i++)
     {
-        i = j;
-        for (; i - j >= 0; j++)
-        {
-            binary[j - steps] = binary[i];
-        }
+
+        j = (i - steps + size) % size;
+
+        temp = binary[i];
+        binary[i] = binary[j];
+        binary[j] = temp;
     }
-    binary[size - 1] = '\0';
 }
-*/
 /*
     input: the string of the operand, the type of the operator, the mode and the symbol table
     output: the address type, per page 19
