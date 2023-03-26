@@ -642,6 +642,8 @@ void rollBack(char *binary, int steps)
         binary[i] = binary[j];
         binary[j] = temp;
     }
+    binary[size-steps]='0';
+    binary[size-steps+1]='0';
 }
 /*
     input: the string of the operand, the type of the operator, the mode and the symbol table
