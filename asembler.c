@@ -71,4 +71,6 @@ int main(int argc, char *argv[])
   closeFileList(outputFilesHead);
   return 1;
 }
- /*to do- valgrind*/
+/*to do- valgrind*/
+/*to do -decide if extern and entry stay*/
+/*to do- make sure they print to file*/

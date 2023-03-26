@@ -248,7 +248,7 @@ FileList *toBinary(FILE *fp, char *fileName)
 
         dumpFullInstruction(label, opcode, oper1, oper2, spaceCount, &IC, SIMULATION, op_table);
     }
-    if (foundErr == TRUE) /*to do - implement finding errors*/
+    if (foundErr == TRUE)
     {
         fprintf(stderr, "there are error's in the first pass!");
     }
@@ -303,6 +303,7 @@ FileList *toBinary(FILE *fp, char *fileName)
         i = 0;
         if (*bit == symbolMarker) /*we met a sybol!*/
         {/*to do -decide if extern and entry stay*/
+         /*to do- make sure they print to file*/
             continue; /*we skip those, we collected them all*/
         }
 
@@ -363,7 +364,7 @@ FileList *toBinary(FILE *fp, char *fileName)
         dumpFullInstruction(label, opcode, oper1, oper2, spaceCount, &IC, EXECUTION, op_table);
     }
     dumpSymbolsToMainFile(dataHeader,IC,binaryFileNode->file);
-    /*to do, dump correctly the symbols*/
+
     if (!foundErr)
     {
         dumpSymbols(dataHeader, fileName, ENTRY, ".ent");
