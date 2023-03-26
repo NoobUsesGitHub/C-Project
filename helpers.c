@@ -451,28 +451,31 @@ void dumpStr(char *oper, int *DC, int mode)
 void intToBinary(char *binaryChar, int value)
 {
     char temp;
-    int bufferSize=strlen(binaryChar);
-int i =0;
-    for (i = bufferSize - 1; i >= 0; i--) {
-        if ((value >> i) & 1) {
-            binaryChar[i]='1';
-        } else {
-            binaryChar[i]='0';
+    int bufferSize = strlen(binaryChar);
+    int i = 0;
+    for (i = bufferSize - 1; i >= 0; i--)
+    {
+        if ((value >> i) & 1)
+        {
+            binaryChar[i] = '1';
+        }
+        else
+        {
+            binaryChar[i] = '0';
         }
     }
-    
-    bufferSize=strlen(binaryChar);
+
+    bufferSize = strlen(binaryChar);
     i = 0;
-    for (; i < bufferSize / 2; i++) {
-         temp= binaryChar[i];
+    for (; i < bufferSize / 2; i++)
+    {
+        temp = binaryChar[i];
         binaryChar[i] = binaryChar[bufferSize - i - 1];
         binaryChar[bufferSize - i - 1] = temp;
     }
-
 }
 
-
-    /*binaryChar[size+1] = '\0';*/
+/*binaryChar[size+1] = '\0';*/
 /*
     input: a string
     output: the number of register it is if it exists, if not, -1
@@ -527,21 +530,20 @@ bool existInAddressType(int ad_type, int addressing_methods[])
     return FALSE;
 }
 
-
 /*
-  input: two strs, from and two, and how many chars to copy 
+  input: two strs, from and two, and how many chars to copy
   will copy the chars from the from to to
 */
 void strcpyBySteps(char *to, char *from, int steps)
 {
-  while (steps > 0)
-  {
-    *to = *from;
-    to++;
-    from++;
+    while (steps > 0)
+    {
+        *to = *from;
+        to++;
+        from++;
 
-    steps--;
-  }
+        steps--;
+    }
 }
 
 /*
@@ -632,14 +634,16 @@ void shiftLeftChar(char *binary, int steps)
 {
     int size = strlen(binary);
     char temp[size];
-    int i=steps,j=0;
-    while(i<size)
+    memset(temp, '0', size);
+    temp[size-1]='\0';
+    int i = steps, j = 0;
+    while (i < size)
     {
-        temp[j]=binary[i];
+        temp[j] = binary[i];
         i++;
         j++;
     }
-    memcpy(binary,temp,(size+1)*sizeof(char));    
+    memcpy(binary, temp, (size + 1) * sizeof(char));
 }
 /*
     input: the string of the operand, the type of the operator, the mode and the symbol table
