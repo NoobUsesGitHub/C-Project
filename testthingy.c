@@ -61,7 +61,7 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
   if (needToPrintLabel)
   {
     intToBinary(binary, existInSymbolTable(label, sy_table));
-    rollBack(binary, 2);
+    shiftLeftChar(binary, 2);
     strcpy(binary + 12, "10");
 
     printf("%d  %s", *IC, binary);
@@ -78,6 +78,6 @@ int main()
   strcpy(binary, "00000000000100\0");
   int IC = 11;
   calculateOpcodeBinaryAndPrint(BNE, 0, 0, SIMULATION, &IC, sy_table, "AAA");
-  rollBack(binary, 2);
+  shiftLeftChar(binary, 2);
   return 0;
 }

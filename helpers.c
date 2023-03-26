@@ -617,7 +617,7 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
     if (needToPrintLabel)
     {
         intToBinary(binary, existInSymbolTable(label, sy_table));
-        rollBack(binary, 2);
+        shiftLeftChar(binary, 2);
         strcpy(binary + 12, "10");
 
         printf("%d  %s", *IC, binary);
@@ -628,7 +628,7 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
 /*
     input: a string and the number of chars to take back a step
 */
-void rollBack(char *binary, int steps)
+void shiftLeftChar(char *binary, int steps)
 {
     int size = strlen(binary);
     int i=steps-1;
