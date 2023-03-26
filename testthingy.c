@@ -26,18 +26,32 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
   /*10-13 is for only address type 2 JMPS*/
   if (op_type == JMP || op_type == JSR || op_type == BNE)
   {
-    temp[0]='0';
-    temp[1]='1';
     /*first 12-13*/
     if (adTypeOper1 == 2)
-      strcpyBySteps(binary, temp,2);
+    {
+      temp[3]='1';
+      temp[2]='0';
+      strcpyBySteps(binary, temp, 2);
+    }
     else if (adTypeOper1 == 3)
-      strcpyBySteps(binary, temp,2);
+    {
+      temp[3]='1';
+      temp[2]='0';
+      strcpyBySteps(binary, temp, 2);
+    }
     /*second 10-11*/
     if (adTypeOper2 == 2)
-      strcpyBySteps(binary + 2, temp,2);
+    {
+      temp[3]='1';
+      temp[2]='0';
+      strcpyBySteps(binary+2, temp, 2);
+    }
     else if (adTypeOper2 == 3)
-      strcpyBySteps(binary + 2, temp,2);
+    {
+      temp[3]='1';
+      temp[2]='0';
+      strcpyBySteps(binary+2, temp, 2);
+    }
     needToPrintLabel = TRUE;
   } /*to do-ARE for operands*/
 
