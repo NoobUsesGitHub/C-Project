@@ -631,13 +631,15 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
 void shiftLeftChar(char *binary, int steps)
 {
     int size = strlen(binary);
-    int i=steps-1;
-    for(;i<size;i++)
-    	binary[i-1]=binary[i];
-    i=size-steps;
-    for(;i<=size;i++)
-    	binary[i]='0';
-    
+    char temp[size];
+    int i=steps,j=0;
+    while(i<size)
+    {
+        temp[j]=binary[i];
+        i++;
+        j++;
+    }
+    memcpy(binary,temp,(size+1)*sizeof(char));    
 }
 /*
     input: the string of the operand, the type of the operator, the mode and the symbol table
