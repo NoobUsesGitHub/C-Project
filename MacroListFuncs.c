@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "helpers.h"
+#include "MacroListFuncs.h"
+
 
 
 
@@ -53,7 +55,7 @@ void constMacroList(MacroList **m)
  * input:a file node header
  * will close all file objects
  */
-void freeList(MacroList *head)
+void freeMacroList(MacroList *head)
 {
     MacroList *next = head;
     while (next != NULL)

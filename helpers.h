@@ -6,6 +6,10 @@
 #include <string.h>
 #include "struct.h"
 
+Operator *createOperatorsTable();
+
+void deleteOperatorsTable(Operator *);
+
 double hasher(char *);
 
 void clearStr(char *, int);
@@ -16,28 +20,35 @@ bool isLetter(char *);
 
 int dataLength(char *);
 
-char *opcodeToBinary(char*);
+char *opcodeToBinary(char *);
 
-int realOpCode(char*,HashTable[]);
-
-int countSpace(char*);
+int countSpace(char *);
 
 void removeRedundantSpaces(char *);
 
-void dumpOpCode(char*, int);
+void addToData(Symbol *, int);
 
-void initHashTable(HashTable**);
+void dumpDataOpers(char *, int *, int);
 
-void addToData(Symbol*, int);
+void dumpStr(char *, int *,int);
 
-int numOfOpers(int,HashTable*);
+void intToBinary(char *, int);
 
-void dumpDataOpers(char*, int*);
+char *opcodeToBinary(char *);
 
-void dumpStr(char*, int*);
+OperatorType stringToOperatorType(char*);
 
-void intToBinary(char*,int);
+int getNumOfOperands(OperatorType, Operator*);
 
-char*opcodeToBinary(char*);
+int realRegister(char*);
 
+bool isAddTypeCorrect(OperatorType,int, int, Operator*);
+
+bool existInAddressType(int, int[]);
+
+void dumpFullInstruction(char*,char*,char*,char*,int,int*,int,Operator*);
+
+int checkAddressType(char*);
+
+int breakDownJumps(char *, char *, char *);
 #endif // HELPERS_H

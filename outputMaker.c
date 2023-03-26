@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <string.h>
 #include "helpers.h"
+#include "outputMaker.h"
+#include "FileListFuncs.h"
+
 FileList *toOutput(FILE *fp, char *fileName)
 {
   char c = ' ';
@@ -67,9 +70,10 @@ FileList *toOutput(FILE *fp, char *fileName)
 
 char binaryTranslate(char c)
 {
+  char output_char;
   if (c == '0')
-    c = '.';
-  if (c == '1')
-    c = '/';
-  return c;
+    output_char = '.';
+  else if (c == '1')
+    output_char = '/';
+  return output_char;
 }

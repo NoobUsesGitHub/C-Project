@@ -1,39 +1,81 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+#include "struct.h"
 
-void removeRedundantSpaces(char *str)
+
+void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int adTypeOper2, int mode, int *IC, Symbol *sy_table,char *label)
 {
-  int i, j, len;
-  len = strlen(str); /*to change*/
-  j = 0;
-  for (i = 0; i < len; i++)
-  {
-    if (isspace(str[i]) == 0)
+    bool needToPrintLabel = ;
+    char binary[15];
+    strcpy(binary, "00000000000000\0");
+    char temp[5];
+    strcpy(temp, "0000\0");
+    /*first, the opcode 8-10*/
+    intToBinary(temp, (int)op_type);
+    strcpy(binary + 4, temp);
+    strcpy(temp, "0000\0");
+
+    /*2-3 dst operand*/
+    intToBinary(temp, adTypeOper2);
+    strcpy(binary + 9, temp + 2);
+    strcpy(temp, "0000\0");
+    /*4-5 dst operand*/
+    intToBinary(temp, adTypeOper1);
+    strcpy(binary + 7, temp + 2);
+    strcpy(temp, "0000\0");
+    /*10-13 is for only address type 2 JMPS*/
+    if (op_type == JMP || op_type == JSR || op_type == BNE)
     {
-      if (i > 0 && str[i] == ',' && isspace(str[j - 1]))
-      {
-        str[j - 1] = str[i];
-        continue;
-      }
-      str[j] = str[i];
-      j++;
-    }
-    else if (i > 0 && isspace(str[i - 1]) == 0)
+        /*first 12-13*/
+        if (adTypeOper1 == 2)
+            strcpy(binary, "11");
+        else if (adTypeOper1 == 3)
+            strcpy(binary, "01");
+        /*first 10-11*/
+        if (adTypeOper1 == 2)
+            strcpy(binary + 2, "11");
+        else if (adTypeOper1 == 3)
+            strcpy(binary + 2, "01");
+        needToPrintLabel = TRUE;
+    } /*to do-ARE for operands*/
+
+    printf("%d  %s", *IC, binary);
+    *IC++;
+    strcpy(binary, "00000000000000\0");
+    if (needToPrintLabel)
     {
-      str[j] = ' ';
-      j++;
+        intToBinary(binary, existInSymbolTable(label, sy_table));
+        rollBack(binary, 2);
+        strcpy(binary + 12, "10");
+
+        printf("%d  %s", *IC, binary);
+        *IC++;
     }
-  }
-  if (str[j - 1] == ' ' || str[j - 1] == '\t')
-    j--;
-  str[j] = '\0';
 }
 
+
+/*
+    input: a string and the number of steps back to take every item
+*/
+void rollBack(char *binary, int steps)
+{
+    int size = strlen(binary);
+    int i = steps, j = 0;
+    for (; i < size - 1; i++)
+    {
+        i = j;
+        for (; i - j >= 0; j++)
+        {
+            binary[j - steps] = binary[i];
+        }
+    }
+    binary[size - 1] = '\0';
+}
 int main()
 {
-  char str[100] = "LABEL: OPCODE OPER1  , OPER2   ";
-
-  removeRedundantSpaces(str);
-  printf("Modified string: %s", str);
+  char binary[15];
+  strcpy(binary,"00000000000100\0";
+  rollBack(binary, 2);
   return 0;
 }

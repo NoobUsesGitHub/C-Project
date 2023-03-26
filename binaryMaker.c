@@ -1,17 +1,23 @@
 #include <stdio.h>
 #include <string.h>
 #include "helpers.h"
+#include "binaryMaker.h"
+#include "FileListFuncs.h"
+#include "SymbolListFuncs.h"
+#include "struct.h"
 
 FileList *toBinary(FILE *fp, char *fileName)
 {
-    HashTable table[16];
-    initHashTable(&table);
-    int IC = -1, DC = 0, wordCount = 0, spaceCount = 0; /*wordCount=L*/
+    Operator *op_table = createOperatorsTable();
+
+    int IC = -1, DC = 0, wordCount = 0, spaceCount = 0,i=0; /*wordCount=L*/
     Stype stype = 0;
     bool skp = FALSE, foundSymbol = FALSE, foundErr = FALSE, foundLabel = FALSE;
-    char bit = ' ', label[MAX_LABEL_SIZE], dataTester[7], opcode[5], oper1[MAX_LABEL_SIZE], oper2[MAX_LABEL_SIZE], *pch = NULL, str[MAX_LINE_SIZE];
+    char* bit=NULL, label[MAX_LABEL_SIZE], dataTester[7], opcode[5], oper1[MAX_LABEL_SIZE], oper2[MAX_LABEL_SIZE], *pch = NULL, str[MAX_LINE_SIZE];
     char strNewName[strlen(fileName)];
-    Symbol *dataHeader, *dataNode;
+    Symbol *dataHeader=NULL;
+    Symbol *dataNode=NULL;
+    OperatorType op_code_type;
 
     constSymbol(&dataHeader);
     constSymbol(&dataHeader);
@@ -35,7 +41,7 @@ FileList *toBinary(FILE *fp, char *fileName)
         return binaryFileNode;
     }
 
-    while (fgets(str, 85, fp) != NULL) /*first pass*/
+    while (fgets(str, MAX_LINE_SIZE, fp) != NULL) /*first pass*/
     {
         removeRedundantSpaces(str);
         IC++;
@@ -52,7 +58,7 @@ FileList *toBinary(FILE *fp, char *fileName)
             continue; /*skiiiiip*/
 
         /*checking for a label*/
-        while (isLetter(*bit) == TRUE)
+        while (isLetter(bit) == TRUE)
         {
             if (*bit == LABEL_END)
             {
@@ -66,27 +72,27 @@ FileList *toBinary(FILE *fp, char *fileName)
         if (foundLabel == FALSE)
         {
             bit = str;       /*reseting point*/
-            clearStr(label); /*clearing label*/
+            clearStr(label,MAX_LABEL_SIZE); /*clearing label*/
         }
         else
         {
             /*check if label is a real register or opcode*/
-            if (realOpCode(label, table) != -1 || realRegister(label) != -1)
+            if (stringToOperatorType(label) != ERROR_NA || realRegister(label) != -1)
                 printf("label %s is a register or opcode!", label);
         }
 
         /*jumping for the next word*/
         /*checking for symbols first*/
-        while (isLetter(*bit) == FALSE)
+        while (isLetter(bit) == FALSE)
             bit++;
-        if (*bit == '\0' || bit != '\n')
+        if (*bit == '\0' || *bit != '\n')
             printf("weldp");
 
         i = 0;
         if (*bit == symbolMarker) /*we met a sybol!*/
         {
             bit++; /*skipping the dot!*/
-            while (isLetter(*bit) == TRUE)
+            while (isLetter(bit) == TRUE)
             {
                 dataTester[i] = *bit;
                 i++;
@@ -95,10 +101,10 @@ FileList *toBinary(FILE *fp, char *fileName)
             stype = checkSymbolType(dataTester);
 
             /*jumping for the next word*/
-            while (isLetter(*bit) == TRUE)
+            while (isLetter(bit) == TRUE)
                 bit++;
 
-            if (*bit == '\0' || bit != '\n')
+            if (*bit == '\0' || *bit != '\n')
                 printf("weldp");
 
             i = 0;
@@ -120,7 +126,7 @@ FileList *toBinary(FILE *fp, char *fileName)
                 bit++;
                 oper1[i] = '\0';
 
-                dumpStr(oper, &IC, SIMULATION);
+                dumpStr(oper1, &IC, SIMULATION);
 
                 if (foundLabel == FALSE)
                 {
@@ -134,7 +140,7 @@ FileList *toBinary(FILE *fp, char *fileName)
             case ENTRY:
                 clearStr(label, MAX_LABEL_SIZE);
                 /*collecting label, we ignore the first label*/
-                while (isLetter(*bit) == TRUE)
+                while (isLetter(bit) == TRUE)
                 {
                     label[i] = *bit;
                     i++;
@@ -148,7 +154,7 @@ FileList *toBinary(FILE *fp, char *fileName)
                 i = 0;
                 while (*bit != '\n')
                 {
-                    if (isLetter(*bit) == TRUE)
+                    if (isLetter(bit) == TRUE)
                     {
                         oper1[i] = *bit;
                         i++;
@@ -197,6 +203,7 @@ FileList *toBinary(FILE *fp, char *fileName)
 
         case 1: /*opcode oper1*/
             strcpy(opcode, pch);
+            op_code_type=stringToOperatorType(opcode);
             pch = strtok(NULL, delimints);
             strcpy(oper1, pch);
             break;
@@ -204,6 +211,7 @@ FileList *toBinary(FILE *fp, char *fileName)
         case 2:
             /*opcode oper1, oper 2*/
             strcpy(opcode, pch);
+            op_code_type=stringToOperatorType(opcode);
             pch = strtok(NULL, delimints);
             strcpy(oper1, pch);
             oper1[strlen(oper1) - 1] = '\0'; /*skipping the ,*/
@@ -212,21 +220,21 @@ FileList *toBinary(FILE *fp, char *fileName)
             break;
         }
 
-         /*keep an eye open for jmp jsr and bne*/
-        if (realOpCode(opcode, table) == realOpCode("jmp", table) || realOpCode(opcode, table) == realOpCode("jsr", table) || realOpCode(opcode, table) == realOpCode("bne", table))
-            breakDownJumps(opcode, oper1, oper2);
+         /*keep an eye open for jmp jsr and bne NEED TO FIX STILL*/
+        if (op_code_type == JMP || op_code_type == JSR || op_code_type == BNE)
+            spaceCount =breakDownJumps(oper1, oper2);
 
         /*now we have the opcode, the two operators and the label if any,*/
 
-        if (realOpCode(opcode) == -1) /*if opcode a real opcode*/
+        if (op_code_type == ERROR_NA) /*if opcode a real opcode*/
             printf("nope, not right");
 
-        if (realOpCode(oper1) != -1 || realOpCode(oper2) != -1) /*if any operator is a name of an opecode*/
+        if (stringToOperatorType(oper1) != ERROR_NA || stringToOperatorType(oper1) != ERROR_NA) /*if any operator is a name of an opecode*/
             printf("nope, not right");
 
+        
 
-
-        dumpFullInstruction(label, opcode, oper1, oper2,spaceCount, &IC, SIMULATION,table);
+        dumpFullInstruction(label, opcode, oper1, oper2,spaceCount, &IC, SIMULATION,op_table);
     }
 
     /*rewind(fp) / fseek(fptr, 0, SEEK_SET);
@@ -250,7 +258,7 @@ FileList *toBinary(FILE *fp, char *fileName)
         close them
         go to second pass*/
 
-    freeList(header);
-    freeTable(table);
+    freeSyList(dataHeader);
+    deleteOperatorsTable(op_table);
     return binaryFileNode; /*tochange*/
 }

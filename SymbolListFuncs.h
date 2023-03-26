@@ -6,7 +6,8 @@
 #include "helpers.h"
 
 /*SymbolListFuncs*/
-int checkSymbolType(char*);
+Stype checkSymbolType(char*);
 
-Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line)
+Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line);
+void freeSyList(Symbol*);
 #endif

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "helpers.h"
+#include "SymbolListFuncs.h"
 
 /*
  * input: a pointer for null macro node object
@@ -32,7 +33,7 @@ Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line)
         header->name = str;
         header->hash = hasher(str);
         header->type = type;
-        header->line = type;
+        header->line = line;
     }
     else
     {
@@ -48,7 +49,7 @@ Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line)
             current_node->next->name = str;
             current_node->next->hash = hasher(str);
             current_node->next->type = type;
-            current_node->next->line = type;
+            current_node->next->line = line;
         }
         else
         {
@@ -64,7 +65,7 @@ Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line)
  * input:a file node header
  * will close all file objects
  */
-void freeList(Symbol *head)
+void freeSyList(Symbol *head)
 {
     Symbol *next = head;
     while (next != NULL)
@@ -103,4 +104,24 @@ Stype checkSymbolType(char *str)
     }
 
     return CODE;
+}
+
+/*
+    input: a string, the symbol table
+    output: the line where the symbol appeared, if it doesn't exist,-1
+
+*/
+int existInSymbolTable(char *oper, Symbol *sym_table)
+{
+    double hsh = hasher(oper);
+
+    while (sym_table->next != NULL)
+    {
+        if (sym_table->hash == hsh)
+            return sym_table->line;
+        sym_table = sym_table->next;
+    }
+    if (sym_table != NULL)
+        return -1;
+    return sym_table->line;
 }

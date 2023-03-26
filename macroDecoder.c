@@ -2,9 +2,8 @@
 #include <string.h>
 #include <ctype.h>
 #include "helpers.h"
-
-#define coment ';'
-#define delimints "    \t \f \r"
+#include "MacroListFuncs.h"
+#include "FileListFuncs.h"
 
 
 FileList* macroDecoder(FILE *fp, char *fileName)
@@ -74,7 +73,7 @@ FileList* macroDecoder(FILE *fp, char *fileName)
         skp = FALSE;
     }
 
-    freeList(header);
+    freeMacroList(header);
 
     return macroFileNode; /*tochange*/
 }
