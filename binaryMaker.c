@@ -215,7 +215,7 @@ FileList *toBinary(FILE *fp, char *fileName)
         }
 
          /*keep an eye open for jmp jsr and bne*/
-        if (stringToOperatorType(opcode) == JMP || stringToOperatorType(opcode) == JSR || stringToOperatorType(opcode, table) == BNE)
+        if (stringToOperatorType(opcode) == JMP || stringToOperatorType(opcode) == JSR || stringToOperatorType(opcode) == BNE)
             breakDownJumps(opcode, oper1, oper2);
 
         /*now we have the opcode, the two operators and the label if any,*/

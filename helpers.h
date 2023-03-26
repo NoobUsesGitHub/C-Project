@@ -8,7 +8,7 @@
 
 Operator *createOperatorsTable();
 
-void deleteOperatorsTable(Operaotr *);
+void deleteOperatorsTable(Operator *);
 
 double hasher(char *);
 
@@ -30,7 +30,7 @@ void addToData(Symbol *, int);
 
 void dumpDataOpers(char *, int *, int);
 
-void dumpStr(char *, int *);
+void dumpStr(char *, int *,int);
 
 void intToBinary(char *, int);
 

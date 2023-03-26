@@ -346,7 +346,7 @@ OperatorType stringToOperatorType(char *operator_name)
     {
         return RTS;
     }
-    else if (strcmp(operator_name, "stop") || trcmp(ostr "stop"))
+    else if (strcmp(operator_name, "stop") || strcmp(str "stop"))
     {
         return STOP;
     }
