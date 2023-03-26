@@ -547,9 +547,9 @@ void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, in
     calculateOperatorsBinaryAndPrint();
 }
 */
-void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int adTypeOper2, int mode, int *IC, Symbol *sy_table,char *label)
+void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int adTypeOper2, int mode, int *IC, Symbol *sy_table, char *label)
 {
-    bool needToPrintLabel =FALSE ;
+    bool needToPrintLabel = FALSE;
     char binary[15];
     strcpy(binary, "00000000000000\0");
     char temp[5];
@@ -628,7 +628,7 @@ int checkAddressType(char *oper, OperatorType opcode, int mode, Symbol *sym_tabl
     if (opcode == JMP || opcode == BNE || opcode == JSR)
         return 2;
 
-    if (realRegister(opcode) != -1)
+    if (realRegister(oper) != -1)
         return 3;
 
     if (mode == SIMULATION || (mode != SIMULATION && existInSymbolTable(oper, sym_table) != -1))
@@ -643,7 +643,8 @@ int checkAddressType(char *oper, OperatorType opcode, int mode, Symbol *sym_tabl
 int breakDownJumps(char *oper1, char *oper2)
 {
     /*if this a normal jump, will be not split because it has a label, else split to two operands */
-    bool turn_to_second_oper = FALSE char *bit = oper1;
+    bool turn_to_second_oper = FALSE;
+    char *bit = oper1;
     if (*bit == '(')
         bit++;
 
