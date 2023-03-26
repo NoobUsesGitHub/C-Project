@@ -536,3 +536,6 @@ void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, in
     /*print the opcode binary*/
     /*print the opers binary*/
 }
+/*fix*/
+int checkAddressType(char *oper){return 0;}
+void breakDownJumps(char *opcode, char *oper1, char *oper2){}
