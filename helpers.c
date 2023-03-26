@@ -520,16 +520,16 @@ bool existInAddressType(int ad_type, int addressing_methods[])
     not done yet
     general Idea- will recieve label, opcode,operator1 operator2 and then code them up to binary
 
-*/
+
 
 void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, int opersCnt, int *IC, int mode, Operator *op_table, Symbol *sym_table)
 {
     int adTypeOper1 = 0, adTypeOper2 = 0;
     OperatorType op_type = stringToOperatorType(opcode);
-    if (opersCnt != getNumOfOperands(op_type, op_table)) /*do we have more than required operators*/
+    if (opersCnt != getNumOfOperands(op_type, op_table)) /*do we have more than required operators
         printf("nope, not right");
 
-    /*take the types of two opers*/
+    /*take the types of two opers
 
     adTypeOper1 = checkAddressType(oper1, op_type, mode, sym_table);
     adTypeOper2 = checkAddressType(oper2, op_type, mode, sym_table);
@@ -537,19 +537,19 @@ void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, in
     {
         printf("incorrect address type for one of the operators for %s in %d", opcode, *IC);
         adTypeOper1 = 0;
-        adTypeOper2 = 0; /*adding dummy info*/
+        adTypeOper2 = 0; /*adding dummy info
     }
-    /*check if we have a jump, cause they work diffrent*/
+    /*check if we have a jump, cause they work diffrent
 
-    /*print the opcode binary*/
+    /*print the opcode binary
     calculateOpcodeBinaryAndPrint(op_type, adTypeOper1, adTypeOper2, mode, IC,sym_table,label);
-    /*print the opers binary*/
+    /*print the opers binary
     calculateOperatorsBinaryAndPrint();
 }
-
+*/
 void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int adTypeOper2, int mode, int *IC, Symbol *sy_table,char *label)
 {
-    bool needToPrintLabel = ;
+    bool needToPrintLabel =FALSE ;
     char binary[15];
     strcpy(binary, "00000000000000\0");
     char temp[5];
@@ -599,7 +599,7 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
 
 /*
     input: a string and the number of steps back to take every item
-*/
+
 void rollBack(char *binary, int steps)
 {
     int size = strlen(binary);
@@ -614,7 +614,7 @@ void rollBack(char *binary, int steps)
     }
     binary[size - 1] = '\0';
 }
-
+*/
 /*
     input: the string of the operand, the type of the operator, the mode and the symbol table
     output: the address type, per page 19
