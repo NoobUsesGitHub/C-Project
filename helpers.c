@@ -550,16 +550,16 @@ void strcpyBySteps(char *to, char *from, int steps)
     not done yet
     general Idea- will recieve label, opcode,operator1 operator2 and then code them up to binary
 
-
+*/
 
 void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, int opersCnt, int *IC, int mode, Operator *op_table, Symbol *sym_table)
 {
     int adTypeOper1 = 0, adTypeOper2 = 0;
     OperatorType op_type = stringToOperatorType(opcode);
-    if (opersCnt != getNumOfOperands(op_type, op_table)) /*do we have more than required operators
+    if (opersCnt != getNumOfOperands(op_type, op_table)) /*do we have more than required operators*/
         printf("nope, not right");
 
-    /*take the types of two opers
+    /*take the types of two opers*/
 
     adTypeOper1 = checkAddressType(oper1, op_type, mode, sym_table);
     adTypeOper2 = checkAddressType(oper2, op_type, mode, sym_table);
@@ -567,66 +567,82 @@ void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, in
     {
         printf("incorrect address type for one of the operators for %s in %d", opcode, *IC);
         adTypeOper1 = 0;
-        adTypeOper2 = 0; /*adding dummy info
+        adTypeOper2 = 0; /*adding dummy info*/
     }
-    /*check if we have a jump, cause they work diffrent
+    /*check if we have a jump, cause they work diffrent*/
 
-    /*print the opcode binary
+    /*print the opcode binary*/
     calculateOpcodeBinaryAndPrint(op_type, adTypeOper1, adTypeOper2, mode, IC,sym_table,label);
-    /*print the opers binary
+    /*print the opers binary*/
     calculateOperatorsBinaryAndPrint();
 }
 
 void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int adTypeOper2, int mode, int *IC, Symbol *sy_table, char *label)
 {
-    bool needToPrintLabel = FALSE;
-    char binary[15];
-    strcpy(binary, "00000000000000\0");
-    char temp[5];
-    strcpy(temp, "0000\0");
-    /*first, the opcode 8-10
-    intToBinary(temp, (int)op_type);
-    strcpy(binary + 4, temp);
-    strcpy(temp, "0000\0");
+  bool needToPrintLabel = FALSE;
+  char binary[15];
+  strcpy(binary, "00000000000000\0");
+  char temp[5];
+  strcpy(temp, "0000\0");
+  /*first, the opcode 8-10*/
+  intToBinary(temp, (int)op_type);
+  strcpyBySteps(binary + 4, temp, 4);
+  strcpy(temp, "0000\0");
 
-    /*2-3 dst operand
-    intToBinary(temp, adTypeOper2);
-    strcpy(binary + 9, temp + 2);
-    strcpy(temp, "0000\0");
-    /*4-5 dst operand
-    intToBinary(temp, adTypeOper1);
-    strcpy(binary + 7, temp + 2);
-    strcpy(temp, "0000\0");
-    /*10-13 is for only address type 2 JMPS
-    if (op_type == JMP || op_type == JSR || op_type == BNE)
+  /*2-3 dst operand*/
+  intToBinary(temp, adTypeOper2);
+  strcpyBySteps(binary + 10, temp + 2, 2);
+  strcpy(temp, "0000\0");
+  /*4-5 src operand*/
+  intToBinary(temp, adTypeOper1);
+  strcpyBySteps(binary + 8, temp + 2, 2);
+  strcpy(temp, "0000\0");
+  /*10-13 is for only address type 2 JMPS*/
+  if (op_type == JMP || op_type == JSR || op_type == BNE)
+  {
+    /*first 12-13*/
+    if (adTypeOper1 == 2)
     {
-        /*first 12-13
-        if (adTypeOper1 == 2)
-            strcpy(binary, "11");
-        else if (adTypeOper1 == 3)
-            strcpy(binary, "01");
-        /*first 10-11
-        if (adTypeOper1 == 2)
-            strcpy(binary + 2, "11");
-        else if (adTypeOper1 == 3)
-            strcpy(binary + 2, "01");
-        needToPrintLabel = TRUE;
-    } /*to do-ARE for operands
+      temp[3]='1';
+      temp[2]='0';
+      strcpyBySteps(binary, temp+2, 2);
+    }
+    else if (adTypeOper1 == 3)
+    {
+      temp[3]='1';
+      temp[2]='1';
+      strcpyBySteps(binary, temp+2, 2);
+    }
+    /*second 10-11*/
+    if (adTypeOper2 == 2)
+    {
+      temp[3]='1';
+      temp[2]='0';
+      strcpyBySteps(binary+2, temp+2, 2);
+    }
+    else if (adTypeOper2 == 3)
+    {
+      temp[3]='1';
+      temp[2]='1';
+      strcpyBySteps(binary+2, temp+2, 2);
+    }
+    needToPrintLabel = TRUE;
+  } /*to do-ARE for operands*/
+
+  printf("%d  %s\n", *IC, binary);
+  *IC=*IC+1;
+  strcpy(binary, "00000000000000\0");
+  if (needToPrintLabel)
+  {
+    intToBinary(binary, existInSymbolTable(label, sy_table));
+    shiftLeftChar(binary, 2);
+    strcpy(binary + 12, "10");
 
     printf("%d  %s", *IC, binary);
-    *IC++;
-    strcpy(binary, "00000000000000\0");
-    if (needToPrintLabel)
-    {
-        intToBinary(binary, existInSymbolTable(label, sy_table));
-        shiftLeftChar(binary, 2);
-        strcpy(binary + 12, "10");
-
-        printf("%d  %s", *IC, binary);
-        *IC++;
-    }
+    *IC=*IC+1;
+  }
 }
-*/
+
 /*
     input: a string and the number of chars to take back a step
 */
