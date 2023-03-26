@@ -459,7 +459,7 @@ void intToBinary(char *binaryChar, int value)
         value >>= 1;
     }
     binaryChar[0] = (value < 0) ? '1' : '0';
-    binaryChar[size] = '\0';
+    /*binaryChar[size+1] = '\0';*/
 }
 
 /*
