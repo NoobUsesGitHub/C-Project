@@ -50,5 +50,7 @@ void dumpFullInstruction(char*,char*,char*,char*,int,int*,int,Operator*);
 
 int checkAddressType(char*, OperatorType, int, Symbol*);
 
+void strcpyBySteps(char*, char*, int);
+
 int breakDownJumps(char *, char *);
 #endif // HELPERS_H
