@@ -5,7 +5,7 @@
 
 void strcpyBySteps(char *to, char *from, int steps)
 {
-  while (steps >= 0)
+  while (steps > 0)
   {
     *to = *from;
     to++;
