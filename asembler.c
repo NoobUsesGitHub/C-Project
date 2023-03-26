@@ -74,3 +74,4 @@ int main(int argc, char *argv[])
 /*to do- valgrind*/
 /*to do -decide if extern and entry stay*/
 /*to do- make sure they print to file*/
+/*go through everything correctly*/
