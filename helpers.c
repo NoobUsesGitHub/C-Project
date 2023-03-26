@@ -487,7 +487,7 @@ bool isAddTypeCorrect(OperatorType op_type, int adTypeOper1, int adTypeOper2, Op
 {
     if (op_type == ERROR_NA)
         return FALSE;
-    if (existInAddressType(adTypeOper1, op_table[op_type].src_addressing_methods) && existInAddressType(adTypeOper2, op_table[op_type].dest_addressing_methods))
+    if (existInAddressType(adTypeOper1, op_table[op_type].src_addressing_methods) && existInAddressType(adTypeOper2, op_table[op_type].dst_addressing_methods))
     {
         return TRUE;
     }
