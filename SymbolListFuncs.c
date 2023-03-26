@@ -105,3 +105,23 @@ Stype checkSymbolType(char *str)
 
     return CODE;
 }
+
+/*
+    input: a string, the symbol table
+    output: the line where the symbol appeared, if it doesn't exist,-1
+
+*/
+int existInSymbolTable(char *oper, Symbol *sym_table)
+{
+    double hsh = hasher(oper);
+
+    while (sym_table->next != NULL)
+    {
+        if (sym_table->hash == hsh)
+            return sym_table->line;
+        sym_table = sym_table->next;
+    }
+    if (sym_table != NULL)
+        return -1;
+    return sym_table->line;
+}

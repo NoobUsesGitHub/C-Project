@@ -346,7 +346,7 @@ OperatorType stringToOperatorType(char *operator_name)
     {
         return RTS;
     }
-    else if (strcmp(operator_name, "stop") || strcmp(str ,"stop"))
+    else if (strcmp(operator_name, "stop") || strcmp(str, "stop"))
     {
         return STOP;
     }
@@ -518,7 +518,7 @@ bool existInAddressType(int ad_type, int addressing_methods[])
 
 */
 
-void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, int opersCnt, int *IC, int mode, Operator *op_table)
+void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, int opersCnt, int *IC, int mode, Operator *op_table, Symbol *sym_table)
 {
     int adTypeOper1 = 0, adTypeOper2 = 0;
     OperatorType op_type = stringToOperatorType(opcode);
@@ -527,8 +527,8 @@ void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, in
 
     /*take the types of two opers*/
 
-    adTypeOper1 = checkAddressType(oper1);
-    adTypeOper2 = checkAddressType(oper2);
+    adTypeOper1 = checkAddressType(oper1, op_type, mode, sym_table);
+    adTypeOper2 = checkAddressType(oper2, op_type, mode, sym_table);
     if (!isAddTypeCorrect(op_type, adTypeOper1, adTypeOper2, op_table))
         printf("incorrect address type for one of the operators for %s in %d", opcode, *IC);
     /*check if that's in the allowed list*/
@@ -536,6 +536,68 @@ void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, in
     /*print the opcode binary*/
     /*print the opers binary*/
 }
-/*fix*/
-int checkAddressType(char *oper){return 0;}
-void breakDownJumps(char *opcode, char *oper1, char *oper2){}
+
+/*
+    input: the string of the operand, the type of the operator, the mode and the symbol table
+    output: the address type, per page 19
+*/
+int checkAddressType(char *oper, OperatorType opcode, int mode, Symbol *sym_table)
+{
+    char *bit = oper;
+    if (*bit == '#')
+        return 0;
+
+    if (opcode == JMP || opcode == BNE || opcode == JSR)
+        return 2;
+
+    if (realRegister(opcode) != -1)
+        return 3;
+
+    if (mode == SIMULATION || (mode != SIMULATION && existInSymbolTable(oper, sym_table) != -1))
+        return 1;
+    return -1;
+}
+
+/*
+    input: the string for the operator that we recieved and a placeholder for the next
+    output: the number of operands we have if we need to split the operands
+*/
+int breakDownJumps(char *oper1, char *oper2)
+{
+    /*if this a normal jump, will be not split because it has a label, else split to two operands */
+    bool turn_to_second_oper = FALSE char *bit = oper1;
+    if (*bit == '(')
+        bit++;
+
+    int i = 0, j = 0;
+    while (*bit != '\n')
+    {
+        if (*bit == ',')
+        {
+            bit++;
+            oper1[i] = '\0';
+            turn_to_second_oper = TRUE;
+            continue;
+        }
+
+        if (!turn_to_second_oper)
+        {
+            oper1[i] = *bit;
+            i++;
+        }
+        else
+        {
+            oper2[j] = *bit;
+            j++;
+        }
+
+        bit++;
+    }
+    if (j > 0)
+    {
+        if (oper2[j - 1] == ')')
+            j--;
+        oper2[j] = '\0';
+    }
+    return turn_to_second_oper ? 2 : 1;
+}

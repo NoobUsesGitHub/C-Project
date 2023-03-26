@@ -17,6 +17,7 @@ FileList *toBinary(FILE *fp, char *fileName)
     char strNewName[strlen(fileName)];
     Symbol *dataHeader=NULL;
     Symbol *dataNode=NULL;
+    OperatorType op_code_type;
 
     constSymbol(&dataHeader);
     constSymbol(&dataHeader);
@@ -202,6 +203,7 @@ FileList *toBinary(FILE *fp, char *fileName)
 
         case 1: /*opcode oper1*/
             strcpy(opcode, pch);
+            op_code_type=stringToOperatorType(opcode);
             pch = strtok(NULL, delimints);
             strcpy(oper1, pch);
             break;
@@ -209,6 +211,7 @@ FileList *toBinary(FILE *fp, char *fileName)
         case 2:
             /*opcode oper1, oper 2*/
             strcpy(opcode, pch);
+            op_code_type=stringToOperatorType(opcode);
             pch = strtok(NULL, delimints);
             strcpy(oper1, pch);
             oper1[strlen(oper1) - 1] = '\0'; /*skipping the ,*/
@@ -218,12 +221,12 @@ FileList *toBinary(FILE *fp, char *fileName)
         }
 
          /*keep an eye open for jmp jsr and bne*/
-        if (stringToOperatorType(opcode) == JMP || stringToOperatorType(opcode) == JSR || stringToOperatorType(opcode) == BNE)
-            breakDownJumps(opcode, oper1, oper2);
+        if (op_code_type == JMP || op_code_type == JSR || op_code_type == BNE)
+            spaceCount =breakDownJumps(oper1, oper2);
 
         /*now we have the opcode, the two operators and the label if any,*/
 
-        if (stringToOperatorType(opcode) == ERROR_NA) /*if opcode a real opcode*/
+        if (op_code_type == ERROR_NA) /*if opcode a real opcode*/
             printf("nope, not right");
 
         if (stringToOperatorType(oper1) != ERROR_NA || stringToOperatorType(oper1) != ERROR_NA) /*if any operator is a name of an opecode*/

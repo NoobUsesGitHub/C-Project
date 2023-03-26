@@ -49,5 +49,6 @@ bool existInAddressType(int, int[]);
 void dumpFullInstruction(char*,char*,char*,char*,int,int*,int,Operator*);
 
 int checkAddressType(char*);
-void breakDownJumps(char *, char *, char *);
+
+int breakDownJumps(char *, char *, char *);
 #endif // HELPERS_H
