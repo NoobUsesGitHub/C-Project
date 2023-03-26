@@ -6,7 +6,7 @@
 
 void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int adTypeOper2, int mode, int *IC, Symbol *sy_table,char *label)
 {
-    bool needToPrintLabel = ;
+    bool needToPrintLabel = FALSE;
     char binary[15];
     strcpy(binary, "00000000000000\0");
     char temp[5];
@@ -58,7 +58,12 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
 int main()
 {
   char binary[15];
-  strcpy(binary,"00000000000100\0";
+  Symbol *sy_table;
+  constSymbol(&sy_table);
+  addSymbolToList(sy_table, "AAA", CODE, 11);
+  strcpy(binary,"00000000000100\0");
+  int IC=11;
+calculateOpcodeBinaryAndPrint (STOP, 0,3, SIMULATION, &IC, sy_table,"AAA");
   rollBack(binary, 2);
   return 0;
 }
