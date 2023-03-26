@@ -459,9 +459,9 @@ void intToBinary(char *binaryChar, int value)
         value >>= 1;
     }
     binaryChar[0] = (value < 0) ? '1' : '0';
-    /*binaryChar[size+1] = '\0';*/
 }
 
+    /*binaryChar[size+1] = '\0';*/
 /*
     input: a string
     output: the number of register it is if it exists, if not, -1
