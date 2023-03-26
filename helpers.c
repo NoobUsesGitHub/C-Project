@@ -462,7 +462,8 @@ int i =0;
     }
     
     bufferSize=strlen(binaryChar);
-    for (int i = 0; i < bufferSize / 2; i++) {
+    i = 0;
+    for (; i < bufferSize / 2; i++) {
          temp= binaryChar[i];
         binaryChar[i] = binaryChar[bufferSize - i - 1];
         binaryChar[bufferSize - i - 1] = temp;
