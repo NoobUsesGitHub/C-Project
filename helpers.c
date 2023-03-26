@@ -527,6 +527,23 @@ bool existInAddressType(int ad_type, int addressing_methods[])
     return FALSE;
 }
 
+
+/*
+  input: two strs, from and two, and how many chars to copy 
+  will copy the chars from the from to to
+*/
+void strcpyBySteps(char *to, char *from, int steps)
+{
+  while (steps > 0)
+  {
+    *to = *from;
+    to++;
+    from++;
+
+    steps--;
+  }
+}
+
 /*
     not done yet
     general Idea- will recieve label, opcode,operator1 operator2 and then code them up to binary

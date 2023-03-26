@@ -3,17 +3,6 @@
 #include <stdlib.h>
 #include "struct.h"
 
-void strcpyBySteps(char *to, char *from, int steps)
-{
-  while (steps > 0)
-  {
-    *to = *from;
-    to++;
-    from++;
-
-    steps--;
-  }
-}
 void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int adTypeOper2, int mode, int *IC, Symbol *sy_table, char *label)
 {
   bool needToPrintLabel = FALSE;
@@ -28,11 +17,11 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
 
   /*2-3 dst operand*/
   intToBinary(temp, adTypeOper2);
-  strcpyBySteps(binary + 9, temp + 2, 2);
+  strcpyBySteps(binary + 10, temp + 2, 2);
   strcpy(temp, "0000\0");
-  /*4-5 dst operand*/
+  /*4-5 src operand*/
   intToBinary(temp, adTypeOper1);
-  strcpyBySteps(binary + 7, temp + 2, 2);
+  strcpyBySteps(binary + 8, temp + 2, 2);
   strcpy(temp, "0000\0");
   /*10-13 is for only address type 2 JMPS*/
   if (op_type == JMP || op_type == JSR || op_type == BNE)
@@ -42,10 +31,10 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
       strcpy(binary, "11");
     else if (adTypeOper1 == 3)
       strcpy(binary, "01");
-    /*first 10-11*/
-    if (adTypeOper1 == 2)
+    /*second 10-11*/
+    if (adTypeOper2 == 2)
       strcpy(binary + 2, "11");
-    else if (adTypeOper1 == 3)
+    else if (adTypeOper2 == 3)
       strcpy(binary + 2, "01");
     needToPrintLabel = TRUE;
   } /*to do-ARE for operands*/
@@ -63,6 +52,7 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
     *IC++;
   }
 }
+
 int main()
 {
   char binary[15];
