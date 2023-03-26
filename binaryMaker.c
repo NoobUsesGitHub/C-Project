@@ -228,7 +228,7 @@ FileList *toBinary(FILE *fp, char *fileName)
 
 
 
-        dumpFullInstruction(label, opcode, oper1, oper2,spaceCount, &IC, SIMULATION,table);
+        dumpFullInstruction(label, opcode, oper1, oper2,spaceCount, &IC, SIMULATION,op_table);
     }
 
     /*rewind(fp) / fseek(fptr, 0, SEEK_SET);
