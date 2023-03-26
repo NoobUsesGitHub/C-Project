@@ -56,7 +56,7 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
   } /*to do-ARE for operands*/
 
   printf("%d  %s\n", *IC, binary);
-  *IC++;
+  *IC=*IC+1;
   strcpy(binary, "00000000000000\0");
   if (needToPrintLabel)
   {
@@ -65,7 +65,7 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
     strcpy(binary + 12, "10");
 
     printf("%d  %s", *IC, binary);
-    *IC++;
+    *IC=*IC+1;
   }
 }
 
