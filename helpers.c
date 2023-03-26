@@ -466,7 +466,7 @@ void intToBinary(char *binaryChar, int value)
 */
 int realRegister(char *str)
 {
-    char reg[2];
+    char reg[3];
     int i = 0;
 
     for (; i < 8; i++)
