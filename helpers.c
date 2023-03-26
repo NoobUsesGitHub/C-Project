@@ -397,7 +397,7 @@ void dumpDataOpers(char *str, int *DC, int mode)
             value = atoi(temp);
             intToBinary(binaryChar, value);
             if (mode != SIMULATION)
-                printf("%s  %s", *DC, binaryChar);
+                printf("%d  %s", *DC, binaryChar);
             *DC++;
             clearStr(temp, size);
         }

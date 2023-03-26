@@ -100,7 +100,7 @@ FileList *toBinary(FILE *fp, char *fileName)
             while (isLetter(bit) == TRUE)
                 bit++;
 
-            if (*bit == '\0' || bit != '\n')
+            if (*bit == '\0' || *bit != '\n')
                 printf("weldp");
 
             i = 0;

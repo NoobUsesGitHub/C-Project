@@ -33,7 +33,7 @@ Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line)
         header->name = str;
         header->hash = hasher(str);
         header->type = type;
-        header->line = type;
+        header->line = line;
     }
     else
     {
@@ -49,7 +49,7 @@ Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line)
             current_node->next->name = str;
             current_node->next->hash = hasher(str);
             current_node->next->type = type;
-            current_node->next->line = type;
+            current_node->next->line = line;
         }
         else
         {
