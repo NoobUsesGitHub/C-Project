@@ -643,7 +643,7 @@ void shiftLeftChar(char *binary, int steps)
         j++;
     }
     memcpy(binary, temp, (size + 1) * sizeof(char));
-    binary[size-1]='\0';
+    binary[size+1]='\0';
 }
 /*
     input: the string of the operand, the type of the operator, the mode and the symbol table
