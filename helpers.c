@@ -626,24 +626,18 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
 }
 */
 /*
-    input: a string and the number of steps back to take every item
+    input: a string and the number of chars to take back a step
 */
 void rollBack(char *binary, int steps)
 {
     int size = strlen(binary);
-    int i, j;
-    char temp;
-    for (i = 0; i < size; i++)
-    {
-
-        j = (i - steps + size) % size;
-
-        temp = binary[i];
-        binary[i] = binary[j];
-        binary[j] = temp;
-    }
-    binary[size-steps]='0';
-    binary[size-steps+1]='0';
+    int i=steps-1;
+    for(;i<size;i++)
+    	binary[i-1]=binary[i];
+    i=size-steps;
+    for(;i<size;i++)
+    	binary[i]='0';
+    
 }
 /*
     input: the string of the operand, the type of the operator, the mode and the symbol table
