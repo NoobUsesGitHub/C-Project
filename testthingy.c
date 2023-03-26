@@ -36,7 +36,7 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
     else if (adTypeOper1 == 3)
     {
       temp[3]='1';
-      temp[2]='0';
+      temp[2]='1';
       strcpyBySteps(binary, temp+2, 2);
     }
     /*second 10-11*/
@@ -49,7 +49,7 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
     else if (adTypeOper2 == 3)
     {
       temp[3]='1';
-      temp[2]='0';
+      temp[2]='1';
       strcpyBySteps(binary+2, temp+2, 2);
     }
     needToPrintLabel = TRUE;
@@ -77,7 +77,7 @@ int main()
   addSymbolToList(sy_table, "AAA", CODE, 11);
   strcpy(binary, "00000000000100\0");
   int IC = 11;
-  calculateOpcodeBinaryAndPrint(BNE, 0, 3, SIMULATION, &IC, sy_table, "AAA");
+  calculateOpcodeBinaryAndPrint(BNE, 0, 0, SIMULATION, &IC, sy_table, "AAA");
   rollBack(binary, 2);
   return 0;
 }
