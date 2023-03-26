@@ -8,5 +8,5 @@
 /*SymbolListFuncs*/
 int checkSymbolType(char*);
 
-Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line)
+Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line);
 #endif
