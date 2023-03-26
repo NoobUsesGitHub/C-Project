@@ -232,7 +232,6 @@ FileList *toBinary(FILE *fp, char *fileName)
             printf("nope, not right");
 
         
-
         dumpFullInstruction(label, opcode, oper1, oper2,spaceCount, &IC, SIMULATION,op_table);
     }
 

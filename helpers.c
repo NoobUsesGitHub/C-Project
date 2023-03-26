@@ -574,7 +574,138 @@ void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, in
     /*print the opcode binary*/
     calculateOpcodeBinaryAndPrint(op_type, adTypeOper1, adTypeOper2, mode, IC, sym_table, label);
     /*print the opers binary*/
-    calculateOperatorsBinaryAndPrint();
+    calculateOperatorsBinaryAndPrint(oper1,oper2,adTypeOper1, adTypeOper2, mode, IC,sym_table);
+}
+
+void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1, int adTypeOper2, int mode, int *IC, Symbol *sym_table)
+{
+    char binary[15], temp[5];
+    strcpy(binary, "00000000000000\0");
+    strcpy(temp, "0000\0");
+
+    if (adTypeOper1 == adTypeOper2 && adTypeOper2 == 3)
+    {
+        /*if both registers, we set them as one
+        reg1+reg2+A(00)
+        */
+        intToBinary(binary, realRegister(oper1));
+        intToBinary(binary, 7);
+
+        intToBinary(temp, realRegister(oper2));
+        strcpyBySteps(binary, temp + 2, 2);
+        shiftLeftChar(binary, 2);
+        if (mode != SIMULATION)
+            printf("%d  %s", *IC, binary);
+        *IC = *IC + 1;
+    }
+    else
+    {
+        /*besides the above, we have them working apart*/
+
+        switch (adTypeOper1)
+        {
+        case -1:
+            break;
+
+        case 0: /*number*/
+            /*oper1 +A(00)*/
+            intToBinary(binary, atoi(oper1 + 1));
+            shiftLeftChar(binary, 2);
+            strcpyBySteps(binary, temp + 2, 2);
+            printf("%d  %s", *IC, binary);
+            *IC = *IC + 1;
+            break;
+
+        case 1: /*label*/
+            if (existInSymbolTable(oper1) != -1 && symbolTypeFromTable(oper1, sym_table) == EXTERN)
+            {
+                /*oper1+E(01)*/
+                intToBinary(binary, existInSymbolTable(oper1, sym_table));
+                shiftLeftChar(binary, 2);
+                temp[3] = '1';
+                temp[2] = '0';
+                strcpyBySteps(binary, temp + 2, 2);
+                if (mode != SIMULATION)
+                    printf("%d  %s", *IC, binary);
+                *IC = *IC + 1;
+            }
+            else
+            {
+                /*oper1+R(10)*/
+
+                intToBinary(binary, existInSymbolTable(oper1, sym_table));
+                shiftLeftChar(binary, 2);
+                temp[3] = '0';
+                temp[2] = '1';
+                strcpyBySteps(binary, temp + 2, 2);
+                if (mode != SIMULATION)
+                    printf("%d  %s", *IC, binary);
+                *IC = *IC + 1;
+            }
+            break;
+        case 3: /*register*/
+            /*regCode(oper1)+A(00) */
+            intToBinary(binary, realRegister(oper1));
+            shiftLeftChar(binary, 7);
+            if (mode != SIMULATION)
+                printf("%d  %s", *IC, binary);
+            *IC = *IC + 1;
+            break;
+        }
+
+        strcpy(binary, "00000000000000\0");
+        strcpy(temp, "0000\0");
+        switch (adTypeOper2)
+        {
+        case -1:
+            break;
+
+        case 0: /*number*/
+            /*oper2 +A(00)*/
+            intToBinary(binary, atoi(oper2 + 1));
+            shiftLeftChar(binary, 2);
+            strcpyBySteps(binary, temp + 2, 2);
+            printf("%d  %s", *IC, binary);
+            *IC = *IC + 1;
+            break;
+
+        case 1: /*label*/
+            if (existInSymbolTable(oper2) != -1 && symbolTypeFromTable(oper2, sym_table) == EXTERN)
+            {
+                /*oper2+E(01)*/
+                intToBinary(binary, existInSymbolTable(oper2, sym_table));
+                shiftLeftChar(binary, 2);
+                temp[3] = '1';
+                temp[2] = '0';
+                strcpyBySteps(binary, temp + 2, 2);
+                if (mode != SIMULATION)
+                    printf("%d  %s", *IC, binary);
+                *IC = *IC + 1;
+            }
+            else
+            {
+                /*oper2+R(10)*/
+                intToBinary(binary, existInSymbolTable(oper2, sym_table));
+                shiftLeftChar(binary, 2);
+                temp[3] = '0';
+                temp[2] = '1';
+                strcpyBySteps(binary, temp + 2, 2);
+                if (mode != SIMULATION)
+                    printf("%d  %s", *IC, binary);
+                *IC = *IC + 1;
+            }
+            break;
+        case 3: /*register*/
+            /*regCode(oper2)+A(00) */
+            intToBinary(binary, realRegister(oper2));
+            shiftLeftChar(binary, 2);
+            strcpyBySteps(binary, temp + 2, 2);
+            if (mode != SIMULATION)
+                printf("%d  %s", *IC, binary);
+            *IC = *IC + 1;
+            break;
+        }
+    }
 }
 
 /*
@@ -594,15 +725,19 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
     strcpy(temp, "0000\0");
 
     /*2-3 dst operand*/
-    intToBinary(temp, adTypeOper2);
-    strcpyBySteps(binary + 10, temp + 2, 2);
-    strcpy(temp, "0000\0");
-
+    if (adTypeOper2 != -1)
+    {
+        intToBinary(temp, adTypeOper2);
+        strcpyBySteps(binary + 10, temp + 2, 2);
+        strcpy(temp, "0000\0");
+    }
     /*4-5 src operand*/
-    intToBinary(temp, adTypeOper1);
-    strcpyBySteps(binary + 8, temp + 2, 2);
-    strcpy(temp, "0000\0");
-
+    if (adTypeOper1 != -1)
+    {
+        intToBinary(temp, adTypeOper1);
+        strcpyBySteps(binary + 8, temp + 2, 2);
+        strcpy(temp, "0000\0");
+    }
     /*10-13 is for only address type 2 JMPS*/
     if (op_type == JMP || op_type == JSR || op_type == BNE)
     {
@@ -651,6 +786,7 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
 
 /*
     input: a string and the number of chars to take back a step
+    will push the chars X steps to the left
 */
 void shiftLeftChar(char *binary, int steps)
 {
@@ -690,7 +826,7 @@ int checkAddressType(char *oper, OperatorType opcode, int mode, Symbol *sym_tabl
 
 /*
     input: the string for the operator that we recieved and a placeholder for the next and the label
-    output: the number of operands we have if we need to split the operands
+    output: the number of operands we have if we need to split the operands and label
 */
 int breakDownJumps(char *oper1, char *oper2, char label)
 {
@@ -711,7 +847,7 @@ int breakDownJumps(char *oper1, char *oper2, char label)
         bit++;
     else
         return 1;
-    
+
     int i = 0, j = 0;
     while (*bit != '\n')
     {
@@ -743,6 +879,6 @@ int breakDownJumps(char *oper1, char *oper2, char label)
             j--;
         oper2[j] = '\0';
     }
-    
+
     return turn_to_second_oper ? 2 : 1;
 }

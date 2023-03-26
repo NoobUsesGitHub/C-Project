@@ -52,5 +52,5 @@ int checkAddressType(char*, OperatorType, int, Symbol*);
 
 void strcpyBySteps(char*, char*, int);
 
-int breakDownJumps(char *, char *);
+int breakDownJumps(char *, char *,char*);
 #endif // HELPERS_H
