@@ -220,7 +220,7 @@ FileList *toBinary(FILE *fp, char *fileName)
             break;
         }
 
-         /*keep an eye open for jmp jsr and bne*/
+         /*keep an eye open for jmp jsr and bne NEED TO FIX STILL*/
         if (op_code_type == JMP || op_code_type == JSR || op_code_type == BNE)
             spaceCount =breakDownJumps(oper1, oper2);
 
@@ -232,7 +232,7 @@ FileList *toBinary(FILE *fp, char *fileName)
         if (stringToOperatorType(oper1) != ERROR_NA || stringToOperatorType(oper1) != ERROR_NA) /*if any operator is a name of an opecode*/
             printf("nope, not right");
 
-
+        
 
         dumpFullInstruction(label, opcode, oper1, oper2,spaceCount, &IC, SIMULATION,op_table);
     }

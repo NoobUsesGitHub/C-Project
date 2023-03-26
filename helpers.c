@@ -4,6 +4,7 @@
 #include <ctype.h>
 #include "helpers.h"
 #include "struct.h"
+#include "SymbolListFuncs.h"
 
 /*
     input:nothing
@@ -450,14 +451,15 @@ void dumpStr(char *oper, int *DC, int mode)
 void intToBinary(char *binaryChar, int value)
 {
     /*make not shit*/
-    int i;
-    for (i = 13; i >= 0; i--)
+    int size = strlen(binaryChar);
+    int i = size - 2;
+    for (; i >= 0; i--)
     {
         binaryChar[i] = (value & 1) + '0';
         value >>= 1;
     }
     binaryChar[0] = (value < 0) ? '1' : '0';
-    binaryChar[14] = '\0';
+    binaryChar[size - 1] = '\0';
 }
 
 /*
@@ -485,6 +487,8 @@ int realRegister(char *str)
 */
 bool isAddTypeCorrect(OperatorType op_type, int adTypeOper1, int adTypeOper2, Operator *op_table)
 {
+    if (adTypeOper1 == -1 || adTypeOper2 == -1)
+        return FALSE;
     if (op_type == ERROR_NA)
         return FALSE;
     if (existInAddressType(adTypeOper1, op_table[op_type].src_addressing_methods) && existInAddressType(adTypeOper2, op_table[op_type].dst_addressing_methods))
@@ -530,11 +534,85 @@ void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, in
     adTypeOper1 = checkAddressType(oper1, op_type, mode, sym_table);
     adTypeOper2 = checkAddressType(oper2, op_type, mode, sym_table);
     if (!isAddTypeCorrect(op_type, adTypeOper1, adTypeOper2, op_table))
+    {
         printf("incorrect address type for one of the operators for %s in %d", opcode, *IC);
-    /*check if that's in the allowed list*/
-    /*print the label binary*/
+        adTypeOper1 = 0;
+        adTypeOper2 = 0; /*adding dummy info*/
+    }
+    /*check if we have a jump, cause they work diffrent*/
+
     /*print the opcode binary*/
+    calculateOpcodeBinaryAndPrint(op_type, adTypeOper1, adTypeOper2, mode, IC,sym_table,label);
     /*print the opers binary*/
+    calculateOperatorsBinaryAndPrint();
+}
+
+void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int adTypeOper2, int mode, int *IC, Symbol *sy_table,char *label)
+{
+    bool needToPrintLabel = ;
+    char binary[15];
+    strcpy(binary, "00000000000000\0");
+    char temp[5];
+    strcpy(temp, "0000\0");
+    /*first, the opcode 8-10*/
+    intToBinary(temp, (int)op_type);
+    strcpy(binary + 4, temp);
+    strcpy(temp, "0000\0");
+
+    /*2-3 dst operand*/
+    intToBinary(temp, adTypeOper2);
+    strcpy(binary + 9, temp + 2);
+    strcpy(temp, "0000\0");
+    /*4-5 dst operand*/
+    intToBinary(temp, adTypeOper1);
+    strcpy(binary + 7, temp + 2);
+    strcpy(temp, "0000\0");
+    /*10-13 is for only address type 2 JMPS*/
+    if (op_type == JMP || op_type == JSR || op_type == BNE)
+    {
+        /*first 12-13*/
+        if (adTypeOper1 == 2)
+            strcpy(binary, "11");
+        else if (adTypeOper1 == 3)
+            strcpy(binary, "01");
+        /*first 10-11*/
+        if (adTypeOper1 == 2)
+            strcpy(binary + 2, "11");
+        else if (adTypeOper1 == 3)
+            strcpy(binary + 2, "01");
+        needToPrintLabel = TRUE;
+    } /*to do-ARE for operands*/
+
+    printf("%d  %s", *IC, binary);
+    *IC++;
+    strcpy(binary, "00000000000000\0");
+    if (needToPrintLabel)
+    {
+        intToBinary(binary, existInSymbolTable(label, sy_table));
+        rollBack(binary, 2);
+        strcpy(binary + 12, "10");
+
+        printf("%d  %s", *IC, binary);
+        *IC++;
+    }
+}
+
+/*
+    input: a string and the number of steps back to take every item
+*/
+void rollBack(char *binary, int steps)
+{
+    int size = strlen(binary);
+    int i = steps, j = 0;
+    for (; i < size - 1; i++)
+    {
+        i = j;
+        for (; i - j >= 0; j++)
+        {
+            binary[j - steps] = binary[i];
+        }
+    }
+    binary[size - 1] = '\0';
 }
 
 /*

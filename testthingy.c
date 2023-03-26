@@ -3,53 +3,79 @@
 #include <stdlib.h>
 #include "struct.h"
 
-Operator *createOperatorsTable()
+
+void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int adTypeOper2, int mode, int *IC, Symbol *sy_table,char *label)
 {
-  int j = 0;
-  Operator *op_table = (Operator *)malloc(OPERATORS_AMOUNT * sizeof(Operator));
-  /* Populate the table: */
-  Operator mov =
-      {
-          .type = MOV,
-          .num_of_operands = 2,
-          .src_addressing_methods = {0, 1, 2, 3},
-          .dst_addressing_methods = {1, 2, 3, -1}};
-  memcpy(op_table + MOV, &mov, sizeof(Operator));
-  printf("Printing mov struct:\n");
-  printf("type=%d, num_of_ops=%d\n", op_table[MOV].type, op_table[MOV].num_of_operands);
-  printf("src arr:\n");
-  for (j = 0; j < 4; j++)
-  {
-    printf("%d ", op_table[MOV].src_addressing_methods[j]);
-  }
-  printf("\ndst arr:\n");
-  for (j = 0; j < 4; j++)
-  {
-    printf("%d ", op_table[MOV].dst_addressing_methods[j]);
-  }
-  return NULL;
+    bool needToPrintLabel = ;
+    char binary[15];
+    strcpy(binary, "00000000000000\0");
+    char temp[5];
+    strcpy(temp, "0000\0");
+    /*first, the opcode 8-10*/
+    intToBinary(temp, (int)op_type);
+    strcpy(binary + 4, temp);
+    strcpy(temp, "0000\0");
 
-  // /* mov */
-  // op_table[MOV].type = MOV;
-  // op_table[MOV].num_of_operands = 2;
-  // op_table[MOV].src_addressing_methods = {0,1,2,3};
+    /*2-3 dst operand*/
+    intToBinary(temp, adTypeOper2);
+    strcpy(binary + 9, temp + 2);
+    strcpy(temp, "0000\0");
+    /*4-5 dst operand*/
+    intToBinary(temp, adTypeOper1);
+    strcpy(binary + 7, temp + 2);
+    strcpy(temp, "0000\0");
+    /*10-13 is for only address type 2 JMPS*/
+    if (op_type == JMP || op_type == JSR || op_type == BNE)
+    {
+        /*first 12-13*/
+        if (adTypeOper1 == 2)
+            strcpy(binary, "11");
+        else if (adTypeOper1 == 3)
+            strcpy(binary, "01");
+        /*first 10-11*/
+        if (adTypeOper1 == 2)
+            strcpy(binary + 2, "11");
+        else if (adTypeOper1 == 3)
+            strcpy(binary + 2, "01");
+        needToPrintLabel = TRUE;
+    } /*to do-ARE for operands*/
 
-  // Operator cmp =
-  // {
-  //     .type = CMP,
-  //     .num_of_operands = 2,
-  //     .src_addressing_methods = {0,1,2,3},
-  //     .dst_addressing_methods = {0,1,2,3}
-  // };
-  // for ( i = 0; i < OPERATORS_AMOUNT; i++)
-  // {
-  //     op_table[i] =
-  // }
-  // */
+    printf("%d  %s", *IC, binary);
+    *IC++;
+    strcpy(binary, "00000000000000\0");
+    if (needToPrintLabel)
+    {
+        intToBinary(binary, existInSymbolTable(label, sy_table));
+        rollBack(binary, 2);
+        strcpy(binary + 12, "10");
+
+        printf("%d  %s", *IC, binary);
+        *IC++;
+    }
 }
 
+
+/*
+    input: a string and the number of steps back to take every item
+*/
+void rollBack(char *binary, int steps)
+{
+    int size = strlen(binary);
+    int i = steps, j = 0;
+    for (; i < size - 1; i++)
+    {
+        i = j;
+        for (; i - j >= 0; j++)
+        {
+            binary[j - steps] = binary[i];
+        }
+    }
+    binary[size - 1] = '\0';
+}
 int main()
 {
-  Operator *ops_table = createOperatorsTable();
+  char binary[15];
+  strcpy(binary,"00000000000100\0";
+  rollBack(binary, 2);
   return 0;
 }
