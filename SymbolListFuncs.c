@@ -65,7 +65,7 @@ Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line)
  * input:a file node header
  * will close all file objects
  */
-void freeList(Symbol *head)
+void freeSyList(Symbol *head)
 {
     Symbol *next = head;
     while (next != NULL)

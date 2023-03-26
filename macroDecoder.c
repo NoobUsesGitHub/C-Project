@@ -3,6 +3,7 @@
 #include <ctype.h>
 #include "helpers.h"
 #include "MacroListFuncs.h"
+#include "FileListFuncs.h"
 
 
 FileList* macroDecoder(FILE *fp, char *fileName)

@@ -2,6 +2,7 @@
 #include <string.h>
 #include "helpers.h"
 #include "binaryMaker.h"
+#include "FileListFuncs.h"
 #include "struct.h"
 
 FileList *toBinary(FILE *fp, char *fileName)

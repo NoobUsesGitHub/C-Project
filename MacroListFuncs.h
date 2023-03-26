@@ -8,7 +8,7 @@
 
 void constMacroList(MacroList**);
 
-void freeList(MacroList*);
+void freeMacroList(MacroList*);
 
 void freeMacro(char **, int);
 
