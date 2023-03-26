@@ -22,7 +22,7 @@ void constSymbol(Symbol **s)
     input: a header node, a nase for the new macro and it's list of strings that it unfolds to
     output: the new macro node already connected to the list
 */
-Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line)
+Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line, char *input)
 { /*do i need to return here?*/
     char *str = (char *)malloc(strlen(name) * (sizeof(char) + 1));
     Symbol *current_node = header;
@@ -34,6 +34,8 @@ Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line)
         header->hash = hasher(str);
         header->type = type;
         header->line = line;
+        header->input = (char *)malloc((strlen(input) + 1) * (sizeof(char)));
+        strcpy(header->input, input);
     }
     else
     {
@@ -50,6 +52,9 @@ Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line)
             current_node->next->hash = hasher(str);
             current_node->next->type = type;
             current_node->next->line = line;
+
+            header->input = (char *)malloc((strlen(input) + 1) * (sizeof(char)));
+            strcpy(header->input, input);
         }
         else
         {
@@ -71,6 +76,7 @@ void freeSyList(Symbol *head)
     while (next != NULL)
     {
         free(head->name);
+        free(head->input);
         next = head->next;
         free(head);
         head = next;
