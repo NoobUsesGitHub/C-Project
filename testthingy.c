@@ -30,18 +30,18 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
     temp[1]='1';
     /*first 12-13*/
     if (adTypeOper1 == 2)
-      strcpy(binary, "11");
+      strcpyBySteps(binary, temp,2);
     else if (adTypeOper1 == 3)
-      strcpy(binary, "01");
+      strcpyBySteps(binary, temp,2);
     /*second 10-11*/
     if (adTypeOper2 == 2)
-      strcpy(binary + 2, "11");
+      strcpyBySteps(binary + 2, temp,2);
     else if (adTypeOper2 == 3)
-      strcpy(binary + 2, "01");
+      strcpyBySteps(binary + 2, temp,2);
     needToPrintLabel = TRUE;
   } /*to do-ARE for operands*/
 
-  printf("%d  %s", *IC, binary);
+  printf("%d  %s\n", *IC, binary);
   *IC++;
   strcpy(binary, "00000000000000\0");
   if (needToPrintLabel)
