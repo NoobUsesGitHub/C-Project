@@ -26,6 +26,8 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
   /*10-13 is for only address type 2 JMPS*/
   if (op_type == JMP || op_type == JSR || op_type == BNE)
   {
+    temp[0]='0';
+    temp[1]='1';
     /*first 12-13*/
     if (adTypeOper1 == 2)
       strcpy(binary, "11");
@@ -61,7 +63,7 @@ int main()
   addSymbolToList(sy_table, "AAA", CODE, 11);
   strcpy(binary, "00000000000100\0");
   int IC = 11;
-  calculateOpcodeBinaryAndPrint(STOP, 0, 3, SIMULATION, &IC, sy_table, "AAA");
+  calculateOpcodeBinaryAndPrint(BNE, 0, 3, SIMULATION, &IC, sy_table, "AAA");
   rollBack(binary, 2);
   return 0;
 }
