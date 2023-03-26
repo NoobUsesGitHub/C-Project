@@ -450,6 +450,7 @@ void dumpStr(char *oper, int *DC, int mode)
 */
 void intToBinary(char *binaryChar, int value)
 {
+    char temp;
     int bufferSize=strlen(binaryChar);
 int i =0;
     for (i = bufferSize - 1; i >= 0; i--) {
@@ -459,6 +460,14 @@ int i =0;
             binaryChar[i]='0';
         }
     }
+    
+    bufferSize=strlen(binaryChar);
+    for (int i = 0; i < bufferSize / 2; i++) {
+         temp= binaryChar[i];
+        binaryChar[i] = binaryChar[bufferSize - i - 1];
+        binaryChar[bufferSize - i - 1] = temp;
+    }
+
 }
 
 
