@@ -635,7 +635,6 @@ void shiftLeftChar(char *binary, int steps)
     int size = strlen(binary);
     char temp[size];
     memset(temp, '0', size);
-    temp[size-1]='\0';
     int i = steps, j = 0;
     while (i < size)
     {
@@ -644,6 +643,7 @@ void shiftLeftChar(char *binary, int steps)
         j++;
     }
     memcpy(binary, temp, (size + 1) * sizeof(char));
+    binary[size-1]='\0';
 }
 /*
     input: the string of the operand, the type of the operator, the mode and the symbol table
