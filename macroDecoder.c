@@ -73,7 +73,7 @@ FileList* macroDecoder(FILE *fp, char *fileName)
         skp = FALSE;
     }
 
-    freeList(header);
+    freeMacroList(header);
 
     return macroFileNode; /*tochange*/
 }

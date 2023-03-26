@@ -255,7 +255,7 @@ FileList *toBinary(FILE *fp, char *fileName)
         close them
         go to second pass*/
 
-    freeList(binaryFileNode);
+    freeSyList(dataHeader);
     deleteOperatorsTable(op_table);
     return binaryFileNode; /*tochange*/
 }
