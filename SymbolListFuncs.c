@@ -121,7 +121,9 @@ int existInSymbolTable(char *oper, Symbol *sym_table)
             return sym_table->line;
         sym_table = sym_table->next;
     }
-    if (sym_table != NULL)
+    if (sym_table != NULL&&sym_table->hash != 0&&sym_table->hash == hsh)
+    {
         return -1;
+    }
     return sym_table->line;
 }
