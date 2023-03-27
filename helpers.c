@@ -570,7 +570,13 @@ void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, in
         adTypeOper1 = 0;
         adTypeOper2 = 0; /*adding dummy info*/
     }
-    /*check if we have a jump, cause they work diffrent*/
+
+    if(mode==EXECUTION)
+    {
+        /*looking through for externals*/
+        checkForExternals(oper1,line,sym_list);
+        checkForExternals(oper2,sym_list);
+    }
 
     /*print the opcode binary*/
     calculateOpcodeBinaryAndPrint(op_type, adTypeOper1, adTypeOper2, mode, IC, sym_list, label);
@@ -950,4 +956,15 @@ void dumpSymbolsToMainFile(Symbol *header, int IC, FILE *fp)
 }
 
 
+/*
+    input: the string name, it's line and the symbol list header
+    if it exists, will update the symbol list with external symbol if it exists 
+*/
+void checkForExternals(char* oper,int line,Symbol* sym_list)
+{
+    if(symbolTypeFromTable(oper,sym_list)==EXTERN)
+    {
+        addSymbolToList(sym_list,oper,EXTERN,line,NULL);
+    }
 
+}
