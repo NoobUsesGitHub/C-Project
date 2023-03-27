@@ -36,7 +36,7 @@ FileList *toBinary(FILE *fp, char *fileName)
     if (fp == NULL || binaryFileNode->file == NULL)
     {
         binaryFileNode->file = NULL;
-        fprintf(stderr, "File is not correct"); /*need to print out to STDOUT and say which line*/
+        fprintf(stdout, "File is not correct"); /*need to print out to STDOUT and say which line*/
         return binaryFileNode;
     }
 
@@ -89,7 +89,7 @@ FileList *toBinary(FILE *fp, char *fileName)
             bit++;
         if (*bit == '\0' || *bit != '\n')
         {
-            fprintf(stderr, "line %d eneded unexpectandly", IC);
+            fprintf(stdout, "line %d eneded unexpectandly", IC);
             foundErr = TRUE;
         }
 
@@ -111,7 +111,7 @@ FileList *toBinary(FILE *fp, char *fileName)
 
             if (*bit == '\0' || *bit != '\n')
             {
-                fprintf(stderr, "line %d eneded unexpectandly", IC);
+                fprintf(stdout, "line %d eneded unexpectandly", IC);
                 foundErr = TRUE;
             }
 
@@ -124,7 +124,7 @@ FileList *toBinary(FILE *fp, char *fileName)
                 {
                     if (*bit == '\n')
                     {
-                        fprintf(stderr, "string finished with no end");
+                        fprintf(stdout, "string finished with no end");
                         foundErr = TRUE;
                         break;
                     }
@@ -200,7 +200,7 @@ FileList *toBinary(FILE *fp, char *fileName)
         }
         if (spaceCount > 2)
         {
-            fprintf(stderr, "operator %s was found with too many operands", opcode);
+            fprintf(stdout, "operator %s was found with too many operands", opcode);
             foundErr = TRUE;
             continue;
         }
@@ -236,13 +236,13 @@ FileList *toBinary(FILE *fp, char *fileName)
 
         if (op_code_type == ERROR_NA)
         { /*if opcode a real opcode*/
-            fprintf(stderr, "opcode %s not found",opcode);
+            fprintf(stdout, "opcode %s not found",opcode);
             foundErr = TRUE;
         }
 
         if (stringToOperatorType(oper1) != ERROR_NA || stringToOperatorType(oper1) != ERROR_NA)
         { /*if any operator is a name of an opecode*/
-            fprintf(stderr, "operator src %s not found",oper1);
+            fprintf(stdout, "operator src %s not found",oper1);
             foundErr = TRUE;
         }
 
@@ -250,7 +250,7 @@ FileList *toBinary(FILE *fp, char *fileName)
     }
     if (foundErr == TRUE)
     {
-        fprintf(stderr, "there are error's in the first pass!");
+        fprintf(stdout, "there are error's in the first pass!");
     }
     else
     {
@@ -351,13 +351,13 @@ FileList *toBinary(FILE *fp, char *fileName)
 
         if (op_code_type == ERROR_NA) /*if opcode a real opcode*/
              { /*if opcode a real opcode*/
-            fprintf(stderr, "opcode %s not found",opcode);
+            fprintf(stdout, "opcode %s not found",opcode);
             foundErr = TRUE;
         }
 
         if (stringToOperatorType(oper1) != ERROR_NA || stringToOperatorType(oper1) != ERROR_NA) /*if any operator is a name of an opecode*/
             { /*if any operator is a name of an opecode*/
-            fprintf(stderr, "operator src %s not found",oper1);
+            fprintf(stdout, "operator src %s not found",oper1);
             foundErr = TRUE;
         }
 

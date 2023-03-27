@@ -94,7 +94,7 @@ Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line, char *
             if (type != EXTERN && type != ENTRY)
             {
                 current_node->name = NULL;
-                fprintf(stderr, "Symbol %s exists already!!", name);
+                fprintf(stdout, "Symbol %s exists already!!", name);
                 return current_node->next;
             }
             else if (type == ENTRY)

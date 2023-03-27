@@ -31,7 +31,7 @@ FileList *toOutput(FILE *fp, char *fileName)
   if (fp == NULL || outputFile->file == NULL)
   {
     outputFile->file = NULL;
-    fprintf(stderr, "couldn't create output file");
+    fprintf(stdout, "couldn't create output file");
     return outputFile;
   }
   c = (char)fgetc(fp);

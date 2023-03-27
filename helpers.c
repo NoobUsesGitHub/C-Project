@@ -558,7 +558,7 @@ void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, in
     int adTypeOper1 = 0, adTypeOper2 = 0;
     OperatorType op_type = stringToOperatorType(opcode);
     if (opersCnt != getNumOfOperands(op_type, op_table)) /*do we have more than required operators*/
-        printf(stderr, "opcode %s has more operators than expected", opcode);
+        printf(stdout, "opcode %s has more operators than expected", opcode);
 
     /*take the types of two opers*/
 
@@ -566,7 +566,7 @@ void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, in
     adTypeOper2 = checkAddressType(oper2, op_type, mode, sym_list);
     if (!isAddTypeCorrect(op_type, adTypeOper1, adTypeOper2, op_table))
     {
-        fprintf(stderr, "incorrect address type for one of the operators for %s in %d", opcode, *IC);
+        fprintf(stdout, "incorrect address type for one of the operators for %s in %d", opcode, *IC);
         adTypeOper1 = 0;
         adTypeOper2 = 0; /*adding dummy info*/
     }
@@ -900,7 +900,7 @@ void dumpSymbols(Symbols *header, char *fileName, Stype stype, char *extention)
     strcpyBySteps(newName + strlen(newName) - strlen(extention), extention, 3);
     FILE *fp = fopen(newName, "w");
     if (fp == NULL)
-        fprintf(stderr, "we had trouble opening a %s file", extention);
+        fprintf(stdout, "we had trouble opening a %s file", extention);
     while (header->next != NULL)
     {
         if (header->type == stype||(header->externalType == stype&&header->externalType ==CODE))
