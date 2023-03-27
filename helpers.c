@@ -363,7 +363,7 @@ void addToData(Symbol *dataHeader, int IC)
 {
     while (dataHeader->next != NULL)
     {
-        if (dataHeader->type == DATA)
+        if (dataHeader->type == DATA || dataHeader->type == STRING)
             dataHeader->line = dataHeader->line + IC;
         dataHeader++;
     }
@@ -547,12 +547,6 @@ void strcpyBySteps(char *to, char *from, int steps)
     }
 }
 
-/*
-    not done yet
-    general Idea- will recieve label, opcode,operator1 operator2 and then code them up to binary
-
-*/
-
 void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, int opersCnt, int *IC, int mode, Operator *op_table, Symbol *sym_list)
 {
     int adTypeOper1 = 0, adTypeOper2 = 0;
@@ -570,10 +564,23 @@ void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, in
         adTypeOper1 = 0;
         adTypeOper2 = 0; /*adding dummy info*/
     }
-    if (adTypeOper1 == 1 || adTypeOper1 == -1)
-    {
-    }
+    if (mode == EXECUTION)
+    {/*assuming we found a external already*/
+        if (adTypeOper1 == 1 || adTypeOper1 == -1)
+        {
+            checkIfExternal(oper1,*IC,sym_list);
+        }
 
+        if (adTypeOper2 == 1 || adTypeOper2 == -1)
+        {
+            checkIfExternal(oper2,*IC,sym_list);
+        }
+
+        if (op_type==JMP||op_type==BNE||op_type==JSR) /*check if label exists as external*/
+        {
+            checkIfExternal(label,*IC,sym_list);
+        }
+    }
     /*print the opcode binary*/
     calculateOpcodeBinaryAndPrint(op_type, adTypeOper1, adTypeOper2, mode, IC, sym_list, label);
     /*print the opers binary*/
@@ -966,4 +973,14 @@ void dumpSymbolsToMainFile(Symbol *header, int IC, FILE *fp)
             break;
         }
     }
+}
+
+/*
+    input: a string (label) a line number and the symbol list
+    if the label represents an external symbol we will add it for the .ext file
+*/
+void checkIfExternal(char *oper, int line, Symbol *sym_list)
+{
+    if (symbolTypeFromTable(oper, sym_list) == EXTERN)
+        addSymbolToList(sym_list, oper, CODE, line, NULL,EXTERN);
 }

@@ -73,7 +73,6 @@ int main(int argc, char *argv[])
 }
 /*to do- valgrind*/
 /*to do - add more error finding*/
-/*to do - fix external*/
 /*to do - check that external prints it's lines*/
 /*to do - fix comments and such*/
 /*to do - go through everything correctly*/
