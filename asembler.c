@@ -73,11 +73,9 @@ int main(int argc, char *argv[])
 }
 /*to do- valgrind*/
 /*to do - add more error finding*/
-/*to do -decide if extern and entry stay*/
-/*to do- make sure they print to file*/
-/*go through everything correctly*/
-/*to do - what if label in secondpass doesnt exist??*/
-/*to do- fix entry and external*/
-/*to do- fix comments and such*/
-/*to do- make sure that dump symbols to main file dumps only data/string*
-/*to do- make sure that we post correct file names*/
+/*to do - fix entry and external*/
+/*to do - decide if extern and entry stay*/
+/*to do - fix comments and such*/
+/*to do - go through everything correctly*/
+/*to do - make sure that we post correct file names*/
+/*to do - make sure they print to file*/

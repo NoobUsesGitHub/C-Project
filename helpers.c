@@ -417,9 +417,9 @@ void dumpDataOpers(char *str, int *cnt, int mode,FILE* fp)
         intToBinary(binaryChar, value);
         if (mode != SIMULATION)
             printf("%d  %s", *cnt, binaryChar);
-        *cnt++;
+        *cnt=*cnt+1;
         clearStr(temp, size);
-        *DC++;
+        *cnt=*cnt+1;
     }
 }
 

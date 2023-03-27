@@ -164,7 +164,7 @@ int countSymbols(Symbol *header)
     int i = 0;
     while (header->input != NULL)
     {
-        if (header->type != CODE)
+        if (header->type != CODE&&header->type != ENTRY &&header->type != EXTERN)
             i++;
         header = header->next;
     }

@@ -8,6 +8,6 @@
 /*SymbolListFuncs*/
 Stype checkSymbolType(char*);
 
-Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line);
+Symbol *addSymbolToList(Symbol *, char *, Stype, int, char *);
 void freeSyList(Symbol*);
 #endif
