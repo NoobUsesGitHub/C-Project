@@ -22,11 +22,14 @@ int dataLength(char *);
 
 char *opcodeToBinary(char *);
 
+
 int countSpace(char *);
 
 void removeRedundantSpaces(char *);
 
 void addToData(Symbol *, int);
+
+void shiftLeftChar(char *, int);
 
 void dumpDataOpers(char *, int *, int,FILE*);
 
@@ -46,11 +49,22 @@ bool isAddTypeCorrect(OperatorType,int, int, Operator*);
 
 bool existInAddressType(int, int[]);
 
-void dumpFullInstruction(char*,char*,char*,char*,int,int*,int,Operator*);
+void dumpFullInstruction(char*,char*,char*,char*,int,int*,int,Operator*, Symbol *);
 
 int checkAddressType(char*, OperatorType, int, Symbol*);
 
 void strcpyBySteps(char*, char*, int);
 
 int breakDownJumps(char *, char *,char*);
+
+void dumpSymbols(Symbol *, char *, Stype, char *);
+
+void calculateOpcodeBinaryAndPrint(OperatorType , int , int, int, int *, Symbol *, char *);
+
+void calculateOperatorsBinaryAndPrint(char *, char *, int, int, int, int *, Symbol *);
+
+
+void dumpSymbolsToMainFile(Symbol *, int, FILE *);
+
+void checkIfExternal(char *, int, Symbol *);
 #endif // HELPERS_H

@@ -4,10 +4,17 @@
 #include <stdlib.h>
 #include <string.h>
 #include "helpers.h"
+#include "struct.h"
 
 /*SymbolListFuncs*/
-Stype checkSymbolType(char*);
 
-Symbol *addSymbolToList(Symbol *, char *, Stype, int, char *);
+Symbol *addSymbolToList(Symbol *, char *, Stype, int, char *, Stype);
 void freeSyList(Symbol*);
+Stype checkSymbolType(char*);
+int existInSymbolTable(char *, Symbol *);
+Stype symbolTypeFromTable(char *, Symbol *);
+int countSymbols(Symbol *);
+void fillSymArr(Symbol *[], int, Symbol *);
+int SymbolCompare(const void *, const void *);
+void fixEntryPositions(Symbol *);
 #endif

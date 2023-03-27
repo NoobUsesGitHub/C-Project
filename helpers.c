@@ -898,7 +898,7 @@ int breakDownJumps(char *oper1, char *oper2, char label)
     input: a header of the symbols table, the file name, a data symbol type, and the extention
     will push all the data symbols of that type to a file
 */
-void dumpSymbols(Symbols *header, char *fileName, Stype stype, char *extention)
+void dumpSymbols(Symbol *header, char *fileName, Stype stype, char *extention)
 {
     char newName[strlen(fileName)];
     char binary[15];
