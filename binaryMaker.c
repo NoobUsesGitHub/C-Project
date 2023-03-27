@@ -106,7 +106,7 @@ FileList *toBinary(FILE *fp, char *fileName)
             stype = checkSymbolType(dataTester);
 
             /*jumping for the next word*/
-            while (isLetter(bit) == TRUE)
+            while (isLetter(bit) == FALSE)
                 bit++;
 
             if (*bit == '\0' || *bit != '\n')
@@ -152,11 +152,13 @@ FileList *toBinary(FILE *fp, char *fileName)
                 while (isLetter(bit) == TRUE)
                 {
                     label[i] = *bit;
+                    bit++;
                     i++;
                 }
                 label[i] = '\0';
-                dataNode = addSymbolToList(dataHeader, label, stype, DC,label);
-                DC++;
+                dataNode = addSymbolToList(dataHeader, label, stype, DC,label,);
+                if(stype!=EXTERN)
+                    DC++;
                 break;
 
             case DATA:

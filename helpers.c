@@ -384,7 +384,7 @@ int getNumOfOperands(OperatorType type, Operator *op_table)
     input: a string and the Data counter
     will print the individual numbers as binary and increase the DC
 */
-void dumpDataOpers(char *str, int *cnt, int mode,FILE* fp)
+void dumpDataOpers(char *str, int *cnt, int mode, FILE *fp)
 {
 
     int size = strlen(str);
@@ -417,9 +417,9 @@ void dumpDataOpers(char *str, int *cnt, int mode,FILE* fp)
         intToBinary(binaryChar, value);
         if (mode != SIMULATION)
             printf("%d  %s", *cnt, binaryChar);
-        *cnt=*cnt+1;
+        *cnt = *cnt + 1;
         clearStr(temp, size);
-        *cnt=*cnt+1;
+        *cnt = *cnt + 1;
     }
 }
 
@@ -427,7 +427,7 @@ void dumpDataOpers(char *str, int *cnt, int mode,FILE* fp)
     input: a string and the Data counter
     will print the individual letters as binary and increase the DC
 */
-void dumpStr(char *oper, int *cnt, int mode,FILE *fp)
+void dumpStr(char *oper, int *cnt, int mode, FILE *fp)
 {
     int size = strlen(oper);
     char binaryChar[14];
@@ -570,7 +570,9 @@ void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, in
         adTypeOper1 = 0;
         adTypeOper2 = 0; /*adding dummy info*/
     }
-    /*check if we have a jump, cause they work diffrent*/
+    if (adTypeOper1 == 1 || adTypeOper1 == -1)
+    {
+    }
 
     /*print the opcode binary*/
     calculateOpcodeBinaryAndPrint(op_type, adTypeOper1, adTypeOper2, mode, IC, sym_list, label);
@@ -618,7 +620,7 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
             break;
 
         case 1: /*label*/
-        
+
             if (existInSymbolTable(oper1) != -1 && symbolTypeFromTable(oper1, sym_list) == EXTERN)
             {
                 /*oper1+E(01)*/
@@ -903,19 +905,36 @@ void dumpSymbols(Symbols *header, char *fileName, Stype stype, char *extention)
         fprintf(stdout, "we had trouble opening a %s file", extention);
     while (header->next != NULL)
     {
-        if (header->type == stype||(header->externalType == stype&&header->externalType ==CODE))
-        {
-            found_any = TRUE;
-            intToBinary(binary, header->line);
-            bit = binary;
-            while (*bit != '\0')
+        if (stype != EXTERN)
+            if (header->type == stype || (header->externalType == stype && header->externalType == CODE))
             {
-                *bit = binaryTranslate(*bit);
-                bit++;
+                found_any = TRUE;
+                intToBinary(binary, header->line);
+                bit = binary;
+                while (*bit != '\0')
+                {
+                    *bit = binaryTranslate(*bit);
+                    bit++;
+                }
+                fprintf(fp, "%s  %s\n", header->name, binary);
+                strcpy(binary, "00000000000000\0");
             }
-            fprintf(fp, "%s  %s\n", header->name, binary);
-            strcpy(binary, "00000000000000\0");
-        }
+            else
+            {
+                if (header->type != stype && header->externalType == stype)
+                {
+                    found_any = TRUE;
+                    intToBinary(binary, header->line);
+                    bit = binary;
+                    while (*bit != '\0')
+                    {
+                        *bit = binaryTranslate(*bit);
+                        bit++;
+                    }
+                    fprintf(fp, "%s  %s\n", header->name, binary);
+                    strcpy(binary, "00000000000000\0");
+                }
+            }
         header = header->next;
     }
     fclose(fp);
@@ -930,24 +949,21 @@ will create an array and print the symbols ordered by line
 void dumpSymbolsToMainFile(Symbol *header, int IC, FILE *fp)
 {
     int numOfSymbols = countSymbols(header), i = 0;
-    Symbol* arr[numOfSymbols];
+    Symbol *arr[numOfSymbols];
     fillSymArr(arr, numOfSymbols, header);
-    qsort(arr,numOfSymbols,sizeof(Symbol),SymbolCompare);
+    qsort(arr, numOfSymbols, sizeof(Symbol), SymbolCompare);
 
-    for(;i<numOfSymbols;i++)
+    for (; i < numOfSymbols; i++)
     {
         switch (arr[i]->type)
         {
         case STRING:
-            dumpStr(arr[i]->input, &IC, EXECUTION,fp);
+            dumpStr(arr[i]->input, &IC, EXECUTION, fp);
             break;
-        
+
         case DATA:
-            dumpDataOpers(arr[i]->input, &IC, EXECUTION,fp);
+            dumpDataOpers(arr[i]->input, &IC, EXECUTION, fp);
             break;
         }
     }
 }
-
-
-
