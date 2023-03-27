@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "helpers.h"
+#include "struct.h"
 #include "SymbolListFuncs.h"
 
 /*
@@ -15,6 +16,7 @@ void constSymbol(Symbol **s)
     (*(s))->hash = 0.0;
     (*(s))->type = CODE;
     (*(s))->line = 0;
+    (*(s))->externalType = 0;
     (*(s))->next = NULL;
 }
 
@@ -34,6 +36,20 @@ Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line, char *
         header->hash = hasher(str);
         header->type = type;
         header->line = line;
+        switch (type)
+        {
+        case EXTERN:
+            header->externalType = EXTERN;
+            break;
+
+        case ENTRY:
+            header->externalType = ENTRY;
+            break;
+
+        default:
+            header->externalType = CODE;
+            break;
+        }
         header->input = (char *)malloc((strlen(input) + 1) * (sizeof(char)));
         strcpy(header->input, input);
     }
@@ -42,7 +58,10 @@ Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line, char *
         while (current_node->next != NULL && existsAlready == FALSE)
         {
             if (type != EXTERN && strcmp(current_node->name, name))
+            {
                 existsAlready = TRUE;
+                continue;
+            }
             current_node = current_node->next;
         }
         if (existsAlready == FALSE)
@@ -52,15 +71,36 @@ Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line, char *
             current_node->next->hash = hasher(str);
             current_node->next->type = type;
             current_node->next->line = line;
+            switch (type)
+            {
+            case EXTERN:
+                current_node->next->externalType = EXTERN;
+                break;
 
-            header->input = (char *)malloc((strlen(input) + 1) * (sizeof(char)));
-            strcpy(header->input, input);
+            case ENTRY:
+                current_node->next->externalType = ENTRY;
+                break;
+
+            default:
+                current_node->next->externalType = CODE;
+                break;
+            }
+
+            current_node->next->input = (char *)malloc((strlen(input) + 1) * (sizeof(char)));
+            strcpy(current_node->next->input, input);
         }
         else
         {
-            current_node->name = NULL;
-            fprintf(stderr, "Symbol%s exists already!!", name);
-            return current_node->next;
+            if (type != EXTERN && type != ENTRY)
+            {
+                current_node->name = NULL;
+                fprintf(stderr, "Symbol %s exists already!!", name);
+                return current_node->next;
+            }
+            else if (type == ENTRY)
+            {
+                current_node->externalType=ENTRY;
+            }
         }
     }
     return current_node;
@@ -116,7 +156,7 @@ Stype checkSymbolType(char *str)
     input: a string, the symbol table
     output: the line where the symbol appeared, if it doesn't exist,-1
 */
-Stype existInSymbolTable(char *oper, Symbol *sym_list)
+int existInSymbolTable(char *oper, Symbol *sym_list)
 {
     double hsh = hasher(oper);
 
@@ -138,7 +178,7 @@ Stype existInSymbolTable(char *oper, Symbol *sym_list)
     output: the symobol's type appeared, if it doesn't exist default CODE
     we assume we check before if it exists, but we have defualt anyway
 */
-int symbolTypeFromTable(char *oper, Symbol *sym_list)
+Stype symbolTypeFromTable(char *oper, Symbol *sym_list)
 {
     double hsh = hasher(oper);
 
@@ -164,7 +204,7 @@ int countSymbols(Symbol *header)
     int i = 0;
     while (header->input != NULL)
     {
-        if (header->type != CODE&&header->type != ENTRY &&header->type != EXTERN)
+        if (header->type != CODE && header->type != ENTRY && header->type != EXTERN)
             i++;
         header = header->next;
     }

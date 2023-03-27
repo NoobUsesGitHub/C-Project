@@ -73,8 +73,8 @@ int main(int argc, char *argv[])
 }
 /*to do- valgrind*/
 /*to do - add more error finding*/
-/*to do - fix entry and external*/
-/*to do - decide if extern and entry stay*/
+/*to do - fix external*/
+/*to do - check that external prints it's lines*/
 /*to do - fix comments and such*/
 /*to do - go through everything correctly*/
 /*to do - make sure that we post correct file names*/

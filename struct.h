@@ -76,6 +76,7 @@ typedef struct Symbol
     double hash;
     Stype type;
     int line;
+    Stype externalType;
     char *input;
     struct Symbol *next;
 } Symbol;

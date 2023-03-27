@@ -903,7 +903,7 @@ void dumpSymbols(Symbols *header, char *fileName, Stype stype, char *extention)
         fprintf(stderr, "we had trouble opening a %s file", extention);
     while (header->next != NULL)
     {
-        if (header->type == stype)
+        if (header->type == stype||(header->externalType == stype&&header->externalType ==CODE))
         {
             found_any = TRUE;
             intToBinary(binary, header->line);
