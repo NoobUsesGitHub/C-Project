@@ -7,4 +7,5 @@
 
 FileList* macroDecoder(FILE*, char*);
 
+int massIsSpace(char*);
 #endif // MACRODECODER_H
