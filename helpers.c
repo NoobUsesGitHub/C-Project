@@ -552,7 +552,7 @@ void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, in
     int adTypeOper1 = 0, adTypeOper2 = 0;
     OperatorType op_type = stringToOperatorType(opcode);
     if (opersCnt != getNumOfOperands(op_type, op_table)) /*do we have more than required operators*/
-        printf(stdout, "opcode %s has more operators than expected", opcode);
+        fprintf(stdout, "opcode %s has more operators than expected", opcode);
 
     /*take the types of two opers*/
 
@@ -628,7 +628,7 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
 
         case 1: /*label*/
 
-            if (existInSymbolTable(oper1) != -1 && symbolTypeFromTable(oper1, sym_list) == EXTERN)
+            if (existInSymbolTable(oper1,sym_list) != -1 && symbolTypeFromTable(oper1, sym_list) == EXTERN)
             {
                 /*oper1+E(01)*/
                 intToBinary(binary, existInSymbolTable(oper1, sym_list));
@@ -681,7 +681,7 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
             break;
 
         case 1: /*label*/
-            if (existInSymbolTable(oper2) != -1 && symbolTypeFromTable(oper2, sym_list) == EXTERN)
+            if (existInSymbolTable(oper2,sym_list) != -1 && symbolTypeFromTable(oper2, sym_list) == EXTERN)
             {
                 /*oper2+E(01)*/
                 intToBinary(binary, existInSymbolTable(oper2, sym_list));
@@ -839,7 +839,7 @@ int checkAddressType(char *oper, OperatorType opcode, int mode, Symbol *sym_list
     input: the string for the operator that we recieved and a placeholder for the next and the label
     output: the number of operands we have if we need to split the operands and label
 */
-int breakDownJumps(char *oper1, char *oper2, char label)
+int breakDownJumps(char *oper1, char *oper2, char* label)
 {
     /*if this a normal jump, will be not split because it has a label, else split to two operands */
     bool turn_to_second_oper = FALSE;

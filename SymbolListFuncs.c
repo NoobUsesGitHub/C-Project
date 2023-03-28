@@ -91,11 +91,11 @@ Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line, char *
 
             current_node->next->input = (char *)malloc((strlen(input) + 1) * (sizeof(char)));
             strcpy(current_node->next->input, input);
-
+/*
             else if (type == ENTRY)
             {
                 current_node->externalType = ENTRY;
-            }
+            }*/
         }
     }
     return current_node;
@@ -239,7 +239,7 @@ int SymbolCompare(const void *a, const void *b)
 */
 void fixEntryPositions(Symbol *dataHeader)
 {
-    Symbol *pointer = NULL, current_node = dataHeader;
+    Symbol *pointer = NULL, *current_node = dataHeader;
     bool found = FALSE;
     while (current_node->name != NULL)
     {

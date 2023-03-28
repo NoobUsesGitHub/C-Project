@@ -58,7 +58,7 @@ FileList* macroDecoder(FILE *fp, char *fileName)
                 pch = strtok(NULL, delimints);
                 curMacro = addMacroToList(header, pch, NULL);
                 if(stringToOperatorType(pch)!=-1)
-                    fprintf(stdout, "%s can't be a name of a macro!");
+                    fprintf(stdout, "%s can't be a name of a macro!",pch);
                 skp = TRUE;
             }
 

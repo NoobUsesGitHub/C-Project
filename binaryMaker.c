@@ -142,7 +142,7 @@ FileList *toBinary(FILE *fp, char *fileName)
                     clearStr(label, MAX_LABEL_SIZE);
                     sprintf(label, "X DC: %d", DC); /*adding a dummy name*/
                 }
-                dataNode = addSymbolToList(dataHeader, label, stype, DC, oper1);
+                dataNode = addSymbolToList(dataHeader, label, stype, DC, oper1,CODE);
                 DC = DC + strlen(oper1) + 1;
                 break;
             case EXTERN:
@@ -155,7 +155,7 @@ FileList *toBinary(FILE *fp, char *fileName)
                     i++;
                 }
                 label[i] = '\0';
-                dataNode = addSymbolToList(dataHeader, label, stype, -1, label);
+                dataNode = addSymbolToList(dataHeader, label, stype, -1, label,CODE);
                 break;
             case ENTRY:
                 clearStr(label, MAX_LABEL_SIZE);
@@ -167,7 +167,7 @@ FileList *toBinary(FILE *fp, char *fileName)
                     i++;
                 }
                 label[i] = '\0';
-                dataNode = addSymbolToList(dataHeader, label, stype, DC, label);
+                dataNode = addSymbolToList(dataHeader, label, stype, DC, label,CODE);
                 DC++;
                 break;
 
@@ -189,7 +189,7 @@ FileList *toBinary(FILE *fp, char *fileName)
                     sprintf(label, "X DC: %d", DC); /*adding a dummy name*/
                 }
 
-                dataNode = addSymbolToList(dataHeader, label, stype, DC, oper1);
+                dataNode = addSymbolToList(dataHeader, label, stype, DC, oper1,CODE);
                 dumpDataOpers(oper1, &DC, SIMULATION, NULL); /*maybe not?*/
                 break;
             }
@@ -197,7 +197,7 @@ FileList *toBinary(FILE *fp, char *fileName)
         }
 
         if (foundLabel == TRUE) /*if we have label, and still here, make it a code symbol*/
-            dataNode = addSymbolToList(dataHeader, label, CODE, IC, NULL);
+            dataNode = addSymbolToList(dataHeader, label, CODE, IC, NULL,CODE);
 
         /* instruction label: opcode source-operand, target-operand
         label: opcode target-operand
@@ -258,7 +258,7 @@ FileList *toBinary(FILE *fp, char *fileName)
             foundErr = TRUE;
         }
 
-        dumpFullInstruction(label, opcode, oper1, oper2, spaceCount, &IC, SIMULATION, op_table);
+        dumpFullInstruction(label, opcode, oper1, oper2, spaceCount, &IC, SIMULATION, op_table,dataHeader);
     }
     if (foundErr == TRUE)
     {
@@ -373,7 +373,7 @@ FileList *toBinary(FILE *fp, char *fileName)
             foundErr = TRUE;
         }
 
-        dumpFullInstruction(label, opcode, oper1, oper2, spaceCount, &IC, EXECUTION, op_table);
+        dumpFullInstruction(label, opcode, oper1, oper2, spaceCount, &IC, EXECUTION, op_table,dataHeader);
     }
     dumpSymbolsToMainFile(dataHeader, IC, binaryFileNode->file);
 
