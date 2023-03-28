@@ -12,6 +12,8 @@ void addToList(FileList*, FILE*, char*);
 
 void closeFileList(FileList*);
 
+void reOpen(FileList*);
+
 void stringToFiles(int, char **, FileList**);
 
 #endif // FILELISTFUNCS_H

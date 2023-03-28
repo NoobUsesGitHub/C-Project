@@ -45,6 +45,7 @@ int main(int argc, char *argv[])
   tempOutput = binaryFilesHead;
   for (i = 1; i <= argc - 1; i++)
   {
+    reOpen(tempInputNode);
     tempOutput = toBinary(tempInputNode->file, tempInputNode->fileName);
     if (tempOutput->file == NULL) /*assuming that the binary file maker has found some error and finished early, after printing them*/
     {
@@ -60,6 +61,7 @@ int main(int argc, char *argv[])
   tempOutput = outputFilesHead;
   for (i = 1; i <= argc - 1; i++)
   {
+    reOpen(tempInputNode);
     tempOutput = toOutput(tempInputNode->file, tempInputNode->fileName);
     if (tempOutput->file == NULL) /*assuming that the output maker has found some error and finished early, after printing them*/
     {
