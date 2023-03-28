@@ -62,7 +62,7 @@ FileList* macroDecoder(FILE *fp, char *fileName)
                 skp = TRUE;
             }
 
-            if (skp == FALSE&&isspace(pch)==0)
+            if (skp == FALSE&&massIsSpace(pch)==0)
             {
                 if (dumpIfexistsInMacro(header, hasher(pch),macroFileNode->file) == 0)
                 {
