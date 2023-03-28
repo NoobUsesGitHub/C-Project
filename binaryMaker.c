@@ -36,7 +36,7 @@ FileList *toBinary(FILE *fp, char *fileName)
     if (fp == NULL || binaryFileNode->file == NULL)
     {
         binaryFileNode->file = NULL;
-        fprintf(stderr, "File is not correct"); /*need to print out to STDOUT and say which line*/
+        fprintf(stdout, "File is not correct"); /*need to print out to STDOUT and say which line*/
         return binaryFileNode;
     }
 
@@ -89,7 +89,7 @@ FileList *toBinary(FILE *fp, char *fileName)
             bit++;
         if (*bit == '\0' || *bit != '\n')
         {
-            fprintf(stderr, "line %d eneded unexpectandly", IC);
+            fprintf(stdout, "line %d eneded unexpectandly", IC);
             foundErr = TRUE;
         }
 
@@ -106,12 +106,12 @@ FileList *toBinary(FILE *fp, char *fileName)
             stype = checkSymbolType(dataTester);
 
             /*jumping for the next word*/
-            while (isLetter(bit) == TRUE)
+            while (isLetter(bit) == FALSE)
                 bit++;
 
             if (*bit == '\0' || *bit != '\n')
             {
-                fprintf(stderr, "line %d eneded unexpectandly", IC);
+                fprintf(stdout, "line %d eneded unexpectandly", IC);
                 foundErr = TRUE;
             }
 
@@ -124,7 +124,7 @@ FileList *toBinary(FILE *fp, char *fileName)
                 {
                     if (*bit == '\n')
                     {
-                        fprintf(stderr, "string finished with no end");
+                        fprintf(stdout, "string finished with no end");
                         foundErr = TRUE;
                         break;
                     }
@@ -135,27 +135,39 @@ FileList *toBinary(FILE *fp, char *fileName)
                 bit++;
                 oper1[i] = '\0';
 
-                dumpStr(oper1, &IC, SIMULATION,NULL);
+                dumpStr(oper1, &IC, SIMULATION, NULL);
 
                 if (foundLabel == FALSE)
                 {
                     clearStr(label, MAX_LABEL_SIZE);
                     sprintf(label, "X DC: %d", DC); /*adding a dummy name*/
                 }
-                dataNode = addSymbolToList(dataHeader, label, stype, DC,oper1);
+                dataNode = addSymbolToList(dataHeader, label, stype, DC, oper1);
                 DC = DC + strlen(oper1) + 1;
                 break;
             case EXTERN:
+                clearStr(label, MAX_LABEL_SIZE);
+                /*collecting label, we ignore the first label*/
+                while (isLetter(bit) == TRUE)
+                {
+                    label[i] = *bit;
+                    bit++;
+                    i++;
+                }
+                label[i] = '\0';
+                dataNode = addSymbolToList(dataHeader, label, stype, -1, label);
+                break;
             case ENTRY:
                 clearStr(label, MAX_LABEL_SIZE);
                 /*collecting label, we ignore the first label*/
                 while (isLetter(bit) == TRUE)
                 {
                     label[i] = *bit;
+                    bit++;
                     i++;
                 }
                 label[i] = '\0';
-                dataNode = addSymbolToList(dataHeader, label, stype, DC,label);
+                dataNode = addSymbolToList(dataHeader, label, stype, DC, label);
                 DC++;
                 break;
 
@@ -177,15 +189,15 @@ FileList *toBinary(FILE *fp, char *fileName)
                     sprintf(label, "X DC: %d", DC); /*adding a dummy name*/
                 }
 
-                dataNode = addSymbolToList(dataHeader, label, stype, DC,oper1);
-                dumpDataOpers(oper1, &DC, SIMULATION,NULL); /*maybe not?*/
+                dataNode = addSymbolToList(dataHeader, label, stype, DC, oper1);
+                dumpDataOpers(oper1, &DC, SIMULATION, NULL); /*maybe not?*/
                 break;
             }
             continue;
         }
 
         if (foundLabel == TRUE) /*if we have label, and still here, make it a code symbol*/
-            dataNode = addSymbolToList(dataHeader, label, CODE, IC,NULL);
+            dataNode = addSymbolToList(dataHeader, label, CODE, IC, NULL);
 
         /* instruction label: opcode source-operand, target-operand
         label: opcode target-operand
@@ -200,7 +212,7 @@ FileList *toBinary(FILE *fp, char *fileName)
         }
         if (spaceCount > 2)
         {
-            fprintf(stderr, "operator %s was found with too many operands", opcode);
+            fprintf(stdout, "operator %s was found with too many operands", opcode);
             foundErr = TRUE;
             continue;
         }
@@ -236,13 +248,13 @@ FileList *toBinary(FILE *fp, char *fileName)
 
         if (op_code_type == ERROR_NA)
         { /*if opcode a real opcode*/
-            fprintf(stderr, "opcode %s not found",opcode);
+            fprintf(stdout, "opcode %s not found", opcode);
             foundErr = TRUE;
         }
 
         if (stringToOperatorType(oper1) != ERROR_NA || stringToOperatorType(oper1) != ERROR_NA)
         { /*if any operator is a name of an opecode*/
-            fprintf(stderr, "operator src %s not found",oper1);
+            fprintf(stdout, "operator src %s not found", oper1);
             foundErr = TRUE;
         }
 
@@ -250,17 +262,18 @@ FileList *toBinary(FILE *fp, char *fileName)
     }
     if (foundErr == TRUE)
     {
-        fprintf(stderr, "there are error's in the first pass!");
+        fprintf(stdout, "there are error's in the first pass!");
     }
     else
     {
         addToData(dataHeader, IC);
+        fixEntryPositions(dataHeader);
     }
     rewind(fp);
 
-    fprintf(binaryFileNode->file,"%d %d",IC,DC);
+    fprintf(binaryFileNode->file, "%d %d", IC, DC);
     IC = 0;
-    
+
     while (fgets(str, MAX_LINE_SIZE, fp) != NULL) /*second pass*/
     {
         removeRedundantSpaces(str);
@@ -302,8 +315,7 @@ FileList *toBinary(FILE *fp, char *fileName)
 
         i = 0;
         if (*bit == symbolMarker) /*we met a sybol!*/
-        {/*to do -decide if extern and entry stay*/
-         /*to do- make sure they print to file*/
+        {
             continue; /*we skip those, we collected them all*/
         }
 
@@ -350,20 +362,20 @@ FileList *toBinary(FILE *fp, char *fileName)
         /*now we have the opcode, the two operators and the label if any,*/
 
         if (op_code_type == ERROR_NA) /*if opcode a real opcode*/
-             { /*if opcode a real opcode*/
-            fprintf(stderr, "opcode %s not found",opcode);
+        {                             /*if opcode a real opcode*/
+            fprintf(stdout, "opcode %s not found", opcode);
             foundErr = TRUE;
         }
 
         if (stringToOperatorType(oper1) != ERROR_NA || stringToOperatorType(oper1) != ERROR_NA) /*if any operator is a name of an opecode*/
-            { /*if any operator is a name of an opecode*/
-            fprintf(stderr, "operator src %s not found",oper1);
+        {                                                                                       /*if any operator is a name of an opecode*/
+            fprintf(stdout, "operator src %s not found", oper1);
             foundErr = TRUE;
         }
 
         dumpFullInstruction(label, opcode, oper1, oper2, spaceCount, &IC, EXECUTION, op_table);
     }
-    dumpSymbolsToMainFile(dataHeader,IC,binaryFileNode->file);
+    dumpSymbolsToMainFile(dataHeader, IC, binaryFileNode->file);
 
     if (!foundErr)
     {

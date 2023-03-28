@@ -363,7 +363,7 @@ void addToData(Symbol *dataHeader, int IC)
 {
     while (dataHeader->next != NULL)
     {
-        if (dataHeader->type == DATA)
+        if (dataHeader->type == DATA || dataHeader->type == STRING)
             dataHeader->line = dataHeader->line + IC;
         dataHeader++;
     }
@@ -384,7 +384,7 @@ int getNumOfOperands(OperatorType type, Operator *op_table)
     input: a string and the Data counter
     will print the individual numbers as binary and increase the DC
 */
-void dumpDataOpers(char *str, int *cnt, int mode,FILE* fp)
+void dumpDataOpers(char *str, int *cnt, int mode, FILE *fp)
 {
 
     int size = strlen(str);
@@ -417,9 +417,9 @@ void dumpDataOpers(char *str, int *cnt, int mode,FILE* fp)
         intToBinary(binaryChar, value);
         if (mode != SIMULATION)
             printf("%d  %s", *cnt, binaryChar);
-        *cnt=*cnt+1;
+        *cnt = *cnt + 1;
         clearStr(temp, size);
-        *cnt=*cnt+1;
+        *cnt = *cnt + 1;
     }
 }
 
@@ -427,7 +427,7 @@ void dumpDataOpers(char *str, int *cnt, int mode,FILE* fp)
     input: a string and the Data counter
     will print the individual letters as binary and increase the DC
 */
-void dumpStr(char *oper, int *cnt, int mode,FILE *fp)
+void dumpStr(char *oper, int *cnt, int mode, FILE *fp)
 {
     int size = strlen(oper);
     char binaryChar[14];
@@ -547,18 +547,12 @@ void strcpyBySteps(char *to, char *from, int steps)
     }
 }
 
-/*
-    not done yet
-    general Idea- will recieve label, opcode,operator1 operator2 and then code them up to binary
-
-*/
-
 void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, int opersCnt, int *IC, int mode, Operator *op_table, Symbol *sym_list)
 {
     int adTypeOper1 = 0, adTypeOper2 = 0;
     OperatorType op_type = stringToOperatorType(opcode);
     if (opersCnt != getNumOfOperands(op_type, op_table)) /*do we have more than required operators*/
-        printf(stderr, "opcode %s has more operators than expected", opcode);
+        printf(stdout, "opcode %s has more operators than expected", opcode);
 
     /*take the types of two opers*/
 
@@ -566,18 +560,27 @@ void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, in
     adTypeOper2 = checkAddressType(oper2, op_type, mode, sym_list);
     if (!isAddTypeCorrect(op_type, adTypeOper1, adTypeOper2, op_table))
     {
-        fprintf(stderr, "incorrect address type for one of the operators for %s in %d", opcode, *IC);
+        fprintf(stdout, "incorrect address type for one of the operators for %s in %d", opcode, *IC);
         adTypeOper1 = 0;
         adTypeOper2 = 0; /*adding dummy info*/
     }
+    if (mode == EXECUTION)
+    {/*assuming we found a external already*/
+        if (adTypeOper1 == 1 || adTypeOper1 == -1)
+        {
+            checkIfExternal(oper1,*IC,sym_list);
+        }
 
-    if(mode==EXECUTION)
-    {
-        /*looking through for externals*/
-        checkForExternals(oper1,line,sym_list);
-        checkForExternals(oper2,sym_list);
+        if (adTypeOper2 == 1 || adTypeOper2 == -1)
+        {
+            checkIfExternal(oper2,*IC,sym_list);
+        }
+
+        if (op_type==JMP||op_type==BNE||op_type==JSR) /*check if label exists as external*/
+        {
+            checkIfExternal(label,*IC,sym_list);
+        }
     }
-
     /*print the opcode binary*/
     calculateOpcodeBinaryAndPrint(op_type, adTypeOper1, adTypeOper2, mode, IC, sym_list, label);
     /*print the opers binary*/
@@ -624,7 +627,7 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
             break;
 
         case 1: /*label*/
-        
+
             if (existInSymbolTable(oper1) != -1 && symbolTypeFromTable(oper1, sym_list) == EXTERN)
             {
                 /*oper1+E(01)*/
@@ -895,7 +898,7 @@ int breakDownJumps(char *oper1, char *oper2, char label)
     input: a header of the symbols table, the file name, a data symbol type, and the extention
     will push all the data symbols of that type to a file
 */
-void dumpSymbols(Symbols *header, char *fileName, Stype stype, char *extention)
+void dumpSymbols(Symbol *header, char *fileName, Stype stype, char *extention)
 {
     char newName[strlen(fileName)];
     char binary[15];
@@ -906,22 +909,39 @@ void dumpSymbols(Symbols *header, char *fileName, Stype stype, char *extention)
     strcpyBySteps(newName + strlen(newName) - strlen(extention), extention, 3);
     FILE *fp = fopen(newName, "w");
     if (fp == NULL)
-        fprintf(stderr, "we had trouble opening a %s file", extention);
+        fprintf(stdout, "we had trouble opening a %s file", extention);
     while (header->next != NULL)
     {
-        if (header->type == stype||(header->externalType == stype&&header->externalType ==CODE))
-        {
-            found_any = TRUE;
-            intToBinary(binary, header->line);
-            bit = binary;
-            while (*bit != '\0')
+        if (stype != EXTERN)
+            if (header->type == stype || (header->externalType == stype && header->externalType == CODE))
             {
-                *bit = binaryTranslate(*bit);
-                bit++;
+                found_any = TRUE;
+                intToBinary(binary, header->line);
+                bit = binary;
+                while (*bit != '\0')
+                {
+                    *bit = binaryTranslate(*bit);
+                    bit++;
+                }
+                fprintf(fp, "%s  %s\n", header->name, binary);
+                strcpy(binary, "00000000000000\0");
             }
-            fprintf(fp, "%s  %s\n", header->name, binary);
-            strcpy(binary, "00000000000000\0");
-        }
+            else
+            {
+                if (header->type != stype && header->externalType == stype)
+                {
+                    found_any = TRUE;
+                    intToBinary(binary, header->line);
+                    bit = binary;
+                    while (*bit != '\0')
+                    {
+                        *bit = binaryTranslate(*bit);
+                        bit++;
+                    }
+                    fprintf(fp, "%s  %s\n", header->name, binary);
+                    strcpy(binary, "00000000000000\0");
+                }
+            }
         header = header->next;
     }
     fclose(fp);
@@ -936,35 +956,24 @@ will create an array and print the symbols ordered by line
 void dumpSymbolsToMainFile(Symbol *header, int IC, FILE *fp)
 {
     int numOfSymbols = countSymbols(header), i = 0;
-    Symbol* arr[numOfSymbols];
+    Symbol *arr[numOfSymbols];
     fillSymArr(arr, numOfSymbols, header);
-    qsort(arr,numOfSymbols,sizeof(Symbol),SymbolCompare);
+    qsort(arr, numOfSymbols, sizeof(Symbol), SymbolCompare);
 
-    for(;i<numOfSymbols;i++)
+    for (; i < numOfSymbols; i++)
     {
         switch (arr[i]->type)
         {
         case STRING:
-            dumpStr(arr[i]->input, &IC, EXECUTION,fp);
+            dumpStr(arr[i]->input, &IC, EXECUTION, fp);
             break;
-        
+
         case DATA:
-            dumpDataOpers(arr[i]->input, &IC, EXECUTION,fp);
+            dumpDataOpers(arr[i]->input, &IC, EXECUTION, fp);
             break;
         }
     }
 }
 
 
-/*
-    input: the string name, it's line and the symbol list header
-    if it exists, will update the symbol list with external symbol if it exists 
-*/
-void checkForExternals(char* oper,int line,Symbol* sym_list)
-{
-    if(symbolTypeFromTable(oper,sym_list)==EXTERN)
-    {
-        addSymbolToList(sym_list,oper,EXTERN,line,NULL);
-    }
 
-}

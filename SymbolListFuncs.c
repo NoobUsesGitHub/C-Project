@@ -24,7 +24,7 @@ void constSymbol(Symbol **s)
     input: a header node, a nase for the new macro and it's list of strings that it unfolds to
     output: the new macro node already connected to the list
 */
-Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line, char *input)
+Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line, char *input, Stype externType)
 { /*do i need to return here?*/
     char *str = (char *)malloc(strlen(name) * (sizeof(char) + 1));
     Symbol *current_node = header;
@@ -36,20 +36,7 @@ Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line, char *
         header->hash = hasher(str);
         header->type = type;
         header->line = line;
-        switch (type)
-        {
-        case EXTERN:
-            header->externalType = EXTERN;
-            break;
-
-        case ENTRY:
-            header->externalType = ENTRY;
-            break;
-
-        default:
-            header->externalType = CODE;
-            break;
-        }
+        header->externalType = CODE;
         header->input = (char *)malloc((strlen(input) + 1) * (sizeof(char)));
         strcpy(header->input, input);
     }
@@ -57,13 +44,15 @@ Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line, char *
     {
         while (current_node->next != NULL && existsAlready == FALSE)
         {
-            if (type != EXTERN && strcmp(current_node->name, name))
+            if (strcmp(current_node->name, name))
             {
-                existsAlready = TRUE;
+                if (type != EXTERN && line != -1) /*if line -1 we are in the extern phase and we don't really care about duplicates*/
+                    existsAlready = TRUE;
                 continue;
             }
             current_node = current_node->next;
         }
+
         if (existsAlready == FALSE)
         {
             constSymbol(&(current_node->next));
@@ -71,35 +60,41 @@ Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line, char *
             current_node->next->hash = hasher(str);
             current_node->next->type = type;
             current_node->next->line = line;
-            switch (type)
-            {
-            case EXTERN:
-                current_node->next->externalType = EXTERN;
-                break;
-
-            case ENTRY:
-                current_node->next->externalType = ENTRY;
-                break;
-
-            default:
-                current_node->next->externalType = CODE;
-                break;
-            }
+            header->externalType = CODE;
 
             current_node->next->input = (char *)malloc((strlen(input) + 1) * (sizeof(char)));
             strcpy(current_node->next->input, input);
         }
         else
         {
-            if (type != EXTERN && type != ENTRY)
+            if ((type != EXTERN && type != ENTRY) && (type != CODE && externType == EXTERN))
             {
                 current_node->name = NULL;
-                fprintf(stderr, "Symbol %s exists already!!", name);
+                fprintf(stdout, "Symbol %s ay line %d exists already!!", name, line);
                 return current_node->next;
             }
+            /*
+                entry
+                code + externtype==extern
+            */
+            while (current_node->next != NULL)
+            {
+                current_node = current_node->next;
+            }
+
+            constSymbol(&(current_node->next));
+            current_node->next->name = str;
+            current_node->next->hash = hasher(str);
+            current_node->next->type = type;
+            current_node->next->line = line;
+            header->externalType = externType;
+
+            current_node->next->input = (char *)malloc((strlen(input) + 1) * (sizeof(char)));
+            strcpy(current_node->next->input, input);
+
             else if (type == ENTRY)
             {
-                current_node->externalType=ENTRY;
+                current_node->externalType = ENTRY;
             }
         }
     }
@@ -185,7 +180,7 @@ Stype symbolTypeFromTable(char *oper, Symbol *sym_list)
     while (sym_list->next != NULL)
     {
         if (sym_list->hash == hsh)
-            return sym_list->type;
+            return (sym_list->type == EXTERN || sym_list->externalType == EXTERN) ? EXTERN : sym_list->type;
         sym_list = sym_list->next;
     }
     if (sym_list != NULL && sym_list->hash != 0 && sym_list->hash != hsh)
@@ -236,4 +231,32 @@ void fillSymArr(Symbol *arr[], int numOfSymbols, Symbol *header)
 int SymbolCompare(const void *a, const void *b)
 {
     return ((Symbol *)a)->line > ((Symbol *)b)->line;
+}
+
+/*
+    input: the list of symbols
+    will go through every ENTRY node and will update it with it's corresponding label which appeared somewhere
+*/
+void fixEntryPositions(Symbol *dataHeader)
+{
+    Symbol *pointer = NULL, current_node = dataHeader;
+    bool found = FALSE;
+    while (current_node->name != NULL)
+    {
+        if (current_node->type == ENTRY)
+        {
+            found = FALSE;
+            pointer = dataHeader;
+            while (pointer->name != NULL && !found)
+            {
+                if (pointer->type != ENTRY && pointer->hash == current_node->hash)
+                {
+                    current_node->line = pointer->line;
+                    found = TRUE;
+                }
+                pointer = pointer->next;
+            }
+        }
+        current_node = current_node->next;
+    }
 }

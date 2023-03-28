@@ -6,16 +6,16 @@
 #include <string.h>
 #include "struct.h"
 
-void constMacroList(MacroList**);
+MacroList *addMacroToList(MacroList *, char *, char **);
 
-void freeMacroList(MacroList*);
+void constMacroList(MacroList **);
+
+void freeMacroList(MacroList *);
 
 void freeMacro(char **, int);
 
-void addLineToNode(MacroList*, char*);
+void addLineToNode(MacroList *, char *);
 
-int dumpIfexistsInMacro(MacroList*, double,FILE*);
-
-MacroList* addMacroToList(MacroList*, char*, char**);
+int dumpIfexistsInMacro(MacroList *, double, FILE *);
 
 #endif // MACROLISTFUNCS_H
