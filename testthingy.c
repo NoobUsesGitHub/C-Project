@@ -5,8 +5,11 @@
 
 int main()
 {
-	char str[4];
-	strcpy(str,"mov");
-	printf("%d",isspace(str));
+	unsigned i=1;
+	i=i&0;
+printf("%d",i);
+i=1;
+i=i&&0;
+printf("%d",i);
   return 0;
 }
