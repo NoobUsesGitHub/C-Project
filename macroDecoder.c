@@ -33,7 +33,7 @@ FileList* macroDecoder(FILE *fp, char *fileName)
         return macroFileNode;
     }
 
-    while (fgets(str, 85, fp) != NULL)
+    while (fgets(str, MAX_LINE_SIZE, fp) != NULL)
     {
         pch = strtok(str, delimints); /*start strtok*/
 
