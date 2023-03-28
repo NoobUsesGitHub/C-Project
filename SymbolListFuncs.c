@@ -261,19 +261,3 @@ void fixEntryPositions(Symbol *dataHeader)
     }
 }
 
-
-
-/*
-    input: a string
-    output: 1- if the whole string is a space character,else 0
-*/
-int massIsSpace(char* pch)
-{
-    int space=isspace(*pch);
-    while(*pch!='\0'&&*pch!='\n')
-    {   
-        space=space&&isspace(*pch);
-        pch++;
-    }
-    return space;
-}
