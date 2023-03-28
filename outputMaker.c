@@ -16,14 +16,7 @@ FileList *toOutput(FILE *fp, char *fileName)
   constNode(&outputFile);
 
   strcpy(strNewName, fileName);
-  char *bit = strNewName + (strlen(strNewName) - 2);
-  while (*change != '\0')
-  {
-    *bit = *change;
-    bit++;
-    change++;
-  }
-  *bit = '\0';
+  strcpyBySteps(strNewName+(strlen(strNewName)-1-strlen(change)),change,3);
   outputFile->fileName = (char *)malloc(strlen(strNewName) * sizeof(char));
   strcpy(outputFile->fileName, strNewName);
 

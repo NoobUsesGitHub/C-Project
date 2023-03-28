@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
   }
   closeFileList(macroFilesHead);
 
-  tempInputNode = macroFilesHead;
+  tempInputNode = binaryFilesHead;
   constNode(&outputFilesHead);
   tempOutput = outputFilesHead;
   for (i = 1; i <= argc - 1; i++)
