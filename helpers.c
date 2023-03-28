@@ -975,5 +975,16 @@ void dumpSymbolsToMainFile(Symbol *header, int IC, FILE *fp)
     }
 }
 
+/*
+    input: a string(possibly a label) a line number and the symbol list
+    if the label represents an external symbol we will add it to the symbol table to add to the .ext file
+*/
+void checkIfExternal(char* oper,int line,Symbol* sym_list)
+{
+    if(symbolTypeFromTable(oper,sym_list)==EXTERN)
+        addSymbolToList(sym_list,oper,CODE,line,NULL,EXTERN);
 
+
+
+}
 
