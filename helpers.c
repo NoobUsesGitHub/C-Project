@@ -258,6 +258,11 @@ void removeRedundantSpaces(char *str)
     {
         if (isspace(str[i]) != 0)
         { /*is space*/
+            if (i == 0)
+            {
+                i++;
+                continue;
+            }
             if ((j > 0) && isspace(temp[j - 1]) != 0)
                 temp[j - 1] = str[i];
             else
@@ -302,67 +307,67 @@ OperatorType stringToOperatorType(char *operator_name)
         str[i] = tolower(str[i]);
     }
 
-    if (strcmp(operator_name, "mov") || strcmp(str, "mov"))
+    if (strcmp(operator_name, "mov") == 0 || strcmp(str, "MOV") == 0)
     {
         return MOV;
     }
-    else if (strcmp(operator_name, "cmp") || strcmp(str, "cmp"))
+    else if (strcmp(operator_name, "cmp") == 0 || strcmp(str, "CMP") == 0)
     {
         return CMP;
     }
-    else if (strcmp(operator_name, "add") || strcmp(str, "add"))
+    else if (strcmp(operator_name, "add") == 0 || strcmp(str, "ADD") == 0)
     {
         return ADD;
     }
-    else if (strcmp(operator_name, "sub") || strcmp(str, "sub"))
+    else if (strcmp(operator_name, "sub") == 0 || strcmp(str, "SUB") == 0)
     {
         return SUB;
     }
-    else if (strcmp(operator_name, "not") || strcmp(str, "not"))
+    else if (strcmp(operator_name, "not") == 0 || strcmp(str, "NOT") == 0)
     {
         return NOT;
     }
-    else if (strcmp(operator_name, "clr") || strcmp(str, "clr"))
+    else if (strcmp(operator_name, "clr") == 0 || strcmp(str, "CLR") == 0)
     {
         return CLR;
     }
-    else if (strcmp(operator_name, "lea") || strcmp(str, "lea"))
+    else if (strcmp(operator_name, "lea") == 0 || strcmp(str, "LEA") == 0)
     {
         return LEA;
     }
-    else if (strcmp(operator_name, "inc") || strcmp(str, "inc"))
+    else if (strcmp(operator_name, "inc") == 0 || strcmp(str, "INC") == 0)
     {
         return INC;
     }
-    else if (strcmp(operator_name, "dec") || strcmp(str, "dec"))
+    else if (strcmp(operator_name, "dec") == 0 || strcmp(str, "DEC") == 0)
     {
         return DEC;
     }
-    else if (strcmp(operator_name, "jmp") || strcmp(str, "jmp"))
+    else if (strcmp(operator_name, "jmp") == 0 || strcmp(str, "JMP") == 0)
     {
         return JMP;
     }
-    else if (strcmp(operator_name, "bne") || strcmp(str, "bne"))
+    else if (strcmp(operator_name, "bne") == 0 || strcmp(str, "BNE") == 0)
     {
         return BNE;
     }
-    else if (strcmp(operator_name, "red") || strcmp(str, "red"))
+    else if (strcmp(operator_name, "red") == 0 || strcmp(str, "RED") == 0)
     {
         return RED;
     }
-    else if (strcmp(operator_name, "prn") || strcmp(str, "prn"))
+    else if (strcmp(operator_name, "prn") == 0 || strcmp(str, "PRN") == 0)
     {
         return PRN;
     }
-    else if (strcmp(operator_name, "jsr") || strcmp(str, "jsr"))
+    else if (strcmp(operator_name, "jsr") == 0 || strcmp(str, "JSR") == 0)
     {
         return JSR;
     }
-    else if (strcmp(operator_name, "rts") || strcmp(str, "rts"))
+    else if (strcmp(operator_name, "rts") == 0 || strcmp(str, "RTS") == 0)
     {
         return RTS;
     }
-    else if (strcmp(operator_name, "stop") || strcmp(str, "stop"))
+    else if (strcmp(operator_name, "stop") == 0 || strcmp(str, "STOP") == 0)
     {
         return STOP;
     }
@@ -413,7 +418,7 @@ void dumpDataOpers(char *str, int *cnt, int mode, FILE *fp)
             value = atoi(temp);
             intToBinary(binaryChar, value);
             if (mode != SIMULATION)
-                fprintf(fp,"%d  %s", *cnt, binaryChar);
+                fprintf(fp, "%d\t%s", *cnt, binaryChar);
             *cnt++;
             clearStr(temp, size);
         }
@@ -430,7 +435,7 @@ void dumpDataOpers(char *str, int *cnt, int mode, FILE *fp)
         value = atoi(temp);
         intToBinary(binaryChar, value);
         if (mode != SIMULATION)
-            fprintf(fp,"%d  %s", *cnt, binaryChar);
+            fprintf(fp, "%d\t%s", *cnt, binaryChar);
         *cnt = *cnt + 1;
         clearStr(temp, size);
         *cnt = *cnt + 1;
@@ -451,11 +456,12 @@ void dumpStr(char *oper, int *cnt, int mode, FILE *fp)
         value = (int)(*oper);
         intToBinary(binaryChar, value);
         if (mode != SIMULATION)
-            fprintf(fp,"%d  %s", *cnt, binaryChar);
+            fprintf(fp, "%d\t%s", *cnt, binaryChar);
         *cnt++;
         oper++;
     }
-    fprintf(fp,"%d  %s", *cnt, binaryChar);
+    if (mode != SIMULATION)
+        fprintf(fp, "%d\t%s", *cnt, binaryChar);
     *cnt++;
 }
 
@@ -561,7 +567,7 @@ void strcpyBySteps(char *to, char *from, int steps)
     }
 }
 
-void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, int opersCnt, int *IC, int mode, Operator *op_table, Symbol *sym_list,FILE* fp)
+void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, int opersCnt, int *IC, int mode, Operator *op_table, Symbol *sym_list, FILE *fp)
 {
     int adTypeOper1 = 0, adTypeOper2 = 0;
     OperatorType op_type = stringToOperatorType(opcode);
@@ -596,12 +602,12 @@ void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, in
         }
     }
     /*print the opcode binary*/
-    calculateOpcodeBinaryAndPrint(op_type, adTypeOper1, adTypeOper2, mode, IC, sym_list, label,fp);
+    calculateOpcodeBinaryAndPrint(op_type, adTypeOper1, adTypeOper2, mode, IC, sym_list, label, fp);
     /*print the opers binary*/
-    calculateOperatorsBinaryAndPrint(oper1, oper2, adTypeOper1, adTypeOper2, mode, IC, sym_list,fp);
+    calculateOperatorsBinaryAndPrint(oper1, oper2, adTypeOper1, adTypeOper2, mode, IC, sym_list, fp);
 }
 
-void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1, int adTypeOper2, int mode, int *IC, Symbol *sym_list,FILE* fp)
+void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1, int adTypeOper2, int mode, int *IC, Symbol *sym_list, FILE *fp)
 {
     char binary[15], temp[5];
     strcpy(binary, "00000000000000\0");
@@ -619,7 +625,7 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
         strcpyBySteps(binary, temp + 2, 2);
         shiftLeftChar(binary, 2);
         if (mode != SIMULATION)
-            fprintf(fp,"%d  %s", *IC, binary);
+            fprintf(fp, "%d\t%s\n", *IC, binary);
         *IC = *IC + 1;
     }
     else
@@ -636,7 +642,8 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
             intToBinary(binary, atoi(oper1 + 1));
             shiftLeftChar(binary, 2);
             strcpyBySteps(binary, temp + 2, 2);
-            fprintf(fp,"%d  %s", *IC, binary);
+            if (mode != SIMULATION)
+                fprintf(fp, "%d\t%s\n", *IC, binary);
             *IC = *IC + 1;
             break;
 
@@ -651,7 +658,7 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
                 temp[2] = '0';
                 strcpyBySteps(binary, temp + 2, 2);
                 if (mode != SIMULATION)
-                    fprintf(fp,"%d  %s", *IC, binary);
+                    fprintf(fp, "%d\t%s\n", *IC, binary);
                 *IC = *IC + 1;
             }
             else
@@ -664,7 +671,7 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
                 temp[2] = '1';
                 strcpyBySteps(binary, temp + 2, 2);
                 if (mode != SIMULATION)
-                    fprintf(fp,"%d  %s", *IC, binary);
+                    fprintf(fp, "%d\t%s\n", *IC, binary);
                 *IC = *IC + 1;
             }
             break;
@@ -673,7 +680,7 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
             intToBinary(binary, realRegister(oper1));
             shiftLeftChar(binary, 7);
             if (mode != SIMULATION)
-                fprintf(fp,"%d  %s", *IC, binary);
+                fprintf(fp, "%d\t%s\n", *IC, binary);
             *IC = *IC + 1;
             break;
         }
@@ -690,7 +697,8 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
             intToBinary(binary, atoi(oper2 + 1));
             shiftLeftChar(binary, 2);
             strcpyBySteps(binary, temp + 2, 2);
-            fprintf(fp,"%d  %s", *IC, binary);
+            if (mode != SIMULATION)
+                fprintf(fp, "%d\t%s\n", *IC, binary);
             *IC = *IC + 1;
             break;
 
@@ -704,7 +712,7 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
                 temp[2] = '0';
                 strcpyBySteps(binary, temp + 2, 2);
                 if (mode != SIMULATION)
-                    fprintf(fp,"%d  %s", *IC, binary);
+                    fprintf(fp, "%d\t%s\n", *IC, binary);
                 *IC = *IC + 1;
             }
             else
@@ -716,7 +724,7 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
                 temp[2] = '1';
                 strcpyBySteps(binary, temp + 2, 2);
                 if (mode != SIMULATION)
-                    fprintf(fp,"%d  %s", *IC, binary);
+                    fprintf(fp, "%d\t%s\n", *IC, binary);
                 *IC = *IC + 1;
             }
             break;
@@ -726,7 +734,7 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
             shiftLeftChar(binary, 2);
             strcpyBySteps(binary, temp + 2, 2);
             if (mode != SIMULATION)
-                fprintf(fp,"%d  %s", *IC, binary);
+                fprintf(fp, "%d\t%s\n", *IC, binary);
             *IC = *IC + 1;
             break;
         }
@@ -737,7 +745,7 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
     input: the type of the operator, the address types of the operands, the mode, the instruction counter, the symbol info table and the label
     will turn the opcode to binary, if there is a label(aka we are jumping, will print that too)
 */
-void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int adTypeOper2, int mode, int *IC, Symbol *sy_list, char *label,FILE* fp)
+void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int adTypeOper2, int mode, int *IC, Symbol *sy_list, char *label, FILE *fp)
 {
     bool needToPrintLabel = FALSE;
     char binary[15], temp[5];
@@ -795,7 +803,7 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
         needToPrintLabel = TRUE;
     }
     if (mode != SIMULATION)
-        fprintf(fp,"%d  %s\n", *IC, binary);
+        fprintf(fp, "%d\t%s\n", *IC, binary);
     *IC = *IC + 1;
     strcpy(binary, "00000000000000\0");
     if (needToPrintLabel)
@@ -804,7 +812,7 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
         shiftLeftChar(binary, 2);
         strcpy(binary + 12, "10");
         if (mode != SIMULATION)
-            fprintf(fp,"%d  %s", *IC, binary);
+            fprintf(fp, "%d\t%s", *IC, binary);
         *IC = *IC + 1;
     }
 }
@@ -937,7 +945,7 @@ void dumpSymbols(Symbol *header, char *fileName, Stype stype, char *extention)
                     *bit = binaryTranslate(*bit);
                     bit++;
                 }
-                fprintf(fp, "%s  %s\n", header->name, binary);
+                fprintf(fp, "%s\t%s\n", header->name, binary);
                 strcpy(binary, "00000000000000\0");
             }
             else
@@ -952,7 +960,7 @@ void dumpSymbols(Symbol *header, char *fileName, Stype stype, char *extention)
                         *bit = binaryTranslate(*bit);
                         bit++;
                     }
-                    fprintf(fp, "%s  %s\n", header->name, binary);
+                    fprintf(fp, "%s\t%s\n", header->name, binary);
                     strcpy(binary, "00000000000000\0");
                 }
             }

@@ -10,7 +10,7 @@ FileList *toOutput(FILE *fp, char *fileName)
   char *change = "ob\0";
   char strNewName[strlen(fileName)];
   bool sawTab = FALSE;
-  /*nt lineNum = 0;*/
+  /*int lineNum = 0;*/
 
   FileList *outputFile;
   constNode(&outputFile);
@@ -28,13 +28,13 @@ FileList *toOutput(FILE *fp, char *fileName)
     return outputFile;
   }
   c = (char)fgetc(fp);
-
+  
+/* skipping the first line*/
   while (c != '\n' && c != EOF)
   {
     fputc(c, outputFile->file);
     c = (char)fgetc(fp);
   }
-  
   while (c != EOF)
   {
     if (sawTab == TRUE)
