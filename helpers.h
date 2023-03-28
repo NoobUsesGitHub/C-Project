@@ -49,7 +49,7 @@ bool isAddTypeCorrect(OperatorType,int, int, Operator*);
 
 bool existInAddressType(int, int[]);
 
-void dumpFullInstruction(char*,char*,char*,char*,int,int*,int,Operator*, Symbol *);
+void dumpFullInstruction(char*,char*,char*,char*,int,int*,int,Operator*, Symbol *,FILE*);
 
 int checkAddressType(char*, OperatorType, int, Symbol*);
 
@@ -59,9 +59,9 @@ int breakDownJumps(char *, char *,char*);
 
 void dumpSymbols(Symbol *, char *, Stype, char *);
 
-void calculateOpcodeBinaryAndPrint(OperatorType , int , int, int, int *, Symbol *, char *);
+void calculateOpcodeBinaryAndPrint(OperatorType , int , int, int, int *, Symbol *, char *,FILE*);
 
-void calculateOperatorsBinaryAndPrint(char *, char *, int, int, int, int *, Symbol *);
+void calculateOperatorsBinaryAndPrint(char *, char *, int, int, int, int *, Symbol *,FILE*);
 
 
 void dumpSymbolsToMainFile(Symbol *, int, FILE *);

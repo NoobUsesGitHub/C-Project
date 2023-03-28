@@ -40,7 +40,7 @@ FileList *toBinary(FILE *fp, char *fileName)
         fprintf(stdout, "File is not correct"); /*need to print out to STDOUT and say which line*/
         return binaryFileNode;
     }
-    
+
     while (fgets(str, MAX_LINE_SIZE, fp) != NULL) /*first pass*/
     {
         removeRedundantSpaces(str);
@@ -67,6 +67,7 @@ FileList *toBinary(FILE *fp, char *fileName)
             }
             label[i] = *bit;
             i++;
+            bit++;
         }
 
         if (foundLabel == FALSE)
@@ -79,7 +80,7 @@ FileList *toBinary(FILE *fp, char *fileName)
             /*check if label is a real register or opcode*/
             if (stringToOperatorType(label) != ERROR_NA || realRegister(label) != -1)
             {
-                printf("label %s is a register or opcode!", label);
+                fprintf(stdout,"label %s is a register or opcode!", label);
                 foundErr = TRUE;
             }
         }
@@ -88,7 +89,7 @@ FileList *toBinary(FILE *fp, char *fileName)
         /*checking for symbols first*/
         while (isLetter(bit) == FALSE)
             bit++;
-        if (*bit == '\0' || *bit != '\n')
+        if (*bit == '\0')
         {
             fprintf(stdout, "line %d eneded unexpectandly", IC);
             foundErr = TRUE;
@@ -143,7 +144,7 @@ FileList *toBinary(FILE *fp, char *fileName)
                     clearStr(label, MAX_LABEL_SIZE);
                     sprintf(label, "X DC: %d", DC); /*adding a dummy name*/
                 }
-                dataNode = addSymbolToList(dataHeader, label, stype, DC, oper1,CODE);
+                dataNode = addSymbolToList(dataHeader, label, stype, DC, oper1, CODE);
                 DC = DC + strlen(oper1) + 1;
                 break;
             case EXTERN:
@@ -156,7 +157,7 @@ FileList *toBinary(FILE *fp, char *fileName)
                     i++;
                 }
                 label[i] = '\0';
-                dataNode = addSymbolToList(dataHeader, label, stype, -1, label,CODE);
+                dataNode = addSymbolToList(dataHeader, label, stype, -1, label, CODE);
                 break;
             case ENTRY:
                 clearStr(label, MAX_LABEL_SIZE);
@@ -168,7 +169,7 @@ FileList *toBinary(FILE *fp, char *fileName)
                     i++;
                 }
                 label[i] = '\0';
-                dataNode = addSymbolToList(dataHeader, label, stype, DC, label,CODE);
+                dataNode = addSymbolToList(dataHeader, label, stype, DC, label, CODE);
                 DC++;
                 break;
 
@@ -190,7 +191,7 @@ FileList *toBinary(FILE *fp, char *fileName)
                     sprintf(label, "X DC: %d", DC); /*adding a dummy name*/
                 }
 
-                dataNode = addSymbolToList(dataHeader, label, stype, DC, oper1,CODE);
+                dataNode = addSymbolToList(dataHeader, label, stype, DC, oper1, CODE);
                 dumpDataOpers(oper1, &DC, SIMULATION, NULL); /*maybe not?*/
                 break;
             }
@@ -198,14 +199,14 @@ FileList *toBinary(FILE *fp, char *fileName)
         }
 
         if (foundLabel == TRUE) /*if we have label, and still here, make it a code symbol*/
-            dataNode = addSymbolToList(dataHeader, label, CODE, IC, NULL,CODE);
+            dataNode = addSymbolToList(dataHeader, label, CODE, IC, NULL, CODE);
 
         /* instruction label: opcode source-operand, target-operand
         label: opcode target-operand
         label: opcode*/
-
-        pch = strtok(str, delimints); /*start strtok*/
         spaceCount = countSpace(str);
+        pch = strtok(str, delimints); /*start strtok*/
+
         if (foundLabel == TRUE) /*skipping labels*/
         {
             pch = strtok(NULL, delimints);
@@ -238,6 +239,7 @@ FileList *toBinary(FILE *fp, char *fileName)
             oper1[strlen(oper1) - 1] = '\0'; /*skipping the ,*/
             pch = strtok(NULL, delimints);
             strcpy(oper2, pch);
+            oper2[strlen(oper2) - 1] = '\0';
             break;
         }
 
@@ -259,8 +261,7 @@ FileList *toBinary(FILE *fp, char *fileName)
             foundErr = TRUE;
         }
 
-        dumpFullInstruction(label, opcode, oper1, oper2, spaceCount, &IC, SIMULATION, op_table,dataHeader);
-        fgets(str, MAX_LINE_SIZE, fp);
+        dumpFullInstruction(label, opcode, oper1, oper2, spaceCount, &IC, SIMULATION, op_table, dataHeader,fp);
     }
     if (foundErr == TRUE)
     {
@@ -302,6 +303,7 @@ FileList *toBinary(FILE *fp, char *fileName)
             }
             label[i] = *bit;
             i++;
+            bit++;
         }
 
         if (foundLabel == FALSE)
@@ -325,8 +327,9 @@ FileList *toBinary(FILE *fp, char *fileName)
         label: opcode target-operand
         label: opcode*/
 
-        pch = strtok(str, delimints); /*start strtok*/
         spaceCount = countSpace(str);
+        pch = strtok(str, delimints); /*start strtok*/
+
         if (foundLabel == TRUE) /*skipping labels*/
         {
             pch = strtok(NULL, delimints);
@@ -375,7 +378,7 @@ FileList *toBinary(FILE *fp, char *fileName)
             foundErr = TRUE;
         }
 
-        dumpFullInstruction(label, opcode, oper1, oper2, spaceCount, &IC, EXECUTION, op_table,dataHeader);
+        dumpFullInstruction(label, opcode, oper1, oper2, spaceCount, &IC, EXECUTION, op_table, dataHeader,fp);
     }
     dumpSymbolsToMainFile(dataHeader, IC, binaryFileNode->file);
 

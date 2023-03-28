@@ -237,41 +237,55 @@ int dataLength(char *str)
 int countSpace(char *str)
 {
     int i = 0;
-    while (*str != '\n' && isLetter(str) == TRUE)
+    while (*str != '\n' && *str != '\0')
     {
         if (*str == SPACE_CHAR)
             i++;
         str++;
     }
-    return i + 1;
+    return i;
 }
 
+/*
+    input: a string
+    will remove double spaces
+*/
 void removeRedundantSpaces(char *str)
 {
-    int i, j, len;
-    len = strlen(str); /*to change*/
-    j = 0;
-    for (i = 0; i < len; i++)
+    int i = 0, j = 0, len = strlen(str);
+    char temp[len * 2];
+    while (i < len)
     {
-        if (isspace(str[i]) == 0)
-        {
-            if (i > 0 && str[i] == COMMA && isspace(str[j - 1]))
+        if (isspace(str[i]) != 0)
+        { /*is space*/
+            if ((j > 0) && isspace(temp[j - 1]) != 0)
+                temp[j - 1] = str[i];
+            else
             {
-                str[j - 1] = str[i];
-                continue;
+                temp[j] = str[i];
+                j++;
             }
-            str[j] = str[i];
-            j++;
         }
-        else if (i > 0 && isspace(str[i - 1]) == 0)
+        else
         {
-            str[j] = SPACE_CHAR;
+            if (str[i] == COMMA && isspace(temp[j - 1]) != 0)
+            {
+                j--;
+            }
+            temp[j] = str[i];
             j++;
+            if (str[i] == COMMA)
+            {
+                temp[j] = SPACE_CHAR;
+                j++;
+            }
         }
+        i++;
     }
-    if (str[j - 1] == SPACE_CHAR || str[j - 1] == '\t')
+    if (temp[j - 1] == SPACE_CHAR || str[j - 1] == '\t')
         j--;
-    str[j] = '\0';
+    temp[j] = '\0';
+    strcpy(str, temp);
 }
 
 /*
@@ -399,7 +413,7 @@ void dumpDataOpers(char *str, int *cnt, int mode, FILE *fp)
             value = atoi(temp);
             intToBinary(binaryChar, value);
             if (mode != SIMULATION)
-                printf("%d  %s", *cnt, binaryChar);
+                fprintf(fp,"%d  %s", *cnt, binaryChar);
             *cnt++;
             clearStr(temp, size);
         }
@@ -416,7 +430,7 @@ void dumpDataOpers(char *str, int *cnt, int mode, FILE *fp)
         value = atoi(temp);
         intToBinary(binaryChar, value);
         if (mode != SIMULATION)
-            printf("%d  %s", *cnt, binaryChar);
+            fprintf(fp,"%d  %s", *cnt, binaryChar);
         *cnt = *cnt + 1;
         clearStr(temp, size);
         *cnt = *cnt + 1;
@@ -437,11 +451,11 @@ void dumpStr(char *oper, int *cnt, int mode, FILE *fp)
         value = (int)(*oper);
         intToBinary(binaryChar, value);
         if (mode != SIMULATION)
-            printf("%d  %s", *cnt, binaryChar);
+            fprintf(fp,"%d  %s", *cnt, binaryChar);
         *cnt++;
         oper++;
     }
-    printf("%d  %s", *cnt, binaryChar);
+    fprintf(fp,"%d  %s", *cnt, binaryChar);
     *cnt++;
 }
 
@@ -547,7 +561,7 @@ void strcpyBySteps(char *to, char *from, int steps)
     }
 }
 
-void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, int opersCnt, int *IC, int mode, Operator *op_table, Symbol *sym_list)
+void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, int opersCnt, int *IC, int mode, Operator *op_table, Symbol *sym_list,FILE* fp)
 {
     int adTypeOper1 = 0, adTypeOper2 = 0;
     OperatorType op_type = stringToOperatorType(opcode);
@@ -565,29 +579,29 @@ void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, in
         adTypeOper2 = 0; /*adding dummy info*/
     }
     if (mode == EXECUTION)
-    {/*assuming we found a external already*/
+    { /*assuming we found a external already*/
         if (adTypeOper1 == 1 || adTypeOper1 == -1)
         {
-            checkIfExternal(oper1,*IC,sym_list);
+            checkIfExternal(oper1, *IC, sym_list);
         }
 
         if (adTypeOper2 == 1 || adTypeOper2 == -1)
         {
-            checkIfExternal(oper2,*IC,sym_list);
+            checkIfExternal(oper2, *IC, sym_list);
         }
 
-        if (op_type==JMP||op_type==BNE||op_type==JSR) /*check if label exists as external*/
+        if (op_type == JMP || op_type == BNE || op_type == JSR) /*check if label exists as external*/
         {
-            checkIfExternal(label,*IC,sym_list);
+            checkIfExternal(label, *IC, sym_list);
         }
     }
     /*print the opcode binary*/
-    calculateOpcodeBinaryAndPrint(op_type, adTypeOper1, adTypeOper2, mode, IC, sym_list, label);
+    calculateOpcodeBinaryAndPrint(op_type, adTypeOper1, adTypeOper2, mode, IC, sym_list, label,fp);
     /*print the opers binary*/
-    calculateOperatorsBinaryAndPrint(oper1, oper2, adTypeOper1, adTypeOper2, mode, IC, sym_list);
+    calculateOperatorsBinaryAndPrint(oper1, oper2, adTypeOper1, adTypeOper2, mode, IC, sym_list,fp);
 }
 
-void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1, int adTypeOper2, int mode, int *IC, Symbol *sym_list)
+void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1, int adTypeOper2, int mode, int *IC, Symbol *sym_list,FILE* fp)
 {
     char binary[15], temp[5];
     strcpy(binary, "00000000000000\0");
@@ -605,7 +619,7 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
         strcpyBySteps(binary, temp + 2, 2);
         shiftLeftChar(binary, 2);
         if (mode != SIMULATION)
-            printf("%d  %s", *IC, binary);
+            fprintf(fp,"%d  %s", *IC, binary);
         *IC = *IC + 1;
     }
     else
@@ -622,13 +636,13 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
             intToBinary(binary, atoi(oper1 + 1));
             shiftLeftChar(binary, 2);
             strcpyBySteps(binary, temp + 2, 2);
-            printf("%d  %s", *IC, binary);
+            fprintf(fp,"%d  %s", *IC, binary);
             *IC = *IC + 1;
             break;
 
         case 1: /*label*/
 
-            if (existInSymbolTable(oper1,sym_list) != -1 && symbolTypeFromTable(oper1, sym_list) == EXTERN)
+            if (existInSymbolTable(oper1, sym_list) != -1 && symbolTypeFromTable(oper1, sym_list) == EXTERN)
             {
                 /*oper1+E(01)*/
                 intToBinary(binary, existInSymbolTable(oper1, sym_list));
@@ -637,7 +651,7 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
                 temp[2] = '0';
                 strcpyBySteps(binary, temp + 2, 2);
                 if (mode != SIMULATION)
-                    printf("%d  %s", *IC, binary);
+                    fprintf(fp,"%d  %s", *IC, binary);
                 *IC = *IC + 1;
             }
             else
@@ -650,7 +664,7 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
                 temp[2] = '1';
                 strcpyBySteps(binary, temp + 2, 2);
                 if (mode != SIMULATION)
-                    printf("%d  %s", *IC, binary);
+                    fprintf(fp,"%d  %s", *IC, binary);
                 *IC = *IC + 1;
             }
             break;
@@ -659,7 +673,7 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
             intToBinary(binary, realRegister(oper1));
             shiftLeftChar(binary, 7);
             if (mode != SIMULATION)
-                printf("%d  %s", *IC, binary);
+                fprintf(fp,"%d  %s", *IC, binary);
             *IC = *IC + 1;
             break;
         }
@@ -676,12 +690,12 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
             intToBinary(binary, atoi(oper2 + 1));
             shiftLeftChar(binary, 2);
             strcpyBySteps(binary, temp + 2, 2);
-            printf("%d  %s", *IC, binary);
+            fprintf(fp,"%d  %s", *IC, binary);
             *IC = *IC + 1;
             break;
 
         case 1: /*label*/
-            if (existInSymbolTable(oper2,sym_list) != -1 && symbolTypeFromTable(oper2, sym_list) == EXTERN)
+            if (existInSymbolTable(oper2, sym_list) != -1 && symbolTypeFromTable(oper2, sym_list) == EXTERN)
             {
                 /*oper2+E(01)*/
                 intToBinary(binary, existInSymbolTable(oper2, sym_list));
@@ -690,7 +704,7 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
                 temp[2] = '0';
                 strcpyBySteps(binary, temp + 2, 2);
                 if (mode != SIMULATION)
-                    printf("%d  %s", *IC, binary);
+                    fprintf(fp,"%d  %s", *IC, binary);
                 *IC = *IC + 1;
             }
             else
@@ -702,7 +716,7 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
                 temp[2] = '1';
                 strcpyBySteps(binary, temp + 2, 2);
                 if (mode != SIMULATION)
-                    printf("%d  %s", *IC, binary);
+                    fprintf(fp,"%d  %s", *IC, binary);
                 *IC = *IC + 1;
             }
             break;
@@ -712,7 +726,7 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
             shiftLeftChar(binary, 2);
             strcpyBySteps(binary, temp + 2, 2);
             if (mode != SIMULATION)
-                printf("%d  %s", *IC, binary);
+                fprintf(fp,"%d  %s", *IC, binary);
             *IC = *IC + 1;
             break;
         }
@@ -723,7 +737,7 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
     input: the type of the operator, the address types of the operands, the mode, the instruction counter, the symbol info table and the label
     will turn the opcode to binary, if there is a label(aka we are jumping, will print that too)
 */
-void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int adTypeOper2, int mode, int *IC, Symbol *sy_list, char *label)
+void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int adTypeOper2, int mode, int *IC, Symbol *sy_list, char *label,FILE* fp)
 {
     bool needToPrintLabel = FALSE;
     char binary[15], temp[5];
@@ -781,7 +795,7 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
         needToPrintLabel = TRUE;
     }
     if (mode != SIMULATION)
-        printf("%d  %s\n", *IC, binary);
+        fprintf(fp,"%d  %s\n", *IC, binary);
     *IC = *IC + 1;
     strcpy(binary, "00000000000000\0");
     if (needToPrintLabel)
@@ -790,7 +804,7 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
         shiftLeftChar(binary, 2);
         strcpy(binary + 12, "10");
         if (mode != SIMULATION)
-            printf("%d  %s", *IC, binary);
+            fprintf(fp,"%d  %s", *IC, binary);
         *IC = *IC + 1;
     }
 }
@@ -839,7 +853,7 @@ int checkAddressType(char *oper, OperatorType opcode, int mode, Symbol *sym_list
     input: the string for the operator that we recieved and a placeholder for the next and the label
     output: the number of operands we have if we need to split the operands and label
 */
-int breakDownJumps(char *oper1, char *oper2, char* label)
+int breakDownJumps(char *oper1, char *oper2, char *label)
 {
     /*if this a normal jump, will be not split because it has a label, else split to two operands */
     bool turn_to_second_oper = FALSE;
@@ -979,12 +993,8 @@ void dumpSymbolsToMainFile(Symbol *header, int IC, FILE *fp)
     input: a string(possibly a label) a line number and the symbol list
     if the label represents an external symbol we will add it to the symbol table to add to the .ext file
 */
-void checkIfExternal(char* oper,int line,Symbol* sym_list)
+void checkIfExternal(char *oper, int line, Symbol *sym_list)
 {
-    if(symbolTypeFromTable(oper,sym_list)==EXTERN)
-        addSymbolToList(sym_list,oper,CODE,line,NULL,EXTERN);
-
-
-
+    if (symbolTypeFromTable(oper, sym_list) == EXTERN)
+        addSymbolToList(sym_list, oper, CODE, line, NULL, EXTERN);
 }
-
