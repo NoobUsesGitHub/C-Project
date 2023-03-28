@@ -13,7 +13,8 @@ FileList *toBinary(FILE *fp, char *fileName)
     int IC = 99, DC = 0, wordCount = 0, spaceCount = 0, i = 0; /*wordCount=L*/
     Stype stype = 0;
     bool skp = FALSE, foundSymbol = FALSE, foundErr = FALSE, foundLabel = FALSE;
-    char *bit = NULL, label[MAX_LABEL_SIZE], dataTester[7], opcode[5], oper1[MAX_LABEL_SIZE], oper2[MAX_LABEL_SIZE], *pch = NULL, str[MAX_LINE_SIZE];
+    char *bit = NULL, label[MAX_LABEL_SIZE], dataTester[7], opcode[5];
+    char oper1[MAX_LABEL_SIZE], oper2[MAX_LABEL_SIZE], *pch = NULL, str[MAX_LINE_SIZE];
     char strNewName[strlen(fileName)];
     Symbol *dataHeader = NULL;
     Symbol *dataNode = NULL;
@@ -39,7 +40,7 @@ FileList *toBinary(FILE *fp, char *fileName)
         fprintf(stdout, "File is not correct"); /*need to print out to STDOUT and say which line*/
         return binaryFileNode;
     }
-
+    
     while (fgets(str, MAX_LINE_SIZE, fp) != NULL) /*first pass*/
     {
         removeRedundantSpaces(str);
@@ -259,6 +260,7 @@ FileList *toBinary(FILE *fp, char *fileName)
         }
 
         dumpFullInstruction(label, opcode, oper1, oper2, spaceCount, &IC, SIMULATION, op_table,dataHeader);
+        fgets(str, MAX_LINE_SIZE, fp);
     }
     if (foundErr == TRUE)
     {
