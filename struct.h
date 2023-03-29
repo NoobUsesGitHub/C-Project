@@ -4,6 +4,7 @@
 #include <stdio.h>
 #define MAX_LINE_SIZE 81
 #define MAX_LABEL_SIZE 31
+#define BINARY_LINE_SIZE 15
 #define OPERATORS_AMOUNT 16
 #define SIMULATION 1
 #define EXECUTION 0

@@ -204,7 +204,7 @@ Stype symbolTypeFromTable(char *oper, Symbol *sym_list)
 int countSymbols(Symbol *header)
 {
     int i = 0;
-    while (header->input != NULL)
+    while (header!=NULL&&header->name != NULL)
     {
         if (header->type != CODE && header->type != ENTRY && header->type != EXTERN)
             i++;
@@ -220,7 +220,7 @@ int countSymbols(Symbol *header)
 void fillSymArr(Symbol *arr[], int numOfSymbols, Symbol *header)
 {
     int i = 0;
-    while (header->input != NULL && i < numOfSymbols)
+    while (header!=NULL&&header->name != NULL && i < numOfSymbols)
     {
         if (header->type != CODE)
         {

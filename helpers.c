@@ -408,7 +408,7 @@ void dumpDataOpers(char *str, int *cnt, int mode, FILE *fp)
 
     int size = strlen(str);
     char temp[size];
-    char binaryChar[14];
+    char binaryChar[BINARY_LINE_SIZE];
     int value, i = 0;
     while (*str != '\n')
     {
@@ -419,7 +419,7 @@ void dumpDataOpers(char *str, int *cnt, int mode, FILE *fp)
             intToBinary(binaryChar, value);
             if (mode != SIMULATION)
                 fprintf(fp, "%d\t%s", *cnt, binaryChar);
-            *cnt++;
+            *cnt=*cnt +1;
             clearStr(temp, size);
         }
         else
@@ -449,7 +449,7 @@ void dumpDataOpers(char *str, int *cnt, int mode, FILE *fp)
 void dumpStr(char *oper, int *cnt, int mode, FILE *fp)
 {
     int size = strlen(oper);
-    char binaryChar[14];
+    char binaryChar[BINARY_LINE_SIZE];
     int value;
     while (*oper != '\0' && *oper != '\n')
     {
@@ -457,12 +457,12 @@ void dumpStr(char *oper, int *cnt, int mode, FILE *fp)
         intToBinary(binaryChar, value);
         if (mode != SIMULATION)
             fprintf(fp, "%d\t%s", *cnt, binaryChar);
-        *cnt++;
+        *cnt=*cnt +1;
         oper++;
     }
     if (mode != SIMULATION)
         fprintf(fp, "%d\t%s", *cnt, binaryChar);
-    *cnt++;
+    *cnt=*cnt +1;
 }
 
 /*
@@ -612,7 +612,7 @@ void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, in
 
 void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1, int adTypeOper2, int mode, int *IC, Symbol *sym_list, FILE *fp)
 {
-    char binary[15], temp[7];
+    char binary[BINARY_LINE_SIZE], temp[7];
     strcpy(binary, "00000000000000\0");
     strcpy(temp, "000000\0");
 
@@ -751,7 +751,7 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
 void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int adTypeOper2, int mode, int *IC, Symbol *sy_list, char *label, FILE *fp)
 {
     bool needToPrintLabel = FALSE;
-    char binary[15], temp[5];
+    char binary[BINARY_LINE_SIZE], temp[5];
     strcpy(binary, "00000000000000\0");
     strcpy(temp, "0000\0");
 
@@ -929,7 +929,7 @@ int breakDownJumps(char *oper1, char *oper2, char *label)
 void dumpSymbols(Symbol *header, char *fileName, Stype stype, char *extention)
 {
     char newName[strlen(fileName)];
-    char binary[15];
+    char binary[BINARY_LINE_SIZE];
     bool found_any = FALSE;
     char *bit = NULL;
     strcpy(binary, "00000000000000\0");

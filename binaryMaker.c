@@ -52,6 +52,7 @@ FileList *toBinary(FILE *fp, char *fileName)
         clearStr(oper1, MAX_LABEL_SIZE);
         clearStr(oper2, MAX_LABEL_SIZE);
         i = 0;
+        foundLabel=FALSE;
         bit = str;
 
         /*checking for comment */
@@ -68,6 +69,7 @@ FileList *toBinary(FILE *fp, char *fileName)
             {
                 label[i] = '\0';
                 foundLabel = TRUE; /*will be used later*/
+                bit++;
                 continue;
             }
             label[i] = *bit;
@@ -94,6 +96,7 @@ FileList *toBinary(FILE *fp, char *fileName)
         /*checking for symbols first*/
         while (isLetter(bit) == FALSE)
             bit++;
+        
         if (*bit == '\0')
         {
             fprintf(stdout, "line %d eneded unexpectandly\n", IC);
@@ -116,7 +119,7 @@ FileList *toBinary(FILE *fp, char *fileName)
             while (isLetter(bit) == FALSE)
                 bit++;
 
-            if (*bit == '\0' || *bit != '\n')
+            if (*bit == '\0' || *bit == '\n')
             {
                 fprintf(stdout, "line %d eneded unexpectandly\n", IC);
                 foundErr = TRUE;
@@ -197,7 +200,8 @@ FileList *toBinary(FILE *fp, char *fileName)
                 }
 
                 dataNode = addSymbolToList(dataHeader, label, stype, DC, oper1, CODE);
-                dumpDataOpers(oper1, &DC, SIMULATION, NULL); /*maybe not?*/
+                DC++;
+                /*dumpDataOpers(oper1, &DC, SIMULATION, NULL); maybe not?*/
                 break;
             }
             continue;
@@ -300,6 +304,7 @@ FileList *toBinary(FILE *fp, char *fileName)
         clearStr(oper2, MAX_LABEL_SIZE);
         i = 0;
         bit = str;
+        foundLabel=FALSE;
 
         /*checking for comment */
         if (*bit == COMMENT || *bit == '\n' || *bit == '\0')
@@ -309,12 +314,14 @@ FileList *toBinary(FILE *fp, char *fileName)
         }
 
         /*checking for a label*/
-        while (isLetter(bit) == TRUE)
+        while (isLetter(bit) == TRUE&&foundLabel==FALSE)
         {
             if (*bit == LABEL_END)
             {
                 label[i] = '\0';
                 foundLabel = TRUE; /*will be used later*/
+                bit++;
+                continue;
             }
             label[i] = *bit;
             i++;
