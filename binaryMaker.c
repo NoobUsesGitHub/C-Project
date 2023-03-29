@@ -10,7 +10,7 @@ FileList *toBinary(FILE *fp, char *fileName)
 {
     Operator *op_table = createOperatorsTable();
 
-    int IC = 99, DC = 0, wordCount = 0, spaceCount = 0, i = 0; /*wordCount=L*/
+    int IC = 100, DC = 0, wordCount = 0, spaceCount = 0, i = 0; /*wordCount=L*/
     Stype stype = 0;
     bool skp = FALSE, foundSymbol = FALSE, foundErr = FALSE, foundLabel = FALSE;
     char *bit = NULL, label[MAX_LABEL_SIZE], dataTester[7], opcode[5];
@@ -46,7 +46,7 @@ FileList *toBinary(FILE *fp, char *fileName)
     while (fgets(str, MAX_LINE_SIZE, fp) != NULL) /*first pass*/
     {
         removeRedundantSpaces(str);
-        IC++;
+        /*IC++;*/
         clearStr(label, MAX_LABEL_SIZE); /*clearing label*/
         clearStr(dataTester, 7);
         clearStr(opcode, 5);
@@ -56,8 +56,10 @@ FileList *toBinary(FILE *fp, char *fileName)
         bit = str;
 
         /*checking for comment */
-        if (*bit == COMMENT || *bit == '\n'||*bit == '\0')
+        if (*bit == COMMENT || *bit == '\n'||*bit == '\0'){
+            /*IC--;*/
             continue; /*skiiiiip*/
+            }
 
         /*checking for a label*/
         while (isLetter(bit) == TRUE)
@@ -231,6 +233,7 @@ FileList *toBinary(FILE *fp, char *fileName)
             op_code_type = stringToOperatorType(opcode);
             pch = strtok(NULL, delimints);
             strcpy(oper1, pch);
+            oper1[strlen(oper1) - 1] = '\0';
             break;
 
         case 2:
@@ -282,13 +285,13 @@ FileList *toBinary(FILE *fp, char *fileName)
     }
     rewind(fp);
 
-    fprintf(binaryFileNode->file,"%d\t%d\n",IC,DC);
-    IC = 99;
+    fprintf(binaryFileNode->file,"%d %d\n",IC-100,DC);
+    IC = 100;
 
     while (fgets(str, MAX_LINE_SIZE, fp) != NULL) /*second pass*/
     {
         removeRedundantSpaces(str);
-        IC++;
+        /*IC++;*/
         clearStr(label, MAX_LABEL_SIZE); /*clearing label*/
         clearStr(dataTester, 7);
         clearStr(opcode, 5);
@@ -298,8 +301,10 @@ FileList *toBinary(FILE *fp, char *fileName)
         bit = str;
 
         /*checking for comment */
-        if (*bit == COMMENT || *bit == '\n'||*bit == '\0')
+        if (*bit == COMMENT || *bit == '\n'||*bit == '\0'){
+            /*IC--;*/
             continue; /*skiiiiip*/
+            }
 
         /*checking for a label*/
         while (isLetter(bit) == TRUE)

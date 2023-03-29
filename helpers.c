@@ -520,15 +520,34 @@ int realRegister(char *str)
     output: true if the operands accsespts these operands, else false
 
 */
-bool isAddTypeCorrect(OperatorType op_type, int adTypeOper1, int adTypeOper2, Operator *op_table)
+bool isAddTypeCorrect(OperatorType op_type, int adTypeOper1, int adTypeOper2, Operator *op_table, int opersCnt)
 {
-    if (adTypeOper1 == -1 || adTypeOper2 == -1)
-        return FALSE;
-    if (op_type == ERROR_NA)
-        return FALSE;
-    if (existInAddressType(adTypeOper1, op_table[op_type].src_addressing_methods) && existInAddressType(adTypeOper2, op_table[op_type].dst_addressing_methods))
+    switch (opersCnt)
     {
-        return TRUE;
+    case 0:
+
+        if (adTypeOper1 == -1 && adTypeOper2 == -1)
+            return TRUE;
+        break;
+
+    case 1:
+        if (adTypeOper1 == -1)
+            adTypeOper1 = adTypeOper2;
+        if (existInAddressType(adTypeOper1, op_table[op_type].src_addressing_methods) || existInAddressType(adTypeOper1, op_table[op_type].dst_addressing_methods))
+        {
+            return TRUE;
+        }
+        break;
+    case 2:
+        if (adTypeOper1 == -1 || adTypeOper2 == -1)
+            return FALSE;
+        if (op_type == ERROR_NA)
+            return FALSE;
+        if (existInAddressType(adTypeOper1, op_table[op_type].src_addressing_methods) && existInAddressType(adTypeOper2, op_table[op_type].dst_addressing_methods))
+        {
+            return TRUE;
+        }
+        break;
     }
     return FALSE;
 }
@@ -578,9 +597,9 @@ void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, in
 
     adTypeOper1 = checkAddressType(oper1, op_type, mode, sym_list);
     adTypeOper2 = checkAddressType(oper2, op_type, mode, sym_list);
-    if (!isAddTypeCorrect(op_type, adTypeOper1, adTypeOper2, op_table))
+    if (!isAddTypeCorrect(op_type, adTypeOper1, adTypeOper2, op_table, opersCnt))
     {
-        fprintf(stdout, "incorrect address type for one of the operators for %s in %d", opcode, *IC);
+        fprintf(stdout, "incorrect address type for one of the operators for %s in line %d\n", opcode, *IC);
         adTypeOper1 = 0;
         adTypeOper2 = 0; /*adding dummy info*/
     }
@@ -852,6 +871,9 @@ int checkAddressType(char *oper, OperatorType opcode, int mode, Symbol *sym_list
     if (realRegister(oper) != -1)
         return 3;
 
+
+    if (massIsSpace(oper) == 1)
+        return -1;
     if (mode == SIMULATION || (mode != SIMULATION && existInSymbolTable(oper, sym_list) != -1))
         return 1;
     return -1;
@@ -1005,4 +1027,19 @@ void checkIfExternal(char *oper, int line, Symbol *sym_list)
 {
     if (symbolTypeFromTable(oper, sym_list) == EXTERN)
         addSymbolToList(sym_list, oper, CODE, line, NULL, EXTERN);
+}
+
+/*
+    input: a string
+    output: 1- if the whole string is a space character,else 0
+*/
+int massIsSpace(char *pch)
+{
+    int space = isspace(*pch);
+    while (*pch != '\0' && *pch != '\n')
+    {
+        space = space && isspace(*pch);
+        pch++;
+    }
+    return space;
 }

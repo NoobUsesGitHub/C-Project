@@ -45,7 +45,7 @@ int getNumOfOperands(OperatorType, Operator*);
 
 int realRegister(char*);
 
-bool isAddTypeCorrect(OperatorType,int, int, Operator*);
+bool isAddTypeCorrect(OperatorType,int, int, Operator*,int);
 
 bool existInAddressType(int, int[]);
 
@@ -67,4 +67,5 @@ void calculateOperatorsBinaryAndPrint(char *, char *, int, int, int, int *, Symb
 void dumpSymbolsToMainFile(Symbol *, int, FILE *);
 
 void checkIfExternal(char *, int, Symbol *);
+int massIsSpace(char*);
 #endif // HELPERS_H

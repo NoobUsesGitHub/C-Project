@@ -11,7 +11,7 @@ FileList* macroDecoder(FILE *fp, char *fileName)
     bool macroCollectionStarted = FALSE, skp = FALSE;
     MacroList *header, *curMacro;
     constMacroList(&header);
-    char *pch = NULL, str[MAX_LINE_SIZE];
+    char *pch = NULL, str[MAX_LINE_SIZE], temp[MAX_LINE_SIZE];
     char strNewName[strlen(fileName)];
 
     FileList *macroFileNode;
@@ -35,7 +35,8 @@ FileList* macroDecoder(FILE *fp, char *fileName)
 
     while (fgets(str, MAX_LINE_SIZE, fp) != NULL)
     {
-        pch = strtok(str, delimints); /*start strtok*/
+        strcpy(temp,str);
+        pch = strtok(temp, delimints); /*start strtok*/
 
         if (strcmp(pch, "endmcr") == 0 || strcmp(pch, "endmcr\n") == 0)
         {
@@ -78,19 +79,4 @@ FileList* macroDecoder(FILE *fp, char *fileName)
     freeMacroList(header);
 
     return macroFileNode; /*tochange*/
-}
-
-/*
-    input: a string
-    output: 1- if the whole string is a space character,else 0
-*/
-int massIsSpace(char* pch)
-{
-    int space=isspace(*pch);
-    while(*pch!='\0'&&*pch!='\n')
-    {   
-        space=space&&isspace(*pch);
-        pch++;
-    }
-    return space;
 }
