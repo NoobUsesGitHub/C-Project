@@ -410,7 +410,7 @@ void dumpDataOpers(char *str, int *cnt, int mode, FILE *fp)
     char temp[size];
     char binaryChar[BINARY_LINE_SIZE];
     int value, i = 0;
-    while (*str != '\n')
+    while (*str != '\n'&&*str != '\0')
     {
         /*will run on the string until i finish the number or meet "," */
         if (*str == COMMA)
