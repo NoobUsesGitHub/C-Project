@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
   int not_enough_args = (argc <= 1);
   if (not_enough_args)
   {
-    printf("Please input file names");
+    fprintf(stdout, "Please input file names");
     return 1;
   }
 
@@ -38,13 +38,14 @@ int main(int argc, char *argv[])
     addToList(macroFilesHead, tempOutput->file, tempOutput->fileName);
     tempInputNode = tempInputNode->next; /*going forward with the list*/
   }
-  closeFileList(inputFilesHead); /*to do- check this really cleans the whole file list*/
+  closeFileList(inputFilesHead);
 
   tempInputNode = macroFilesHead;
   constNode(&binaryFilesHead);
   tempOutput = binaryFilesHead;
   for (i = 1; i <= argc - 1; i++)
   {
+    reOpen(tempInputNode);
     tempOutput = toBinary(tempInputNode->file, tempInputNode->fileName);
     if (tempOutput->file == NULL) /*assuming that the binary file maker has found some error and finished early, after printing them*/
     {
@@ -55,11 +56,12 @@ int main(int argc, char *argv[])
   }
   closeFileList(macroFilesHead);
 
-  tempInputNode = macroFilesHead;
+  tempInputNode = binaryFilesHead;
   constNode(&outputFilesHead);
   tempOutput = outputFilesHead;
   for (i = 1; i <= argc - 1; i++)
   {
+    reOpen(tempInputNode);
     tempOutput = toOutput(tempInputNode->file, tempInputNode->fileName);
     if (tempOutput->file == NULL) /*assuming that the output maker has found some error and finished early, after printing them*/
     {
@@ -71,3 +73,11 @@ int main(int argc, char *argv[])
   closeFileList(outputFilesHead);
   return 1;
 }
+/*to do- valgrind*/
+/*to do - add more error finding*/
+/*to do - check that external prints it's lines*/
+/*to do - fix comments and such*/
+/*tests*/
+/*check IC title bug*/
+/*check translation*/
+/*to do - make sure that we post correct file names*/

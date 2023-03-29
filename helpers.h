@@ -22,15 +22,18 @@ int dataLength(char *);
 
 char *opcodeToBinary(char *);
 
+
 int countSpace(char *);
 
 void removeRedundantSpaces(char *);
 
 void addToData(Symbol *, int);
 
-void dumpDataOpers(char *, int *, int);
+void shiftLeftChar(char *, int);
 
-void dumpStr(char *, int *,int);
+void dumpDataOpers(char *, int *, int,FILE*);
+
+void dumpStr(char *, int *,int,FILE*);
 
 void intToBinary(char *, int);
 
@@ -42,15 +45,27 @@ int getNumOfOperands(OperatorType, Operator*);
 
 int realRegister(char*);
 
-bool isAddTypeCorrect(OperatorType,int, int, Operator*);
+bool isAddTypeCorrect(OperatorType,int, int, Operator*,int);
 
 bool existInAddressType(int, int[]);
 
-void dumpFullInstruction(char*,char*,char*,char*,int,int*,int,Operator*);
+void dumpFullInstruction(char*,char*,char*,char*,int,int*,int,Operator*, Symbol *,FILE*);
 
 int checkAddressType(char*, OperatorType, int, Symbol*);
 
 void strcpyBySteps(char*, char*, int);
 
-int breakDownJumps(char *, char *);
+int breakDownJumps(char *, char *,char*);
+
+void dumpSymbols(Symbol *, char *, Stype, char *);
+
+void calculateOpcodeBinaryAndPrint(OperatorType , int , int, int, int *, Symbol *, char *,FILE*);
+
+void calculateOperatorsBinaryAndPrint(char *, char *, int, int, int, int *, Symbol *,FILE*);
+
+
+void dumpSymbolsToMainFile(Symbol *, int, FILE *);
+
+void checkIfExternal(char *, int, Symbol *);
+int massIsSpace(char*);
 #endif // HELPERS_H

@@ -42,7 +42,11 @@
     "prototypes.h": "c",
     "helpers.h": "c",
     "macrodecoder.h": "c",
-    "ctype.h": "c"
+    "ctype.h": "c",
+    "outputmaker.h": "c"
+  },
+  "cmake.debugConfig": {
+    "args": ["test"]
   },
   "C_Cpp.errorSquiggles": "disabled"
 }

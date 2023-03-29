@@ -10,20 +10,13 @@ FileList *toOutput(FILE *fp, char *fileName)
   char *change = "ob\0";
   char strNewName[strlen(fileName)];
   bool sawTab = FALSE;
-  /*nt lineNum = 0;*/
+  /*int lineNum = 0;*/
 
   FileList *outputFile;
   constNode(&outputFile);
 
   strcpy(strNewName, fileName);
-  char *bit = strNewName + (strlen(strNewName) - 2);
-  while (*change != '\0')
-  {
-    *bit = *change;
-    bit++;
-    change++;
-  }
-  *bit = '\0';
+  strcpyBySteps(strNewName+(strlen(strNewName)-strlen(change)),change,3);
   outputFile->fileName = (char *)malloc(strlen(strNewName) * sizeof(char));
   strcpy(outputFile->fileName, strNewName);
 
@@ -31,17 +24,17 @@ FileList *toOutput(FILE *fp, char *fileName)
   if (fp == NULL || outputFile->file == NULL)
   {
     outputFile->file = NULL;
-    printf("File is not correct");
+    fprintf(stdout, "couldn't create output file");
     return outputFile;
   }
   c = (char)fgetc(fp);
-
+  
+/* skipping the first line*/
   while (c != '\n' && c != EOF)
   {
     fputc(c, outputFile->file);
     c = (char)fgetc(fp);
   }
-  
   while (c != EOF)
   {
     if (sawTab == TRUE)

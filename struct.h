@@ -6,6 +6,7 @@
 #define MAX_LABEL_SIZE 31
 #define OPERATORS_AMOUNT 16
 #define SIMULATION 1
+#define EXECUTION 0
 #define LABEL_END ':'
 #define COMMENT ';'
 #define symbolMarker '.' /* hanhaya- direction? idk*/
@@ -75,18 +76,11 @@ typedef struct Symbol
     double hash;
     Stype type;
     int line;
+    Stype externalType;
+    char *input;
     struct Symbol *next;
 } Symbol;
 
-/*
-typedef struct HashTable
-{
-    char *key;
-    double hash;
-    int place;
-    int numberOfOper;
-} HashTable;
-*/
 
 typedef enum bool
 {

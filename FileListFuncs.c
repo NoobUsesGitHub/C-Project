@@ -82,3 +82,14 @@ void stringToFiles(int argc, char *argv[], FileList **header)
     }
     free(str);
 }
+
+
+/*
+    input: a file list object
+    will close it's file and reopen it on read only
+*/
+void reOpen(FileList* tempInputNode)
+{
+    fclose(tempInputNode->file);
+    tempInputNode->file=fopen(tempInputNode->fileName,"r");
+}

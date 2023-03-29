@@ -11,7 +11,7 @@ FileList* macroDecoder(FILE *fp, char *fileName)
     bool macroCollectionStarted = FALSE, skp = FALSE;
     MacroList *header, *curMacro;
     constMacroList(&header);
-    char *pch = NULL, str[MAX_LINE_SIZE];
+    char *pch = NULL, str[MAX_LINE_SIZE], temp[MAX_LINE_SIZE];
     char strNewName[strlen(fileName)];
 
     FileList *macroFileNode;
@@ -29,13 +29,14 @@ FileList* macroDecoder(FILE *fp, char *fileName)
     if (fp == NULL || macroFileNode->file == NULL)
     {
         macroFileNode->file = NULL;
-        printf("File is not correct");
+        fprintf(stdout, "Couldn't create a decoded macro file");
         return macroFileNode;
     }
 
-    while (fgets(str, 85, fp) != NULL)
+    while (fgets(str, MAX_LINE_SIZE, fp) != NULL)
     {
-        pch = strtok(str, delimints); /*start strtok*/
+        strcpy(temp,str);
+        pch = strtok(temp, delimints); /*start strtok*/
 
         if (strcmp(pch, "endmcr") == 0 || strcmp(pch, "endmcr\n") == 0)
         {
@@ -57,10 +58,12 @@ FileList* macroDecoder(FILE *fp, char *fileName)
                 macroCollectionStarted = TRUE;
                 pch = strtok(NULL, delimints);
                 curMacro = addMacroToList(header, pch, NULL);
+                if(stringToOperatorType(pch)!=-1)
+                    fprintf(stdout, "%s can't be a name of a macro!",pch);
                 skp = TRUE;
             }
 
-            if (skp == FALSE&&isspace(pch)==0)
+            if (skp == FALSE&&massIsSpace(pch)==0)
             {
                 if (dumpIfexistsInMacro(header, hasher(pch),macroFileNode->file) == 0)
                 {
