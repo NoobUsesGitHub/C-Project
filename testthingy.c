@@ -2,29 +2,17 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
-void intToBinary(char *placeholderString, int value)
+void intToBinary(char *placeHolderString, int value)
 {
-    int bufferSize = strlen(placeholderString);
-    char temp[bufferSize];
-    memset(temp,'0',sizeof(char)*bufferSize);
-
-    int i = 0;
-    i = bufferSize - 1;
-    while (value != 0)
-    {
-       temp[i]=value & 1;
-        value=value >> 1;
-        i--;
-    }
-
-    i = 0; /*
-     for (; i < bufferSize; i++)
-     {
-         temp[i] = placeholderString[bufferSize - i - 1];
-     }
-     temp[bufferSize]='\0';*/
-     strcpy(placeholderString, temp);
- 
+    int i = 0, size = strlen(placeHolderString);
+    for(i=0;i<size;i++)
+        if(value&(1<<(size-1-i)))
+        {
+            placeHolderString[i]='1';
+        }else{
+            placeHolderString[i]='0';
+        }
+    placeHolderString[size] = '\0';
 }
 int main()
 {

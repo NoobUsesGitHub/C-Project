@@ -469,31 +469,17 @@ void dumpStr(char *oper, int *cnt, int mode, FILE *fp)
     input: a placeholder string and a number to change to binary
     will leave the number in binary (in 12 bits) in the placeholder str
 */
-void intToBinary(char *placeholderString, int value)
+void intToBinary(char *placeHolderString, int value)
 {
-    int bufferSize = strlen(placeholderString);
-    char temp[bufferSize];
-
-    int i = 0;
-    for (i = bufferSize - 1; i >= 0; i--)
-    {
-        if ((value >> i) & 1)
+    int i = 0, size = strlen(placeHolderString);
+    for(i=0;i<size;i++)
+        if(value&(1<<(size-1-i)))
         {
-            placeholderString[i] = '1';
+            placeHolderString[i]='1';
+        }else{
+            placeHolderString[i]='0';
         }
-        else
-        {
-            placeholderString[i] = '0';
-        }
-    }
-
-    i = 0;/*
-    for (; i < bufferSize; i++)
-    {
-        temp[i] = placeholderString[bufferSize - i - 1];
-    }
-    temp[bufferSize]='\0';*/
-    strcpy(placeholderString, temp);
+    placeHolderString[size] = '\0';
 }
 /*
     input: a string
@@ -626,9 +612,9 @@ void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, in
 
 void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1, int adTypeOper2, int mode, int *IC, Symbol *sym_list, FILE *fp)
 {
-    char binary[15], temp[5];
+    char binary[15], temp[7];
     strcpy(binary, "00000000000000\0");
-    strcpy(temp, "0000\0");
+    strcpy(temp, "000000\0");
 
     if (adTypeOper1 == adTypeOper2 && adTypeOper2 == 3)
     {
@@ -639,7 +625,7 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
         shiftLeftChar(binary, 6);
 
         intToBinary(temp, realRegister(oper2));
-        strcpyBySteps(binary+8, temp, 4);
+        strcpyBySteps(binary+8, temp, 6);
         shiftLeftChar(binary, 2);
         if (mode != SIMULATION)
             fprintf(fp, "%d\t%s\n", *IC, binary);
