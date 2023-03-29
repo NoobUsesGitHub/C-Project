@@ -380,11 +380,11 @@ OperatorType stringToOperatorType(char *operator_name)
 */
 void addToData(Symbol *dataHeader, int IC)
 {
-    while (dataHeader->next != NULL)
+    while (dataHeader != NULL)
     {
         if (dataHeader->type == DATA || dataHeader->type == STRING)
             dataHeader->line = dataHeader->line + IC;
-        dataHeader++;
+        dataHeader=dataHeader->next;
     }
 }
 
@@ -405,22 +405,28 @@ int getNumOfOperands(OperatorType type, Operator *op_table)
 */
 void dumpDataOpers(char *str, int *cnt, int mode, FILE *fp)
 {
-
     int size = strlen(str);
     char temp[size];
     char binaryChar[BINARY_LINE_SIZE];
-    int value, i = 0;
-    while (*str != '\n'&&*str != '\0')
+    int value, i = 0, j = 0;
+    while (*str != '\n' && *str != '\0' && massIsSpace(str) != 1)
     {
         /*will run on the string until i finish the number or meet "," */
         if (*str == COMMA)
         {
+            while (j <= BINARY_LINE_SIZE)
+            {
+                binaryChar[j] = '0';
+                j++;
+            }
+            binaryChar[BINARY_LINE_SIZE] = '\0';
             value = atoi(temp);
             intToBinary(binaryChar, value);
             if (mode != SIMULATION)
-                fprintf(fp, "%d\t%s", *cnt, binaryChar);
-            *cnt=*cnt +1;
+                fprintf(fp, "%d\t%s\n", *cnt, binaryChar);
+            *cnt = *cnt + 1;
             clearStr(temp, size);
+            str++;
         }
         else
         {
@@ -429,13 +435,20 @@ void dumpDataOpers(char *str, int *cnt, int mode, FILE *fp)
             i++;
         }
     }
-    if (*temp != SPACE_CHAR)
+    if (massIsSpace(temp) != 1)
     {
 
+        while (j <= BINARY_LINE_SIZE)
+        {
+            binaryChar[j] = '0';
+            j++;
+        }
+
+        binaryChar[BINARY_LINE_SIZE] = '\0';
         value = atoi(temp);
         intToBinary(binaryChar, value);
         if (mode != SIMULATION)
-            fprintf(fp, "%d\t%s", *cnt, binaryChar);
+            fprintf(fp, "%d\t%s\n", *cnt, binaryChar);
         *cnt = *cnt + 1;
         clearStr(temp, size);
         *cnt = *cnt + 1;
@@ -456,13 +469,13 @@ void dumpStr(char *oper, int *cnt, int mode, FILE *fp)
         value = (int)(*oper);
         intToBinary(binaryChar, value);
         if (mode != SIMULATION)
-            fprintf(fp, "%d\t%s", *cnt, binaryChar);
-        *cnt=*cnt +1;
+            fprintf(fp, "%d\t%s\n", *cnt, binaryChar);
+        *cnt = *cnt + 1;
         oper++;
     }
     if (mode != SIMULATION)
-        fprintf(fp, "%d\t%s", *cnt, binaryChar);
-    *cnt=*cnt +1;
+        fprintf(fp, "%d\t%s\n", *cnt, binaryChar);
+    *cnt = *cnt + 1;
 }
 
 /*
@@ -472,12 +485,14 @@ void dumpStr(char *oper, int *cnt, int mode, FILE *fp)
 void intToBinary(char *placeHolderString, int value)
 {
     int i = 0, size = strlen(placeHolderString);
-    for(i=0;i<size;i++)
-        if(value&(1<<(size-1-i)))
+    for (i = 0; i < size; i++)
+        if (value & (1 << (size - 1 - i)))
         {
-            placeHolderString[i]='1';
-        }else{
-            placeHolderString[i]='0';
+            placeHolderString[i] = '1';
+        }
+        else
+        {
+            placeHolderString[i] = '0';
         }
     placeHolderString[size] = '\0';
 }
@@ -625,7 +640,7 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
         shiftLeftChar(binary, 6);
 
         intToBinary(temp, realRegister(oper2));
-        strcpyBySteps(binary+8, temp, 6);
+        strcpyBySteps(binary + 8, temp, 6);
         shiftLeftChar(binary, 2);
         if (mode != SIMULATION)
             fprintf(fp, "%d\t%s\n", *IC, binary);
@@ -855,7 +870,6 @@ int checkAddressType(char *oper, OperatorType opcode, int mode, Symbol *sym_list
     if (realRegister(oper) != -1)
         return 3;
 
-
     if (massIsSpace(oper) == 1)
         return -1;
     if (mode == SIMULATION || (mode != SIMULATION && existInSymbolTable(oper, sym_list) != -1))
@@ -934,11 +948,11 @@ void dumpSymbols(Symbol *header, char *fileName, Stype stype, char *extention)
     char *bit = NULL;
     strcpy(binary, "00000000000000\0");
     strcpy(newName, fileName);
-    strcpyBySteps(newName + strlen(newName) - strlen(extention), extention, 3);
+    strcpyBySteps(newName + strlen(newName) - strlen(extention), extention, 4);
     FILE *fp = fopen(newName, "w");
     if (fp == NULL)
         fprintf(stdout, "we had trouble opening a %s file", extention);
-    while (header->next != NULL)
+    while (header != NULL)
     {
         if (stype != EXTERN)
             if (header->type == stype || (header->externalType == stype && header->externalType == CODE))
@@ -983,11 +997,13 @@ will create an array and print the symbols ordered by line
 */
 void dumpSymbolsToMainFile(Symbol *header, int IC, FILE *fp)
 {
-    int numOfSymbols = countSymbols(header), i = 0;
+    int numOfSymbols = countSymbols(header);
     Symbol *arr[numOfSymbols];
     fillSymArr(arr, numOfSymbols, header);
     qsort(arr, numOfSymbols, sizeof(Symbol), SymbolCompare);
 
+    int i = 0;
+numOfSymbols = countSymbols(header);
     for (; i < numOfSymbols; i++)
     {
         switch (arr[i]->type)

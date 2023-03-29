@@ -78,6 +78,5 @@ int main(int argc, char *argv[])
 /*to do - check that external prints it's lines*/
 /*to do - fix comments and such*/
 /*tests*/
-/*check IC title bug*/
-/*check translation*/
+/*check data symbol entries*/
 /*to do - make sure that we post correct file names*/
