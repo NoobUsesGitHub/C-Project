@@ -469,34 +469,32 @@ void dumpStr(char *oper, int *cnt, int mode, FILE *fp)
     input: a placeholder string and a number to change to binary
     will leave the number in binary (in 12 bits) in the placeholder str
 */
-void intToBinary(char *binaryChar, int value)
+void intToBinary(char *placeholderString, int value)
 {
-    char temp;
-    int bufferSize = strlen(binaryChar);
+    int bufferSize = strlen(placeholderString);
+    char temp[bufferSize];
+
     int i = 0;
     for (i = bufferSize - 1; i >= 0; i--)
     {
         if ((value >> i) & 1)
         {
-            binaryChar[i] = '1';
+            placeholderString[i] = '1';
         }
         else
         {
-            binaryChar[i] = '0';
+            placeholderString[i] = '0';
         }
     }
 
-    bufferSize = strlen(binaryChar);
-    i = 0;
-    for (; i < bufferSize / 2; i++)
+    i = 0;/*
+    for (; i < bufferSize; i++)
     {
-        temp = binaryChar[i];
-        binaryChar[i] = binaryChar[bufferSize - i - 1];
-        binaryChar[bufferSize - i - 1] = temp;
+        temp[i] = placeholderString[bufferSize - i - 1];
     }
+    temp[bufferSize]='\0';*/
+    strcpy(placeholderString, temp);
 }
-
-/*binaryChar[size+1] = '\0';*/
 /*
     input: a string
     output: the number of register it is if it exists, if not, -1
@@ -638,10 +636,10 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
         reg1+reg2+A(00)
         */
         intToBinary(binary, realRegister(oper1));
-        intToBinary(binary, 7);
+        shiftLeftChar(binary, 6);
 
         intToBinary(temp, realRegister(oper2));
-        strcpyBySteps(binary, temp + 2, 2);
+        strcpyBySteps(binary+8, temp, 4);
         shiftLeftChar(binary, 2);
         if (mode != SIMULATION)
             fprintf(fp, "%d\t%s\n", *IC, binary);

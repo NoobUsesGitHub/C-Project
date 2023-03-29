@@ -2,51 +2,38 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
-
-void removeRedundantSpaces(char *str)
+void intToBinary(char *placeholderString, int value)
 {
-    int i = 0, j = 0, len = strlen(str);
-    char temp[len*2];
-    while (i < len)
-    {
-        if (isspace(str[i]) != 0)
-        { /*is space*/
-            if ((j > 0) && isspace(temp[j - 1]) != 0)
-                temp[j - 1] = str[i];
-            else
-            {
-                temp[j] = str[i];
-                j++;
-            }
-        }
-        else
-        {
-            if (str[i] == ',' && isspace(temp[j - 1]) != 0)
-            {
-                j--;
-            }
-            temp[j] = str[i];
-            j++;
-            if (str[i] == ',')
-            {
-               temp[j] = ' ';
-                j++;
-            }
-        }
-        i++;
-    }
-    if (temp[j - 1] == ' ' || str[j - 1] == '\t')
-        j--;
-    temp[j] = '\0';
-    strcpy(str, temp);
-}	
+    int bufferSize = strlen(placeholderString);
+    char temp[bufferSize];
+    memset(temp,'0',sizeof(char)*bufferSize);
 
+    int i = 0;
+    i = bufferSize - 1;
+    while (value != 0)
+    {
+       temp[i]=value & 1;
+        value=value >> 1;
+        i--;
+    }
+
+    i = 0; /*
+     for (; i < bufferSize; i++)
+     {
+         temp[i] = placeholderString[bufferSize - i - 1];
+     }
+     temp[bufferSize]='\0';*/
+     strcpy(placeholderString, temp);
+ 
+}
 int main()
 {
-char *s[24];
-strcpy(s,"  111 222 ,555 8 8 8 9 ");
-printf("%s\n",s);
-removeRedundantSpaces(s);
-printf("%sa\n",s);
-  return 0;
+    int x = 0;
+    char s[5];
+    strcpy(s, "0000\0");
+    printf("%s\n", s);
+    scanf("%d", &x);
+    intToBinary(s, x);
+    printf("%sa\n", s);
+    return 0;
 }
