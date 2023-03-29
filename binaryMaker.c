@@ -41,7 +41,6 @@ FileList *toBinary(FILE *fp, char *fileName)
         fprintf(stdout, "File is not correct\n"); /*need to print out to STDOUT and say which line*/
         return binaryFileNode;
     }
-    
 
     while (fgets(str, MAX_LINE_SIZE, fp) != NULL) /*first pass*/
     {
@@ -56,18 +55,20 @@ FileList *toBinary(FILE *fp, char *fileName)
         bit = str;
 
         /*checking for comment */
-        if (*bit == COMMENT || *bit == '\n'||*bit == '\0'){
+        if (*bit == COMMENT || *bit == '\n' || *bit == '\0')
+        {
             /*IC--;*/
             continue; /*skiiiiip*/
-            }
+        }
 
         /*checking for a label*/
-        while (isLetter(bit) == TRUE)
+        while (isLetter(bit) == TRUE && foundLabel == FALSE)
         {
             if (*bit == LABEL_END)
             {
                 label[i] = '\0';
                 foundLabel = TRUE; /*will be used later*/
+                continue;
             }
             label[i] = *bit;
             i++;
@@ -84,7 +85,7 @@ FileList *toBinary(FILE *fp, char *fileName)
             /*check if label is a real register or opcode*/
             if (stringToOperatorType(label) != ERROR_NA || realRegister(label) != -1)
             {
-                fprintf(stdout,"label %s is a register or opcode!\n", label);
+                fprintf(stdout, "label %s is a register or opcode!\n", label);
                 foundErr = TRUE;
             }
         }
@@ -209,7 +210,7 @@ FileList *toBinary(FILE *fp, char *fileName)
         label: opcode target-operand
         label: opcode*/
         spaceCount = countSpace(str);
-        strcpy(temp,str);
+        strcpy(temp, str);
         pch = strtok(temp, delimints); /*start strtok*/
 
         if (foundLabel == TRUE) /*skipping labels*/
@@ -272,7 +273,7 @@ FileList *toBinary(FILE *fp, char *fileName)
             foundErr = TRUE;
         }
 
-        dumpFullInstruction(label, opcode, oper1, oper2, spaceCount, &IC, SIMULATION, op_table, dataHeader,binaryFileNode->file);
+        dumpFullInstruction(label, opcode, oper1, oper2, spaceCount, &IC, SIMULATION, op_table, dataHeader, binaryFileNode->file);
     }
     if (foundErr == TRUE)
     {
@@ -285,7 +286,7 @@ FileList *toBinary(FILE *fp, char *fileName)
     }
     rewind(fp);
 
-    fprintf(binaryFileNode->file,"%d %d\n",IC-100,DC);
+    fprintf(binaryFileNode->file, "%d %d\n", IC - 100, DC);
     IC = 100;
 
     while (fgets(str, MAX_LINE_SIZE, fp) != NULL) /*second pass*/
@@ -301,10 +302,11 @@ FileList *toBinary(FILE *fp, char *fileName)
         bit = str;
 
         /*checking for comment */
-        if (*bit == COMMENT || *bit == '\n'||*bit == '\0'){
+        if (*bit == COMMENT || *bit == '\n' || *bit == '\0')
+        {
             /*IC--;*/
             continue; /*skiiiiip*/
-            }
+        }
 
         /*checking for a label*/
         while (isLetter(bit) == TRUE)
@@ -341,7 +343,7 @@ FileList *toBinary(FILE *fp, char *fileName)
         label: opcode*/
 
         spaceCount = countSpace(str);
-        strcpy(temp,str);
+        strcpy(temp, str);
         pch = strtok(temp, delimints); /*start strtok*/
 
         if (foundLabel == TRUE) /*skipping labels*/
@@ -399,7 +401,7 @@ FileList *toBinary(FILE *fp, char *fileName)
             foundErr = TRUE;
         }
 
-        dumpFullInstruction(label, opcode, oper1, oper2, spaceCount, &IC, EXECUTION, op_table, dataHeader,binaryFileNode->file);
+        dumpFullInstruction(label, opcode, oper1, oper2, spaceCount, &IC, EXECUTION, op_table, dataHeader, binaryFileNode->file);
     }
     dumpSymbolsToMainFile(dataHeader, IC, binaryFileNode->file);
 

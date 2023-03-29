@@ -37,8 +37,11 @@ Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line, char *
         header->type = type;
         header->line = line;
         header->externalType = CODE;
-        header->input = (char *)malloc((strlen(input) + 1) * (sizeof(char)));
-        strcpy(header->input, input);
+        if (input != NULL)
+        {
+            header->input = (char *)malloc((strlen(input) + 1) * (sizeof(char)));
+            strcpy(header->input, input);
+        }
     }
     else
     {
@@ -61,9 +64,11 @@ Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line, char *
             current_node->next->type = type;
             current_node->next->line = line;
             header->externalType = CODE;
-
-            current_node->next->input = (char *)malloc((strlen(input) + 1) * (sizeof(char)));
-            strcpy(current_node->next->input, input);
+            if (input != NULL)
+            {
+                current_node->next->input = (char *)malloc((strlen(input) + 1) * (sizeof(char)));
+                strcpy(current_node->next->input, input);
+            }
         }
         else
         {
@@ -88,14 +93,16 @@ Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line, char *
             current_node->next->type = type;
             current_node->next->line = line;
             header->externalType = externType;
-
-            current_node->next->input = (char *)malloc((strlen(input) + 1) * (sizeof(char)));
-            strcpy(current_node->next->input, input);
-/*
-            else if (type == ENTRY)
+            if (input != NULL)
             {
-                current_node->externalType = ENTRY;
-            }*/
+                current_node->next->input = (char *)malloc((strlen(input) + 1) * (sizeof(char)));
+                strcpy(current_node->next->input, input);
+            }
+            /*
+                        else if (type == ENTRY)
+                        {
+                            current_node->externalType = ENTRY;
+                        }*/
         }
     }
     return current_node;
@@ -239,9 +246,10 @@ int SymbolCompare(const void *a, const void *b)
 */
 void fixEntryPositions(Symbol *dataHeader)
 {
-    Symbol *pointer = NULL, *current_node = dataHeader;
+    Symbol *pointer = NULL;
+    Symbol *current_node = dataHeader;
     bool found = FALSE;
-    while (current_node->name != NULL)
+    while (current_node!=NULL&&current_node->name != NULL)
     {
         if (current_node->type == ENTRY)
         {
@@ -260,4 +268,3 @@ void fixEntryPositions(Symbol *dataHeader)
         current_node = current_node->next;
     }
 }
-
