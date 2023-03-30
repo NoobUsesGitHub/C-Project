@@ -79,5 +79,6 @@ int main(int argc, char *argv[])
 /*to do - fix comments and such*/
 /*tests*/
 /*check the binary number translation, i think its shorter*/
-/*check data symbol entries*/
+/*check data usage post declare*/
+/*check data usage pre declare*/
 /*to do - make sure that we post correct file names*/

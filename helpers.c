@@ -702,7 +702,7 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
             break;
         }
 
-        strcpy(binary, "0000000000000\0");
+        strcpy(binary, "000000000000\0");
         strcpy(temp, "0000\0");
         switch (adTypeOper2)
         {
@@ -841,7 +841,7 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
 void shiftLeftChar(char *binary, int steps)
 {
     int size = strlen(binary);
-    char temp[size];
+    char temp[size+1];
     memset(temp, '0', size);
     int i = steps, j = 0;
     while (i < size)
@@ -851,7 +851,7 @@ void shiftLeftChar(char *binary, int steps)
         j++;
     }
     memcpy(binary, temp, (size + 1) * sizeof(char));
-    binary[size + 1] = '\0';
+    binary[size] = '\0';
 }
 /*
     input: the string of the operand, the type of the operator, the mode and the symbol table
@@ -945,7 +945,7 @@ void dumpSymbols(Symbol *header, char *fileName, Stype stype, char *extention)
     char binary[BINARY_LINE_SIZE];
     bool found_any = FALSE;
     char *bit = NULL;
-    strcpy(binary, "00000000000000\0");
+    strcpy(binary, "0000000000000\0");
     strcpy(newName, fileName);
     strcpyBySteps(newName + strlen(newName) - strlen(extention), extention, 4);
     FILE *fp = fopen(newName, "w");
@@ -965,7 +965,7 @@ void dumpSymbols(Symbol *header, char *fileName, Stype stype, char *extention)
                     bit++;
                 }
                 fprintf(fp, "%s\t%s\n", header->name, binary);
-                strcpy(binary, "00000000000000\0");
+                strcpy(binary, "0000000000000\0");
             }
             else
             {
@@ -980,7 +980,7 @@ void dumpSymbols(Symbol *header, char *fileName, Stype stype, char *extention)
                         bit++;
                     }
                     fprintf(fp, "%s\t%s\n", header->name, binary);
-                    strcpy(binary, "00000000000000\0");
+                    strcpy(binary, "0000000000000\0");
                 }
             }
         header = header->next;
