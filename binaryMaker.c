@@ -52,7 +52,7 @@ FileList *toBinary(FILE *fp, char *fileName)
         clearStr(oper1, MAX_LABEL_SIZE);
         clearStr(oper2, MAX_LABEL_SIZE);
         i = 0;
-        foundLabel=FALSE;
+        foundLabel = FALSE;
         bit = str;
 
         /*checking for comment */
@@ -96,7 +96,7 @@ FileList *toBinary(FILE *fp, char *fileName)
         /*checking for symbols first*/
         while (isLetter(bit) == FALSE)
             bit++;
-        
+
         if (*bit == '\0')
         {
             fprintf(stdout, "line %d eneded unexpectandly\n", IC);
@@ -106,6 +106,7 @@ FileList *toBinary(FILE *fp, char *fileName)
         i = 0;
         if (*bit == symbolMarker) /*we met a sybol!*/
         {
+            clearStr(dataTester, 7);
             bit++; /*skipping the dot!*/
             while (isLetter(bit) == TRUE)
             {
@@ -113,6 +114,7 @@ FileList *toBinary(FILE *fp, char *fileName)
                 i++;
                 bit++;
             }
+            dataTester[i] = '\0';
             stype = checkSymbolType(dataTester);
 
             /*jumping for the next word*/
@@ -129,23 +131,25 @@ FileList *toBinary(FILE *fp, char *fileName)
             switch (stype)
             {
             case STRING:
-                bit++;              /*skipping the "*/
-                while (*bit != '"') /*check how many "" you have*/
+                bit++;               /*skipping the "*/
+                while (*bit != '\n') /*check how many "" you have*/
                 {
-                    if (*bit == '\n')
-                    {
-                        fprintf(stdout, "string finished with no end\n");
-                        foundErr = TRUE;
-                        break;
-                    }
                     oper1[i] = *bit;
                     i++;
                     bit++;
                 }
+
+                if (oper1[i-1]!= '"'&&MAX_LABEL_SIZE-2<i)
+                {
+                    fprintf(stdout, "string finished with no end\n");
+                    foundErr = TRUE;
+                    break;
+                }
                 bit++;
+                oper1[i-1] = '\n';
                 oper1[i] = '\0';
 
-                dumpStr(oper1, &IC, SIMULATION, NULL);
+                /*dumpStr(oper1, &IC, SIMULATION, NULL);*/
 
                 if (foundLabel == FALSE)
                 {
@@ -290,7 +294,7 @@ FileList *toBinary(FILE *fp, char *fileName)
     }
     rewind(fp);
 
-    dumpSymbolsToMainFile(dataHeader, &IC, binaryFileNode->file,SIMULATION);
+    dumpSymbolsToMainFile(dataHeader, &IC, binaryFileNode->file, SIMULATION);
     fprintf(binaryFileNode->file, "%d %d\n", IC - 100, DC);
     IC = 100;
 
@@ -305,7 +309,7 @@ FileList *toBinary(FILE *fp, char *fileName)
         clearStr(oper2, MAX_LABEL_SIZE);
         i = 0;
         bit = str;
-        foundLabel=FALSE;
+        foundLabel = FALSE;
 
         /*checking for comment */
         if (*bit == COMMENT || *bit == '\n' || *bit == '\0')
@@ -315,7 +319,7 @@ FileList *toBinary(FILE *fp, char *fileName)
         }
 
         /*checking for a label*/
-        while (isLetter(bit) == TRUE&&foundLabel==FALSE)
+        while (isLetter(bit) == TRUE && foundLabel == FALSE)
         {
             if (*bit == LABEL_END)
             {
@@ -411,7 +415,7 @@ FileList *toBinary(FILE *fp, char *fileName)
 
         dumpFullInstruction(label, opcode, oper1, oper2, spaceCount, &IC, EXECUTION, op_table, dataHeader, binaryFileNode->file);
     }
-    dumpSymbolsToMainFile(dataHeader, &IC, binaryFileNode->file,EXECUTION);
+    dumpSymbolsToMainFile(dataHeader, &IC, binaryFileNode->file, EXECUTION);
 
     if (!foundErr)
     {

@@ -16,7 +16,7 @@ void constSymbol(Symbol **s)
     (*(s))->hash = 0.0;
     (*(s))->type = CODE;
     (*(s))->line = 0;
-    (*(s))->externalType = 0;
+    (*(s))->externalType = CODE;
     (*(s))->next = NULL;
 }
 
@@ -45,9 +45,9 @@ Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line, char *
     }
     else
     {
-        while (current_node->next != NULL && existsAlready == FALSE)
+        while (current_node != NULL &&current_node->next != NULL && existsAlready == FALSE)
         {
-            if (strcmp(current_node->name, name))
+            if (strcmp(current_node->name, name)==0)
             {
                 if (type != EXTERN && line != -1) /*if line -1 we are in the extern phase and we don't really care about duplicates*/
                     existsAlready = TRUE;
@@ -131,22 +131,22 @@ void freeSyList(Symbol *head)
 */
 Stype checkSymbolType(char *str)
 {
-    if (strcmp(str, ".data"))
+    if (strcmp(str, "data")==0)
     {
         return DATA;
     }
 
-    if (strcmp(str, ".string"))
+    if (strcmp(str, "string")==0)
     {
         return STRING;
     }
 
-    if (strcmp(str, ".entry"))
+    if (strcmp(str, "entry")==0)
     {
         return ENTRY;
     }
 
-    if (strcmp(str, ".extern"))
+    if (strcmp(str, "extern")==0)
     {
         return EXTERN;
     }
@@ -162,7 +162,7 @@ int existInSymbolTable(char *oper, Symbol *sym_list)
 {
     double hsh = hasher(oper);
 
-    while (sym_list->next != NULL)
+    while (sym_list != NULL)
     {
         if (sym_list->hash == hsh)
             return sym_list->line;
@@ -172,6 +172,8 @@ int existInSymbolTable(char *oper, Symbol *sym_list)
     {
         return -1;
     }
+    if (sym_list == NULL)
+        return -1;
     return sym_list->line;
 }
 
@@ -184,7 +186,7 @@ Stype symbolTypeFromTable(char *oper, Symbol *sym_list)
 {
     double hsh = hasher(oper);
 
-    while (sym_list->next != NULL)
+    while (sym_list != NULL)
     {
         if (sym_list->hash == hsh)
             return (sym_list->type == EXTERN || sym_list->externalType == EXTERN) ? EXTERN : sym_list->type;
@@ -204,7 +206,7 @@ Stype symbolTypeFromTable(char *oper, Symbol *sym_list)
 int countSymbols(Symbol *header)
 {
     int i = 0;
-    while (header!=NULL&&header->name != NULL)
+    while (header != NULL && header->name != NULL)
     {
         if (header->type != CODE && header->type != ENTRY && header->type != EXTERN)
             i++;
@@ -220,7 +222,7 @@ int countSymbols(Symbol *header)
 void fillSymArr(Symbol *arr[], int numOfSymbols, Symbol *header)
 {
     int i = 0;
-    while (header!=NULL&&header->name != NULL && i < numOfSymbols)
+    while (header != NULL && header->name != NULL && i < numOfSymbols)
     {
         if (header->type != CODE)
         {
@@ -249,7 +251,7 @@ void fixEntryPositions(Symbol *dataHeader)
     Symbol *pointer = NULL;
     Symbol *current_node = dataHeader;
     bool found = FALSE;
-    while (current_node!=NULL&&current_node->name != NULL)
+    while (current_node != NULL && current_node->name != NULL)
     {
         if (current_node->type == ENTRY)
         {

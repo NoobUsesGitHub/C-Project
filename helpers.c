@@ -408,18 +408,14 @@ void dumpDataOpers(char *str, int *cnt, int mode, FILE *fp)
     int size = strlen(str);
     char temp[size];
     char binaryChar[BINARY_LINE_SIZE];
+    strcpy(binaryChar, "00000000000000");
     int value, i = 0, j = 0;
     while (*str != '\n' && *str != '\0' && massIsSpace(str) != 1)
     {
         /*will run on the string until i finish the number or meet "," */
         if (*str == COMMA)
         {
-            while (j <= BINARY_LINE_SIZE)
-            {
-                binaryChar[j] = '0';
-                j++;
-            }
-            binaryChar[BINARY_LINE_SIZE] = '\0';
+            strcpy(binaryChar, "00000000000000");
             value = atoi(temp);
             intToBinary(binaryChar, value);
             if (mode != SIMULATION)
@@ -437,14 +433,7 @@ void dumpDataOpers(char *str, int *cnt, int mode, FILE *fp)
     }
     if (massIsSpace(temp) != 1)
     {
-
-        while (j <= BINARY_LINE_SIZE)
-        {
-            binaryChar[j] = '0';
-            j++;
-        }
-
-        binaryChar[BINARY_LINE_SIZE] = '\0';
+        strcpy(binaryChar, "00000000000000");
         value = atoi(temp);
         intToBinary(binaryChar, value);
         if (mode != SIMULATION)
@@ -463,18 +452,16 @@ void dumpStr(char *oper, int *cnt, int mode, FILE *fp)
     int size = strlen(oper);
     char binaryChar[BINARY_LINE_SIZE];
     int value;
-    while (*oper != '\0' && *oper != '\n')
+    while (*oper != '\0')
     {
         value = (int)(*oper);
+        strcpy(binaryChar, "00000000000000");
         intToBinary(binaryChar, value);
         if (mode != SIMULATION)
             fprintf(fp, "%d\t%s\n", *cnt, binaryChar);
         *cnt = *cnt + 1;
         oper++;
     }
-    if (mode != SIMULATION)
-        fprintf(fp, "%d\t%s\n", *cnt, binaryChar);
-    *cnt = *cnt + 1;
 }
 
 /*
@@ -627,8 +614,8 @@ void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, in
 void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1, int adTypeOper2, int mode, int *IC, Symbol *sym_list, FILE *fp)
 {
     char binary[BINARY_LINE_SIZE], temp[7];
-    strcpy(binary, "0000000000000\0");
-    strcpy(temp, "000000\0");
+    strcpy(binary, "00000000000000");
+    strcpy(temp, "000000");
 
     if (adTypeOper1 == adTypeOper2 && adTypeOper2 == 3)
     {
@@ -658,7 +645,7 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
             /*oper1 +A(00)*/
             intToBinary(binary, atoi(oper1 + 1));
             shiftLeftChar(binary, 2);
-            strcpyBySteps(binary, temp + 2, 2);
+            strcpyBySteps(binary + BINARY_LINE_SIZE - 3, temp + 2, 2);
             if (mode != SIMULATION)
                 fprintf(fp, "%d\t%s\n", *IC, binary);
             *IC = *IC + 1;
@@ -673,7 +660,7 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
                 shiftLeftChar(binary, 2);
                 temp[3] = '1';
                 temp[2] = '0';
-                strcpyBySteps(binary, temp + 2, 2);
+                strcpyBySteps(binary + BINARY_LINE_SIZE - 3, temp + 2, 2);
                 if (mode != SIMULATION)
                     fprintf(fp, "%d\t%s\n", *IC, binary);
                 *IC = *IC + 1;
@@ -686,7 +673,7 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
                 shiftLeftChar(binary, 2);
                 temp[3] = '0';
                 temp[2] = '1';
-                strcpyBySteps(binary, temp + 2, 2);
+                strcpyBySteps(binary + BINARY_LINE_SIZE - 3, temp + 2, 2);
                 if (mode != SIMULATION)
                     fprintf(fp, "%d\t%s\n", *IC, binary);
                 *IC = *IC + 1;
@@ -702,8 +689,8 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
             break;
         }
 
-        strcpy(binary, "000000000000\0");
-        strcpy(temp, "0000\0");
+        strcpy(binary, "00000000000000");
+        strcpy(temp, "0000");
         switch (adTypeOper2)
         {
         case -1:
@@ -727,7 +714,7 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
                 shiftLeftChar(binary, 2);
                 temp[3] = '1';
                 temp[2] = '0';
-                strcpyBySteps(binary, temp + 2, 2);
+                strcpyBySteps(binary + BINARY_LINE_SIZE - 3, temp + 2, 2);
                 if (mode != SIMULATION)
                     fprintf(fp, "%d\t%s\n", *IC, binary);
                 *IC = *IC + 1;
@@ -739,7 +726,7 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
                 shiftLeftChar(binary, 2);
                 temp[3] = '0';
                 temp[2] = '1';
-                strcpyBySteps(binary, temp + 2, 2);
+                strcpyBySteps(binary + BINARY_LINE_SIZE - 3, temp + 2, 2);
                 if (mode != SIMULATION)
                     fprintf(fp, "%d\t%s\n", *IC, binary);
                 *IC = *IC + 1;
@@ -749,7 +736,7 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
             /*regCode(oper2)+A(00) */
             intToBinary(binary, realRegister(oper2));
             shiftLeftChar(binary, 2);
-            strcpyBySteps(binary, temp + 2, 2);
+            strcpyBySteps(binary + BINARY_LINE_SIZE - 3, temp + 2, 2);
             if (mode != SIMULATION)
                 fprintf(fp, "%d\t%s\n", *IC, binary);
             *IC = *IC + 1;
@@ -766,27 +753,27 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
 {
     bool needToPrintLabel = FALSE;
     char binary[BINARY_LINE_SIZE], temp[5];
-    strcpy(binary, "0000000000000\0");
-    strcpy(temp, "0000\0");
+    strcpy(binary, "00000000000000");
+    strcpy(temp, "0000");
 
     /*first, the opcode 8-10*/
     intToBinary(temp, (int)op_type);
     strcpyBySteps(binary + 4, temp, 4);
-    strcpy(temp, "0000\0");
+    strcpy(temp, "0000");
 
     /*2-3 dst operand*/
     if (adTypeOper2 != -1)
     {
         intToBinary(temp, adTypeOper2);
         strcpyBySteps(binary + 10, temp + 2, 2);
-        strcpy(temp, "0000\0");
+        strcpy(temp, "0000");
     }
     /*4-5 src operand*/
     if (adTypeOper1 != -1)
     {
         intToBinary(temp, adTypeOper1);
         strcpyBySteps(binary + 8, temp + 2, 2);
-        strcpy(temp, "0000\0");
+        strcpy(temp, "0000");
     }
     /*10-13 is for only address type 2 JMPS*/
     if (op_type == JMP || op_type == JSR || op_type == BNE)
@@ -822,7 +809,7 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
     if (mode != SIMULATION)
         fprintf(fp, "%d\t%s\n", *IC, binary);
     *IC = *IC + 1;
-    strcpy(binary, "0000000000000\0");
+    strcpy(binary, "00000000000000");
     if (needToPrintLabel)
     {
         intToBinary(binary, existInSymbolTable(label, sy_list));
@@ -841,7 +828,7 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
 void shiftLeftChar(char *binary, int steps)
 {
     int size = strlen(binary);
-    char temp[size+1];
+    char temp[size + 1];
     memset(temp, '0', size);
     int i = steps, j = 0;
     while (i < size)
@@ -945,7 +932,7 @@ void dumpSymbols(Symbol *header, char *fileName, Stype stype, char *extention)
     char binary[BINARY_LINE_SIZE];
     bool found_any = FALSE;
     char *bit = NULL;
-    strcpy(binary, "0000000000000\0");
+    strcpy(binary, "00000000000000");
     strcpy(newName, fileName);
     strcpyBySteps(newName + strlen(newName) - strlen(extention), extention, 4);
     FILE *fp = fopen(newName, "w");
@@ -954,7 +941,7 @@ void dumpSymbols(Symbol *header, char *fileName, Stype stype, char *extention)
     while (header != NULL)
     {
         if (stype != EXTERN)
-            if (header->type == stype || (header->externalType == stype && header->externalType == CODE))
+            if (header->type == stype || (header->externalType == stype && header->externalType == CODE)||(stype==DATA&&header->type == STRING))
             {
                 found_any = TRUE;
                 intToBinary(binary, header->line);
@@ -965,7 +952,7 @@ void dumpSymbols(Symbol *header, char *fileName, Stype stype, char *extention)
                     bit++;
                 }
                 fprintf(fp, "%s\t%s\n", header->name, binary);
-                strcpy(binary, "0000000000000\0");
+                strcpy(binary, "00000000000000");
             }
             else
             {
@@ -980,7 +967,7 @@ void dumpSymbols(Symbol *header, char *fileName, Stype stype, char *extention)
                         bit++;
                     }
                     fprintf(fp, "%s\t%s\n", header->name, binary);
-                    strcpy(binary, "0000000000000\0");
+                    strcpy(binary, "00000000000000");
                 }
             }
         header = header->next;
@@ -994,7 +981,7 @@ void dumpSymbols(Symbol *header, char *fileName, Stype stype, char *extention)
 input: the header of the list of symbols, the Instruction counter and file to print to
 will create an array and print the symbols ordered by line
 */
-void dumpSymbolsToMainFile(Symbol *header, int* IC, FILE *fp, int mode)
+void dumpSymbolsToMainFile(Symbol *header, int *IC, FILE *fp, int mode)
 {
     int numOfSymbols = countSymbols(header);
     Symbol *arr[numOfSymbols];
@@ -1024,7 +1011,7 @@ void dumpSymbolsToMainFile(Symbol *header, int* IC, FILE *fp, int mode)
 */
 void checkIfExternal(char *oper, int line, Symbol *sym_list)
 {
-    if (symbolTypeFromTable(oper, sym_list) == EXTERN)
+    if (existInSymbolTable(oper, sym_list) != -1 && symbolTypeFromTable(oper, sym_list) == EXTERN)
         addSymbolToList(sym_list, oper, CODE, line, NULL, EXTERN);
 }
 

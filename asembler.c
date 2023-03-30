@@ -75,10 +75,7 @@ int main(int argc, char *argv[])
 }
 /*to do- valgrind*/
 /*to do - add more error finding*/
-/*to do - check that external prints it's lines*/
 /*to do - fix comments and such*/
 /*tests*/
-/*check the binary number translation, i think its shorter*/
-/*check data usage post declare*/
-/*check data usage pre declare*/
-/*to do - make sure that we post correct file names*/
+/*check entry and external*/
+/*check jump translation*/
