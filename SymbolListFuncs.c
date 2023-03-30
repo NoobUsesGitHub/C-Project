@@ -257,7 +257,7 @@ void fixEntryPositions(Symbol *dataHeader)
         {
             found = FALSE;
             pointer = dataHeader;
-            while (pointer->name != NULL && !found)
+            while (pointer != NULL && !found)
             {
                 if (pointer->type != ENTRY && pointer->hash == current_node->hash)
                 {

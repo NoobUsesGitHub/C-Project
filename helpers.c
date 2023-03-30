@@ -528,6 +528,10 @@ bool isAddTypeCorrect(OperatorType op_type, int adTypeOper1, int adTypeOper2, Op
             return FALSE;
         if (op_type == ERROR_NA)
             return FALSE;
+
+        if (op_type == JMP || op_type == JSR || op_type == BNE)
+            return TRUE;
+
         if (existInAddressType(adTypeOper1, op_table[op_type].src_addressing_methods) && existInAddressType(adTypeOper2, op_table[op_type].dst_addressing_methods))
         {
             return TRUE;
@@ -575,8 +579,8 @@ void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, in
 {
     int adTypeOper1 = 0, adTypeOper2 = 0;
     OperatorType op_type = stringToOperatorType(opcode);
-    if (opersCnt != getNumOfOperands(op_type, op_table)) /*do we have more than required operators*/
-        fprintf(stdout, "opcode %s has more operators than expected", opcode);
+    if (opersCnt != getNumOfOperands(op_type, op_table) && (op_type != JMP && op_type != BNE && op_type != JSR)) /*do we have more than required operators*/
+        fprintf(stdout, "opcode %s has more operators than expected\n", opcode);
 
     /*take the types of two opers*/
 
@@ -816,7 +820,7 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
         shiftLeftChar(binary, 2);
         strcpy(binary + 12, "10");
         if (mode != SIMULATION)
-            fprintf(fp, "%d\t%s", *IC, binary);
+            fprintf(fp, "%d\t%s\n", *IC, binary);
         *IC = *IC + 1;
     }
 }
@@ -850,14 +854,15 @@ int checkAddressType(char *oper, OperatorType opcode, int mode, Symbol *sym_list
     if (*bit == '#')
         return 0;
 
-    if (opcode == JMP || opcode == BNE || opcode == JSR)
-        return 2;
-
     if (realRegister(oper) != -1)
         return 3;
 
     if (massIsSpace(oper) == 1)
         return -1;
+    
+    if (opcode == JMP || opcode == BNE || opcode == JSR)
+        return 2;
+
     if (mode == SIMULATION || (mode != SIMULATION && existInSymbolTable(oper, sym_list) != -1))
         return 1;
     return -1;
@@ -870,17 +875,21 @@ int checkAddressType(char *oper, OperatorType opcode, int mode, Symbol *sym_list
 int breakDownJumps(char *oper1, char *oper2, char *label)
 {
     /*if this a normal jump, will be not split because it has a label, else split to two operands */
-    bool turn_to_second_oper = FALSE;
+    bool skip = FALSE;
     char *bit = oper1;
     char *label_pointer = label;
     memset(label, '\0', MAX_LABEL_SIZE * sizeof(char));
     /*collecting a label, we have one for sure*/
-    while (*bit != '(' && *bit != '\n')
+    while (*bit != '(' && *bit != '\n' && *bit != '\0' && isspace(*bit) == 0)
     {
         *label_pointer = *bit;
         bit++;
         label_pointer++;
     }
+
+    /*skipping forward if we need to*/
+    while (isspace(*bit) != 0)
+        bit++;
     /*checking if we have operands*/
     if (*bit == '(')
         bit++;
@@ -888,27 +897,22 @@ int breakDownJumps(char *oper1, char *oper2, char *label)
         return 1;
 
     int i = 0, j = 0;
-    while (*bit != '\n')
+    while (*bit != '\n' && *bit != '\0')
     {
-        if (*bit == ',')
+        oper1[i] = *bit;
+        i++;
+        bit++;
+    }
+    oper1[i] = '\0';
+    bit = oper2;
+    while (*bit != '\n' && *bit != '\0' && !skip)
+    {
+        if (*bit == ')')
         {
-            bit++;
-            oper1[i] = '\0';
-            turn_to_second_oper = TRUE;
-            continue;
+            skip = TRUE;
         }
-
-        if (!turn_to_second_oper)
-        {
-            oper1[i] = *bit;
-            i++;
-        }
-        else
-        {
-            oper2[j] = *bit;
-            j++;
-        }
-
+        oper2[j] = *bit;
+        j++;
         bit++;
     }
 
@@ -919,7 +923,7 @@ int breakDownJumps(char *oper1, char *oper2, char *label)
         oper2[j] = '\0';
     }
 
-    return turn_to_second_oper ? 2 : 1;
+    return strlen(oper2) > 0 ? 2 : 1;
 }
 
 /*
@@ -928,20 +932,22 @@ int breakDownJumps(char *oper1, char *oper2, char *label)
 */
 void dumpSymbols(Symbol *header, char *fileName, Stype stype, char *extention)
 {
-    char newName[strlen(fileName)];
+    int size=strlen(fileName)+1;
+    char newName[size];
     char binary[BINARY_LINE_SIZE];
     bool found_any = FALSE;
     char *bit = NULL;
     strcpy(binary, "00000000000000");
     strcpy(newName, fileName);
-    strcpyBySteps(newName + strlen(newName) - strlen(extention), extention, 4);
+    strcpyBySteps(newName + strlen(newName)+1 - strlen(extention), extention, 4);
+    newName[size]=0;
     FILE *fp = fopen(newName, "w");
     if (fp == NULL)
         fprintf(stdout, "we had trouble opening a %s file", extention);
     while (header != NULL)
     {
         if (stype != EXTERN)
-            if (header->type == stype || (header->externalType == stype && header->externalType == CODE)||(stype==DATA&&header->type == STRING))
+            if (header->type == stype || (header->externalType == stype && header->externalType == CODE) || (stype == DATA && header->type == STRING))
             {
                 found_any = TRUE;
                 intToBinary(binary, header->line);

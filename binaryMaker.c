@@ -181,8 +181,7 @@ FileList *toBinary(FILE *fp, char *fileName)
                     i++;
                 }
                 label[i] = '\0';
-                dataNode = addSymbolToList(dataHeader, label, stype, DC, label, CODE);
-                DC++;
+                dataNode = addSymbolToList(dataHeader, label, stype, IC, label, CODE);
                 break;
 
             case DATA:
@@ -258,7 +257,7 @@ FileList *toBinary(FILE *fp, char *fileName)
             break;
         }
 
-        /*keep an eye open for jmp jsr and bne NEED TO FIX STILL*/
+        /*keep an eye open for jmp jsr and bne*/
         if (op_code_type == JMP || op_code_type == JSR || op_code_type == BNE)
             spaceCount = breakDownJumps(oper1, oper2, label);
 
@@ -277,7 +276,7 @@ FileList *toBinary(FILE *fp, char *fileName)
         }
         if (stringToOperatorType(oper2) != ERROR_NA || stringToOperatorType(oper2) != ERROR_NA)
         { /*if any operator is a name of an opecode*/
-            fprintf(stdout, "operator src %s not found\n", oper2);
+            fprintf(stdout, "operator dest %s not found\n", oper2);
             foundErr = TRUE;
         }
 
@@ -409,7 +408,7 @@ FileList *toBinary(FILE *fp, char *fileName)
 
         if (stringToOperatorType(oper2) != ERROR_NA || stringToOperatorType(oper2) != ERROR_NA) /*if any operator is a name of an opecode*/
         {                                                                                       /*if any operator is a name of an opecode*/
-            fprintf(stdout, "operator src %s not found\n", oper2);
+            fprintf(stdout, "operator dest %s not found\n", oper2);
             foundErr = TRUE;
         }
 
