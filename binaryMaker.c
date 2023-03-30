@@ -290,6 +290,7 @@ FileList *toBinary(FILE *fp, char *fileName)
     }
     rewind(fp);
 
+    dumpSymbolsToMainFile(dataHeader, &IC, binaryFileNode->file,SIMULATION);
     fprintf(binaryFileNode->file, "%d %d\n", IC - 100, DC);
     IC = 100;
 
@@ -410,7 +411,7 @@ FileList *toBinary(FILE *fp, char *fileName)
 
         dumpFullInstruction(label, opcode, oper1, oper2, spaceCount, &IC, EXECUTION, op_table, dataHeader, binaryFileNode->file);
     }
-    dumpSymbolsToMainFile(dataHeader, IC, binaryFileNode->file);
+    dumpSymbolsToMainFile(dataHeader, &IC, binaryFileNode->file,EXECUTION);
 
     if (!foundErr)
     {

@@ -384,7 +384,7 @@ void addToData(Symbol *dataHeader, int IC)
     {
         if (dataHeader->type == DATA || dataHeader->type == STRING)
             dataHeader->line = dataHeader->line + IC;
-        dataHeader=dataHeader->next;
+        dataHeader = dataHeader->next;
     }
 }
 
@@ -451,7 +451,6 @@ void dumpDataOpers(char *str, int *cnt, int mode, FILE *fp)
             fprintf(fp, "%d\t%s\n", *cnt, binaryChar);
         *cnt = *cnt + 1;
         clearStr(temp, size);
-        *cnt = *cnt + 1;
     }
 }
 
@@ -628,7 +627,7 @@ void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, in
 void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1, int adTypeOper2, int mode, int *IC, Symbol *sym_list, FILE *fp)
 {
     char binary[BINARY_LINE_SIZE], temp[7];
-    strcpy(binary, "00000000000000\0");
+    strcpy(binary, "0000000000000\0");
     strcpy(temp, "000000\0");
 
     if (adTypeOper1 == adTypeOper2 && adTypeOper2 == 3)
@@ -703,7 +702,7 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
             break;
         }
 
-        strcpy(binary, "00000000000000\0");
+        strcpy(binary, "0000000000000\0");
         strcpy(temp, "0000\0");
         switch (adTypeOper2)
         {
@@ -767,7 +766,7 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
 {
     bool needToPrintLabel = FALSE;
     char binary[BINARY_LINE_SIZE], temp[5];
-    strcpy(binary, "00000000000000\0");
+    strcpy(binary, "0000000000000\0");
     strcpy(temp, "0000\0");
 
     /*first, the opcode 8-10*/
@@ -823,7 +822,7 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
     if (mode != SIMULATION)
         fprintf(fp, "%d\t%s\n", *IC, binary);
     *IC = *IC + 1;
-    strcpy(binary, "00000000000000\0");
+    strcpy(binary, "0000000000000\0");
     if (needToPrintLabel)
     {
         intToBinary(binary, existInSymbolTable(label, sy_list));
@@ -995,25 +994,25 @@ void dumpSymbols(Symbol *header, char *fileName, Stype stype, char *extention)
 input: the header of the list of symbols, the Instruction counter and file to print to
 will create an array and print the symbols ordered by line
 */
-void dumpSymbolsToMainFile(Symbol *header, int IC, FILE *fp)
+void dumpSymbolsToMainFile(Symbol *header, int* IC, FILE *fp, int mode)
 {
     int numOfSymbols = countSymbols(header);
     Symbol *arr[numOfSymbols];
     fillSymArr(arr, numOfSymbols, header);
-    qsort(arr, numOfSymbols, sizeof(Symbol), SymbolCompare);
+    qsort(arr, numOfSymbols, sizeof(Symbol *), SymbolCompare);
 
     int i = 0;
-numOfSymbols = countSymbols(header);
+    numOfSymbols = countSymbols(header);
     for (; i < numOfSymbols; i++)
     {
         switch (arr[i]->type)
         {
         case STRING:
-            dumpStr(arr[i]->input, &IC, EXECUTION, fp);
+            dumpStr(arr[i]->input, IC, mode, fp);
             break;
 
         case DATA:
-            dumpDataOpers(arr[i]->input, &IC, EXECUTION, fp);
+            dumpDataOpers(arr[i]->input, IC, mode, fp);
             break;
         }
     }

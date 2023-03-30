@@ -78,5 +78,6 @@ int main(int argc, char *argv[])
 /*to do - check that external prints it's lines*/
 /*to do - fix comments and such*/
 /*tests*/
+/*check the binary number translation, i think its shorter*/
 /*check data symbol entries*/
 /*to do - make sure that we post correct file names*/

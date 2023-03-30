@@ -64,7 +64,7 @@ void calculateOpcodeBinaryAndPrint(OperatorType , int , int, int, int *, Symbol 
 void calculateOperatorsBinaryAndPrint(char *, char *, int, int, int, int *, Symbol *,FILE*);
 
 
-void dumpSymbolsToMainFile(Symbol *, int, FILE *);
+void dumpSymbolsToMainFile(Symbol *, int*, FILE *,int);
 
 void checkIfExternal(char *, int, Symbol *);
 int massIsSpace(char*);

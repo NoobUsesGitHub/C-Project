@@ -237,7 +237,7 @@ void fillSymArr(Symbol *arr[], int numOfSymbols, Symbol *header)
 */
 int SymbolCompare(const void *a, const void *b)
 {
-    return ((Symbol *)a)->line > ((Symbol *)b)->line;
+    return ((Symbol *)a)->line <= ((Symbol *)b)->line;
 }
 
 /*
