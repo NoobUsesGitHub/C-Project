@@ -158,23 +158,21 @@ Stype checkSymbolType(char *str)
     input: a string, the symbol table
     output: the line where the symbol appeared, if it doesn't exist,-1
 */
-int existInSymbolTable(char *oper, Symbol *sym_list)
+int existInSymbolTable(char *oper, Symbol *sym_list,int mode)
 {
     double hsh = hasher(oper);
-
+    int line=-1;
     while (sym_list != NULL)
     {
-        if (sym_list->hash == hsh)
-            return sym_list->line;
+        if (sym_list->hash == hsh&& sym_list->line!=-1)
+            line= sym_list->line;
         sym_list = sym_list->next;
     }
     if (sym_list != NULL && sym_list->hash != 0 && sym_list->hash != hsh)
     {
         return -1;
     }
-    if (sym_list == NULL)
-        return -1;
-    return sym_list->line;
+    return line;
 }
 
 /*
@@ -253,7 +251,7 @@ void fixEntryPositions(Symbol *dataHeader)
     bool found = FALSE;
     while (current_node != NULL && current_node->name != NULL)
     {
-        if (current_node->type == ENTRY)
+        if (current_node->type == ENTRY&&current_node->line ==-1)
         {
             found = FALSE;
             pointer = dataHeader;

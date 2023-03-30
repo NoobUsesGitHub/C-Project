@@ -181,7 +181,7 @@ FileList *toBinary(FILE *fp, char *fileName)
                     i++;
                 }
                 label[i] = '\0';
-                dataNode = addSymbolToList(dataHeader, label, stype, IC, label, CODE);
+                dataNode = addSymbolToList(dataHeader, label, stype, -1, label, CODE);
                 break;
 
             case DATA:

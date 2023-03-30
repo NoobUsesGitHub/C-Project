@@ -77,5 +77,4 @@ int main(int argc, char *argv[])
 /*to do - add more error finding*/
 /*to do - fix comments and such*/
 /*tests*/
-/*check entry and external*/
-/*check jump translation*/
+/*check external*/
