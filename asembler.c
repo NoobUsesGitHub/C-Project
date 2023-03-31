@@ -75,5 +75,3 @@ int main(int argc, char *argv[])
   closeFileList(outputFilesHead);
   return 1;
 }
-/*to do- valgrind*/
-/*to do - fix comments and such*/

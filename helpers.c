@@ -846,7 +846,7 @@ int checkAddressType(char *oper, OperatorType opcode, int mode, Symbol *sym_list
     if (realRegister(oper) != -1)
         return 3;
 
-    if (temp!=NULL&&massIsSpace(oper) == 1)
+    if (oper!=NULL&&massIsSpace(oper) == 1)
         return -1;
 
     if (opcode == JMP || opcode == BNE || opcode == JSR)
