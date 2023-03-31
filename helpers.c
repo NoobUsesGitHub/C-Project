@@ -246,13 +246,14 @@ int countSpace(char *str)
 }
 
 /*
-    input: a string
+    removeRinput: a string
     will remove double spaces
 */
 void removeRedundantSpaces(char *str)
 {
     int i = 0, j = 0, len = strlen(str);
     char temp[len * 2];
+    clearStr(temp,len * 2);
     while (i < len)
     {
         if (isspace(str[i]) != 0)
@@ -409,7 +410,7 @@ void dumpDataOpers(char *str, int *cnt, int mode, FILE *fp)
     char binaryChar[BINARY_LINE_SIZE];
     strcpy(binaryChar, "00000000000000");
     int value, i = 0, j = 0;
-    while (*str != '\n' && *str != '\0' && massIsSpace(str) != 1)
+    while (*str != '\n' && *str != '\0' && str!=NULL&&massIsSpace(str) != 1)
     {
         /*will run on the string until i finish the number or meet "," */
         if (*str == COMMA)
@@ -430,7 +431,7 @@ void dumpDataOpers(char *str, int *cnt, int mode, FILE *fp)
             i++;
         }
     }
-    if (massIsSpace(temp) != 1)
+    if (temp!=NULL&&massIsSpace(temp) != 1)
     {
         strcpy(binaryChar, "00000000000000");
         value = atoi(temp);
@@ -845,7 +846,7 @@ int checkAddressType(char *oper, OperatorType opcode, int mode, Symbol *sym_list
     if (realRegister(oper) != -1)
         return 3;
 
-    if (massIsSpace(oper) == 1)
+    if (temp!=NULL&&massIsSpace(oper) == 1)
         return -1;
 
     if (opcode == JMP || opcode == BNE || opcode == JSR)

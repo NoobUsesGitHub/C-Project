@@ -47,6 +47,7 @@ void constMacroList(MacroList **m)
     *m = (MacroList *)malloc(sizeof(MacroList));
     (*(m))->macroName = NULL;
     (*(m))->macro = NULL;
+    (*(m))->hash= 0;
     (*(m))->size = 0;
     (*(m))->next = NULL;
 }

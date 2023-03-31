@@ -45,12 +45,16 @@ Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line, char *
     }
     else
     {
-        while (current_node != NULL && existsAlready == FALSE)
+        while (current_node->next != NULL && existsAlready == FALSE)
         {
             if (strcmp(current_node->name, name) == 0)
             {
-                if (type != EXTERN && line != -1) /*if line -1 we are in the extern phase and we don't really care about duplicates*/
+                if ((type != EXTERN || type != ENTRY) && line != -1) /*if line -1 we are in the extern phase and we don't really care about duplicates*/
+                {
                     existsAlready = TRUE;
+                    continue;
+                }
+                current_node = current_node->next;
                 continue;
             }
             current_node = current_node->next;
