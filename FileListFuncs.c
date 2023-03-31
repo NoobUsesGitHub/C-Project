@@ -59,6 +59,29 @@ void closeFileList(FileList *head)
     free(head);
 }
 
+/*
+ * input:a file node header
+ * will remove all file objects
+ */
+void removeFileList(FileList *head)
+{
+    FileList *next = head;
+    while (next->next != NULL)
+    {
+        fclose(head->file);
+        remove(head->fileName);
+        free(head->fileName);
+        next = head->next;
+        free(head);
+        head = next;
+    }
+    fclose(head->file);
+    remove(head->fileName);
+    free(head->fileName);
+    free(head->next);
+    free(head);
+}
+
 void stringToFiles(int argc, char *argv[], FileList **header)
 {
     int i, maxSize = 0;
@@ -83,13 +106,12 @@ void stringToFiles(int argc, char *argv[], FileList **header)
     free(str);
 }
 
-
 /*
     input: a file list object
     will close it's file and reopen it on read only
 */
-void reOpen(FileList* tempInputNode)
+void reOpen(FileList *tempInputNode)
 {
     fclose(tempInputNode->file);
-    tempInputNode->file=fopen(tempInputNode->fileName,"r");
+    tempInputNode->file = fopen(tempInputNode->fileName, "r");
 }

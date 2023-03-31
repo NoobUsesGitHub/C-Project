@@ -10,7 +10,7 @@
 #define EXECUTION 0
 #define LABEL_END ':'
 #define COMMENT ';'
-#define symbolMarker '.' /* hanhaya- direction? idk*/
+#define symbolMarker '.' /* hanhaya- direction?instruction?*/
 #define stringMarker '"' /* "abcd"*/
 #define delimints "    \t \f \r"
 #define SPACE_CHAR ' '

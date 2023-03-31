@@ -69,12 +69,11 @@ int main(int argc, char *argv[])
     }
     addToList(outputFilesHead, tempOutput->file, tempOutput->fileName);
     tempInputNode = tempInputNode->next; /*going forward with the list*/
+  
   }
+  removeFileList(binaryFilesHead);
   closeFileList(outputFilesHead);
   return 1;
 }
 /*to do- valgrind*/
-/*to do - add more error finding*/
 /*to do - fix comments and such*/
-/*tests*/
-/*check external*/

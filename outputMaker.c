@@ -10,7 +10,6 @@ FileList *toOutput(FILE *fp, char *fileName)
   char *change = "ob\0";
   char strNewName[strlen(fileName)];
   bool sawTab = FALSE;
-  /*int lineNum = 0;*/
 
   FileList *outputFile;
   constNode(&outputFile);
@@ -58,7 +57,7 @@ FileList *toOutput(FILE *fp, char *fileName)
     c = (char)fgetc(fp);
   }
 
-  return outputFile; /*tochange*/
+  return outputFile;
 }
 
 char binaryTranslate(char c)

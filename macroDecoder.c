@@ -16,15 +16,10 @@ FileList* macroDecoder(FILE *fp, char *fileName)
 
     FileList *macroFileNode;
     constNode(&macroFileNode);
-    /*
-    █▄ ▄█ ▄▀▄ █▄▀ ██▀    ▄▀▀ █   ██▀ ▄▀▄ █▀▄ ██▀ █▀▄
-    █ ▀ █ █▀█ █ █ █▄▄    ▀▄▄ █▄▄ █▄▄ █▀█ █▀▄ █▄▄ █▀▄
-    */
     strcpy(strNewName, fileName);
     strNewName[strlen(strNewName) - 1] = 'm';
     macroFileNode->fileName = (char *)malloc(strlen(strNewName) * sizeof(char));
     strcpy(macroFileNode->fileName, strNewName);
-    /*to change*/
     macroFileNode->file = fopen(strNewName, "w");
     if (fp == NULL || macroFileNode->file == NULL)
     {
@@ -78,5 +73,5 @@ FileList* macroDecoder(FILE *fp, char *fileName)
 
     freeMacroList(header);
 
-    return macroFileNode; /*tochange*/
+    return macroFileNode;
 }

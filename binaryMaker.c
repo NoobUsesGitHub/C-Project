@@ -25,15 +25,10 @@ FileList *toBinary(FILE *fp, char *fileName)
 
     FileList *binaryFileNode;
     constNode(&binaryFileNode);
-    /*
-    █▄ ▄█ ▄▀▄ █▄▀ ██▀    ▄▀▀ █   ██▀ ▄▀▄ █▀▄ ██▀ █▀▄
-    █ ▀ █ █▀█ █ █ █▄▄    ▀▄▄ █▄▄ █▄▄ █▀█ █▀▄ █▄▄ █▀▄
-    */
     strcpy(strNewName, fileName);
-    strNewName[strlen(strNewName) - 1] = 'n'; /*change the name create function for concat*/
+    strNewName[strlen(strNewName) - 1] = 'n'; 
     binaryFileNode->fileName = (char *)malloc(strlen(strNewName) * sizeof(char));
     strcpy(binaryFileNode->fileName, strNewName);
-    /*to change*/
     binaryFileNode->file = fopen(strNewName, "w");
     if (fp == NULL || binaryFileNode->file == NULL)
     {
@@ -139,17 +134,16 @@ FileList *toBinary(FILE *fp, char *fileName)
                     bit++;
                 }
 
-                if (oper1[i-1]!= '"'&&MAX_LABEL_SIZE-2<i)
+                if (oper1[i - 1] != '"' && MAX_LABEL_SIZE - 2 < i)
                 {
                     fprintf(stdout, "string finished with no end\n");
                     foundErr = TRUE;
                     break;
                 }
                 bit++;
-                oper1[i-1] = '\n';
+                oper1[i - 1] = '\n';
                 oper1[i] = '\0';
 
-                /*dumpStr(oper1, &IC, SIMULATION, NULL);*/
 
                 if (foundLabel == FALSE)
                 {
@@ -204,7 +198,6 @@ FileList *toBinary(FILE *fp, char *fileName)
 
                 dataNode = addSymbolToList(dataHeader, label, stype, DC, oper1, CODE);
                 DC++;
-                /*dumpDataOpers(oper1, &DC, SIMULATION, NULL); maybe not?*/
                 break;
             }
             continue;
@@ -388,7 +381,7 @@ FileList *toBinary(FILE *fp, char *fileName)
             break;
         }
 
-        /*keep an eye open for jmp jsr and bne NEED TO FIX STILL*/
+        /*keep an eye open for jmp jsr and bne*/
         if (op_code_type == JMP || op_code_type == JSR || op_code_type == BNE)
             spaceCount = breakDownJumps(oper1, oper2, label);
 
@@ -425,5 +418,5 @@ FileList *toBinary(FILE *fp, char *fileName)
     /*second pass*/
     freeSyList(dataHeader);
     deleteOperatorsTable(op_table);
-    return binaryFileNode; /*tochange*/
+    return binaryFileNode;
 }
