@@ -183,7 +183,7 @@ int existInSymbolTable(char *oper, Symbol *sym_list, int mode)
     int line = -1;
     while (sym_list != NULL && line == -1)
     {
-        if (sym_list->hash == hsh && (sym_list->line != -1 || (sym_list->type == EXTERN && sym_list->line == -1)))
+        if (sym_list->hash == hsh && (sym_list->line != -1 || sym_list->type == EXTERN && sym_list->line == -1))
         {
             if (sym_list->type == EXTERN)
                 line = 0;
