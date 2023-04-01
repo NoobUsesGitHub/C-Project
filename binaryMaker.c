@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 #include "helpers.h"
 #include "binaryMaker.h"
 #include "FileListFuncs.h"
@@ -10,15 +11,14 @@ FileList *toBinary(FILE *fp, char *fileName)
 {
     Operator *op_table = createOperatorsTable();
 
-    int IC = 100, DC = 0,comma_counter=0, wordCount = 0, spaceCount = 0, i = 0; /*wordCount=L*/
+    int IC = 100, DC = 0,comma_counter=0, spaceCount = 0, i = 0; /*wordCount=L*/
     Stype stype = 0;
-    bool skp = FALSE, foundSymbol = FALSE, foundErr = FALSE, foundLabel = FALSE;
+    bool foundErr = FALSE, foundLabel = FALSE;
     char *bit = NULL, label[MAX_LABEL_SIZE], dataTester[7], opcode[5];
     char oper1[MAX_LABEL_SIZE], oper2[MAX_LABEL_SIZE], *pch = NULL, str[MAX_LINE_SIZE];
     char temp[MAX_LABEL_SIZE];
     char strNewName[strlen(fileName)];
     Symbol *dataHeader = NULL;
-    Symbol *dataNode = NULL;
     OperatorType op_code_type;
 
     constSymbol(&dataHeader);
@@ -150,7 +150,7 @@ FileList *toBinary(FILE *fp, char *fileName)
                     clearStr(label, MAX_LABEL_SIZE);
                     sprintf(label, "X DC: %d", DC); /*adding a dummy name*/
                 }
-                dataNode = addSymbolToList(dataHeader, label, stype, DC, oper1, CODE);
+                addSymbolToList(dataHeader, label, stype, DC, oper1, CODE);
                 DC = DC + strlen(oper1) + 1;
                 break;
             case EXTERN:
@@ -163,7 +163,7 @@ FileList *toBinary(FILE *fp, char *fileName)
                     i++;
                 }
                 label[i] = '\0';
-                dataNode = addSymbolToList(dataHeader, label, stype, -1, label, CODE);
+                addSymbolToList(dataHeader, label, stype, -1, label, CODE);
                 break;
             case ENTRY:
                 clearStr(label, MAX_LABEL_SIZE);
@@ -175,7 +175,7 @@ FileList *toBinary(FILE *fp, char *fileName)
                     i++;
                 }
                 label[i] = '\0';
-                dataNode = addSymbolToList(dataHeader, label, stype, -1, label, CODE);
+                addSymbolToList(dataHeader, label, stype, -1, label, CODE);
                 break;
 
             case DATA:
@@ -199,7 +199,7 @@ FileList *toBinary(FILE *fp, char *fileName)
                     sprintf(label, "X DC: %d", DC); /*adding a dummy name*/
                 }
 
-                dataNode = addSymbolToList(dataHeader, label, stype, DC, oper1, CODE);
+                addSymbolToList(dataHeader, label, stype, DC, oper1, CODE);
                 DC=DC+comma_counter+1;
                 break;
             }
@@ -207,7 +207,7 @@ FileList *toBinary(FILE *fp, char *fileName)
         }
 
         if (foundLabel == TRUE) /*if we have label, and still here, make it a code symbol*/
-            dataNode = addSymbolToList(dataHeader, label, CODE, IC, NULL, CODE);
+            addSymbolToList(dataHeader, label, CODE, IC, NULL, CODE);
 
         /* instruction label: opcode source-operand, target-operand
         label: opcode target-operand

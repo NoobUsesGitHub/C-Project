@@ -21,10 +21,10 @@ void constSymbol(Symbol **s)
 }
 
 /*
-    input: a header node, a nase for the new macro and it's list of strings that it unfolds to
-    output: the new macro node already connected to the list
+    input: a header node, a nase for the new Symbol and it's type, line number, it's string of data and its other type
+   will link the new symbol to the main table
 */
-Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line, char *input, Stype externType)
+void *addSymbolToList(Symbol *header, char *name, Stype type, int line, char *input, Stype externType)
 {
     char *str = (char *)malloc(strlen(name) * (sizeof(char) + 1));
     Symbol *current_node = header;
