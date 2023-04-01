@@ -448,7 +448,6 @@ void dumpDataOpers(char *str, int *cnt, int mode, FILE *fp)
 */
 void dumpStr(char *oper, int *cnt, int mode, FILE *fp)
 {
-    int size = strlen(oper);
     char binaryChar[14];
     int value;
     while (*oper != '\0' && *oper != '\n')
