@@ -815,6 +815,8 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
             temp[2] = '1';
             strcpyBySteps(binary + 2, temp + 2, 2);
         }
+        strcpy(temp, "0010");
+        strcpyBySteps(binary+8,temp,4);
         if (massIsSpace(label) != 1)
             needToPrintLabel = TRUE;
     }
