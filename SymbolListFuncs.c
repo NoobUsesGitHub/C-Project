@@ -100,7 +100,7 @@ void *addSymbolToList(Symbol *header, char *name, Stype type, int line, char *in
             {
                 current_node->name = NULL;
                 fprintf(stdout, "Symbol %s ay line %d exists already!!", name, line);
-                exit();
+                return;
             }
             /*
                 entry
