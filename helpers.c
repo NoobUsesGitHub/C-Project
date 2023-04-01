@@ -599,12 +599,16 @@ bool dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, in
     bool foundErr = FALSE;
     int adTypeOper1 = 0, adTypeOper2 = 0;
     OperatorType op_type = stringToOperatorType(opcode);
-    if (opersCnt != getNumOfOperands(op_type, op_table) && (op_type != JMP && op_type != BNE && op_type != JSR)) /*do we have more than required operators*/
+    if (opersCnt != getNumOfOperands(op_type, op_table) && (op_type != JMP && op_type != BNE && op_type != JSR)) {/*do we have more than required operators*/
         if (opersCnt > getNumOfOperands(op_type, op_table))
+        {
             fprintf(stdout, "opcode %s has more operators than expected\n", opcode);
+        }
         else
+        {
             fprintf(stdout, "opcode %s has less operators than expected\n", opcode);
-
+        }
+    }
     /*take the types of two opers*/
 
     adTypeOper1 = checkAddressType(oper1, op_type, mode, sym_list);

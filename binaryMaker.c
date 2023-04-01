@@ -260,7 +260,7 @@ FileList *toBinary(FILE *fp, char *fileName)
             foundErr = TRUE;
             continue;
         }
-        
+
         /*keep an eye open for jmp jsr and bne*/
         if (op_code_type == JMP || op_code_type == JSR || op_code_type == BNE)
             spaceCount = breakDownJumps(oper1, oper2, label);
@@ -422,6 +422,7 @@ FileList *toBinary(FILE *fp, char *fileName)
         }
 
         dumpFullInstruction(label, opcode, oper1, oper2, spaceCount, &IC, EXECUTION, op_table, dataHeader, binaryFileNode->file);
+        clearStr(str,MAX_LINE_SIZE);
     }
     dumpSymbolsToMainFile(dataHeader, &IC, binaryFileNode->file, EXECUTION);
 
