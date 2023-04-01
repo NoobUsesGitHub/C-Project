@@ -203,6 +203,8 @@ FileList *toBinary(FILE *fp, char *fileName)
                 DC=DC+comma_counter+1;
                 break;
             }
+            case CODE:
+            break;
             continue;
         }
 
