@@ -1,3 +1,7 @@
+/*ID:208639906
+to whom it may concern, this code project was supposed to be written in two, but my partner left without sending me the code he wrote at the date of handing in the project,
+so this might be incomplete, I am sorry but I ask of you to please put in considiartion that this code was mostly written in two almost sleepless weeks by one person
+*/
 #include <stdio.h>
 #include <string.h>
 #include "helpers.h"
