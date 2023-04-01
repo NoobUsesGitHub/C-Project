@@ -592,8 +592,8 @@ void strcpyBySteps(char *to, char *from, int steps)
 }
 
 bool dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, int opersCnt, int *IC, int mode, Operator *op_table, Symbol *sym_list, FILE *fp)
-{   
-    bool foundErr=FALSE;
+{
+    bool foundErr = FALSE;
     int adTypeOper1 = 0, adTypeOper2 = 0;
     OperatorType op_type = stringToOperatorType(opcode);
     if (opersCnt != getNumOfOperands(op_type, op_table) && (op_type != JMP && op_type != BNE && op_type != JSR)) /*do we have more than required operators*/
@@ -613,7 +613,7 @@ bool dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, in
     /*print the opcode binary*/
     if (opersCnt == 1 && strcmp(oper1, label) == 0)
         clearStr(label, MAX_LABEL_SIZE);
-    foundErr= calculateOpcodeBinaryAndPrint(op_type, adTypeOper1, adTypeOper2, mode, IC, sym_list, label, fp)==1?TRUE:FALSE;
+    foundErr = calculateOpcodeBinaryAndPrint(op_type, adTypeOper1, adTypeOper2, mode, IC, sym_list, label, fp) == 1 ? TRUE : FALSE;
     /*print the opers binary*/
     calculateOperatorsBinaryAndPrint(oper1, oper2, adTypeOper1, adTypeOper2, mode, IC, sym_list, fp);
     return foundErr;
@@ -850,11 +850,15 @@ int calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int adT
                 strcpy(binary + 12, "01");
             else
                 strcpy(binary + 12, "10");
-        }else
+        }
+        else
         {
-            fprintf(stdout,"label %s doesn't exist!\n",label);
-            strcpy(binary + 12, "10");
-            return 1;
+            if (mode != SIMULATION)
+            {
+                fprintf(stdout, "label %s doesn't exist!\n", label);
+                strcpy(binary + 12, "10");
+                return 1;
+            }
         }
         if (mode != SIMULATION)
             fprintf(fp, "%d\t%s\n", *IC, binary);
@@ -1066,7 +1070,7 @@ void dumpSymbolsToMainFile(Symbol *header, int *IC, FILE *fp, int mode)
         case CODE:
         case EXTERN:
         case ENTRY:
-        break;
+            break;
         }
     }
 }
