@@ -593,8 +593,9 @@ void strcpyBySteps(char *to, char *from, int steps)
     }
 }
 
-void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, int opersCnt, int *IC, int mode, Operator *op_table, Symbol *sym_list, FILE *fp)
-{
+bool dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, int opersCnt, int *IC, int mode, Operator *op_table, Symbol *sym_list, FILE *fp)
+{   
+    bool foundErr=FALSE;
     int adTypeOper1 = 0, adTypeOper2 = 0;
     OperatorType op_type = stringToOperatorType(opcode);
     if (opersCnt != getNumOfOperands(op_type, op_table) && (op_type != JMP && op_type != BNE && op_type != JSR)) /*do we have more than required operators*/
@@ -614,7 +615,7 @@ void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, in
     /*print the opcode binary*/
     if (opersCnt == 1 && strcmp(oper1, label) == 0)
         clearStr(label, MAX_LABEL_SIZE);
-    calculateOpcodeBinaryAndPrint(op_type, adTypeOper1, adTypeOper2, mode, IC, sym_list, label, fp);
+    foundErr= calculateOpcodeBinaryAndPrint(op_type, adTypeOper1, adTypeOper2, mode, IC, sym_list, label, fp)==1?TRUE:FALSE;
     /*print the opers binary*/
     calculateOperatorsBinaryAndPrint(oper1, oper2, adTypeOper1, adTypeOper2, mode, IC, sym_list, fp);
 }
@@ -760,7 +761,7 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
     input: the type of the operator, the address types of the operands, the mode, the instruction counter, the symbol info table and the label
     will turn the opcode to binary, if there is a label(aka we are jumping, will print that too)
 */
-void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int adTypeOper2, int mode, int *IC, Symbol *sym_list, char *label, FILE *fp)
+int calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int adTypeOper2, int mode, int *IC, Symbol *sym_list, char *label, FILE *fp)
 {
     bool needToPrintLabel = FALSE;
     char binary[BINARY_LINE_SIZE], temp[5];
@@ -772,6 +773,11 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
     strcpyBySteps(binary + 4, temp, 4);
     strcpy(temp, "0000");
 
+    if (adTypeOper1 != -1 && adTypeOper2 == -1)
+    { /* we only have a label in the oper1*/
+        adTypeOper2 = adTypeOper1;
+        adTypeOper1 = -1;
+    }
     /*2-3 dst operand*/
     if (adTypeOper2 != -1)
     {
@@ -786,39 +792,48 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
         strcpyBySteps(binary + 8, temp + 2, 2);
         strcpy(temp, "0000");
     }
+
     /*10-13 is for only address type 2 JMPS*/
     if (op_type == JMP || op_type == JSR || op_type == BNE)
     {
-        /*first 12-13*/
-        if (adTypeOper1 == 1)
-        {
-            temp[3] = '1';
-            temp[2] = '0';
-            strcpyBySteps(binary, temp + 2, 2);
-        }
-        else if (adTypeOper1 == 3)
-        {
-            temp[3] = '1';
-            temp[2] = '1';
-            strcpyBySteps(binary, temp + 2, 2);
-        }
-        /*second 10-11*/
-        if (adTypeOper2 == 1)
-        {
-            temp[3] = '1';
-            temp[2] = '0';
-            strcpyBySteps(binary + 2, temp + 2, 2);
-        }
-        else if (adTypeOper2 == 3)
-        {
-            temp[3] = '1';
-            temp[2] = '1';
-            strcpyBySteps(binary + 2, temp + 2, 2);
-        }
-        strcpy(temp, "0010");
-        strcpyBySteps(binary + 8, temp, 4);
+
         if (massIsSpace(label) != 1)
-            needToPrintLabel = TRUE;
+        {
+            /*first 12-13*/
+            if (adTypeOper1 == 1)
+            {
+                temp[3] = '1';
+                temp[2] = '0';
+                strcpyBySteps(binary, temp + 2, 2);
+            }
+            else if (adTypeOper1 == 3)
+            {
+                temp[3] = '1';
+                temp[2] = '1';
+                strcpyBySteps(binary, temp + 2, 2);
+            }
+            /*second 10-11*/
+            if (adTypeOper2 == 1)
+            {
+                temp[3] = '1';
+                temp[2] = '0';
+                strcpyBySteps(binary + 2, temp + 2, 2);
+            }
+            else if (adTypeOper2 == 3)
+            {
+                temp[3] = '1';
+                temp[2] = '1';
+                strcpyBySteps(binary + 2, temp + 2, 2);
+            }
+
+            if (adTypeOper1 != -1 && adTypeOper2 != -1)
+            {
+                strcpy(temp, "0010");
+                strcpyBySteps(binary + 8, temp, 4);
+            }
+            if (massIsSpace(label) != 1)
+                needToPrintLabel = TRUE;
+        }
     }
     if (mode != SIMULATION)
         fprintf(fp, "%d\t%s\n", *IC, binary);
@@ -830,14 +845,23 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
             checkIfExternal(label, *IC, sym_list);
         intToBinary(binary, existInSymbolTable(label, sym_list, EXECUTION));
         shiftLeftChar(binary, 2);
-        if (mode==EXECUTION&& symbolTypeFromTable(label, sym_list) == EXTERN)
-            strcpy(binary + 12, "01");
-        else
+        if (mode == EXECUTION && existInSymbolTable(label, sym_list, SIMULATION) != -1)
+        {
+            if (mode == EXECUTION && symbolTypeFromTable(label, sym_list) == EXTERN)
+                strcpy(binary + 12, "01");
+            else
+                strcpy(binary + 12, "10");
+        }else
+        {
+            fprintf(stdout,"label %s doesn't exist!",label);
             strcpy(binary + 12, "10");
+            return 1;
+        }
         if (mode != SIMULATION)
             fprintf(fp, "%d\t%s\n", *IC, binary);
         *IC = *IC + 1;
     }
+    return 0;
 }
 
 /*

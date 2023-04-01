@@ -278,7 +278,7 @@ FileList *toBinary(FILE *fp, char *fileName)
             foundErr = TRUE;
         }
 
-        dumpFullInstruction(label, opcode, oper1, oper2, spaceCount, &IC, SIMULATION, op_table, dataHeader, binaryFileNode->file);
+        foundErr=dumpFullInstruction(label, opcode, oper1, oper2, spaceCount, &IC, SIMULATION, op_table, dataHeader, binaryFileNode->file);
     }
     if (foundErr == TRUE)
     {
