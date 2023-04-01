@@ -1,3 +1,4 @@
+/*ID:208639906*/
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
@@ -224,12 +225,6 @@ FileList *toBinary(FILE *fp, char *fileName)
             pch = strtok(NULL, delimints);
             spaceCount--;
         }
-        if (spaceCount > 2)
-        {
-            fprintf(stdout, "operator %s was found with too many operands\n", opcode);
-            foundErr = TRUE;
-            continue;
-        }
         switch (spaceCount)
         {
         case 0: /*opcode*/
@@ -258,6 +253,14 @@ FileList *toBinary(FILE *fp, char *fileName)
             break;
         }
 
+        
+        if (spaceCount > 2)
+        {
+            fprintf(stdout, "operator %s was found with too many operands\n", opcode);
+            foundErr = TRUE;
+            continue;
+        }
+        
         /*keep an eye open for jmp jsr and bne*/
         if (op_code_type == JMP || op_code_type == JSR || op_code_type == BNE)
             spaceCount = breakDownJumps(oper1, oper2, label);
