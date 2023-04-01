@@ -169,7 +169,7 @@ double hasher(char *str)
     while (str[i] != '\0')
     {
         if (str[i] != '\n')
-            hash += ((int)(str[i])) / (size - i) * 7.0; /*hashing func- takes every letter and its place and calculates a key for it, adding them together*/
+            hash += ((int)(str[i])) / (size - i) * 7.0*size; /*hashing func- takes every letter and its place and calculates a key for it, adding them together*/
         i++;
     }
     return hash;
@@ -204,7 +204,6 @@ bool isLetter(char *bit)
 */
 void printList(char **str, int size, FILE *fp)
 {
-
     while (size != 0)
     {
         fprintf(fp, "%s", *str);
