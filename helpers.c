@@ -244,7 +244,7 @@ int countSpace(char *str)
 }
 
 /*
-    removeRinput: a string
+    input: a string
     will remove double spaces
 */
 void removeRedundantSpaces(char *str)
@@ -519,7 +519,6 @@ int realRegister(char *str)
 /*
     input: An operator, the two operands adresstypes and the Operator info table
     output: true if the operands accsespts these operands, else false
-
 */
 bool isAddTypeCorrect(OperatorType op_type, int adTypeOper1, int adTypeOper2, Operator *op_table, int opersCnt)
 {
@@ -591,6 +590,11 @@ void strcpyBySteps(char *to, char *from, int steps)
     }
 }
 
+/*
+    input: a instruction's label, an operand, two operatos , how many operators we have really, the instruction counter, the mode, the operator and symbols table, and our file
+    output: true if we have any problems, else false
+    will take the instruction and will print the instruction, label and it's operators bites
+*/
 bool dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, int opersCnt, int *IC, int mode, Operator *op_table, Symbol *sym_list, FILE *fp)
 {
     bool foundErr = FALSE;
@@ -619,6 +623,10 @@ bool dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, in
     return foundErr;
 }
 
+/*
+    input: the operands, their addressing types, the mode, instrucion counter, symbol table and the file
+    will take the operands thier bites
+*/
 void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1, int adTypeOper2, int mode, int *IC, Symbol *sym_list, FILE *fp)
 {
     char binary[BINARY_LINE_SIZE], temp[7];
@@ -758,6 +766,7 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
 
 /*
     input: the type of the operator, the address types of the operands, the mode, the instruction counter, the symbol info table and the label
+    output: 1 if we had a problem with the label, else 0
     will turn the opcode to binary, if there is a label(aka we are jumping, will print that too)
 */
 int calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int adTypeOper2, int mode, int *IC, Symbol *sym_list, char *label, FILE *fp)
@@ -868,7 +877,7 @@ int calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int adT
 }
 
 /*
-    input: a string and the number of chars to take back a step
+    input: a string and the number of chars to shift left
     will push the chars X steps to the left
 */
 void shiftLeftChar(char *binary, int steps)
@@ -886,6 +895,7 @@ void shiftLeftChar(char *binary, int steps)
     memcpy(binary, temp, (size + 1) * sizeof(char));
     binary[size] = '\0';
 }
+
 /*
     input: the string of the operand, the type of the operator, the mode and the symbol table
     output: the address type, per page 19
@@ -968,112 +978,6 @@ int breakDownJumps(char *oper1, char *oper2, char *label)
     return strlen(oper2) > 0 ? 2 : 1;
 }
 
-/*
-    input: a header of the symbols table, the file name, a data symbol type, and the extention
-    will push all the data symbols of that type to a file
-*/
-void dumpSymbols(Symbol *header, char *fileName, Stype stype, char *extention)
-{
-    int size = strlen(fileName) + 1;
-    char newName[size];
-    char binary[BINARY_LINE_SIZE];
-    bool found_any = FALSE;
-    char *bit = NULL;
-    strcpy(binary, "00000000000000");
-    strcpy(newName, fileName);
-    strcpyBySteps(newName + strlen(newName) + 1 - strlen(extention), extention, 4);
-    newName[size] = 0;
-    FILE *fp = fopen(newName, "w");
-    if (fp == NULL)
-        fprintf(stdout, "we had trouble opening a %s file", extention);
-    while (header != NULL)
-    {
-        if (stype != EXTERN)
-        {
-            if (header->type == stype || (header->externalType == stype && header->externalType == CODE) || (stype == DATA && header->type == STRING))
-            {
-                found_any = TRUE;
-                intToBinary(binary, header->line);
-                bit = binary;
-                while (*bit != '\0')
-                {
-                    *bit = binaryTranslate(*bit);
-                    bit++;
-                }
-                fprintf(fp, "%s\t%s\n", header->name, binary);
-                strcpy(binary, "00000000000000");
-            }
-            else
-            {
-                if (header->type != stype && header->externalType == stype)
-                {
-                    found_any = TRUE;
-                    intToBinary(binary, header->line);
-                    bit = binary;
-                    while (*bit != '\0')
-                    {
-                        *bit = binaryTranslate(*bit);
-                        bit++;
-                    }
-                    fprintf(fp, "%s\t%s\n", header->name, binary);
-                    strcpy(binary, "00000000000000");
-                }
-            }
-        }
-        else
-        {
-            if (header->type == CODE && header->externalType == EXTERN)
-            {
-                found_any = TRUE;
-                intToBinary(binary, header->line);
-                bit = binary;
-                while (*bit != '\0')
-                {
-                    *bit = binaryTranslate(*bit);
-                    bit++;
-                }
-                fprintf(fp, "%s\t%s\n", header->name, binary);
-                strcpy(binary, "00000000000000");
-            }
-        }
-        header = header->next;
-    }
-    fclose(fp);
-    if (!found_any)
-        remove(newName);
-}
-
-/*
-input: the header of the list of symbols, the Instruction counter and file to print to
-will create an array and print the symbols ordered by line
-*/
-void dumpSymbolsToMainFile(Symbol *header, int *IC, FILE *fp, int mode)
-{
-    int numOfSymbols = countSymbols(header);
-    Symbol *arr[numOfSymbols];
-    fillSymArr(arr, numOfSymbols, header);
-    qsort(arr, numOfSymbols, sizeof(Symbol *), SymbolCompare);
-
-    int i = 0;
-    numOfSymbols = countSymbols(header);
-    for (; i < numOfSymbols; i++)
-    {
-        switch (arr[i]->type)
-        {
-        case STRING:
-            dumpStr(arr[i]->input, IC, mode, fp);
-            break;
-
-        case DATA:
-            dumpDataOpers(arr[i]->input, IC, mode, fp);
-            break;
-        case CODE:
-        case EXTERN:
-        case ENTRY:
-            break;
-        }
-    }
-}
 
 /*
     input: a string(possibly a label) a line number and the symbol list

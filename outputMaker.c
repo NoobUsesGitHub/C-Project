@@ -60,6 +60,10 @@ FileList *toOutput(FILE *fp, char *fileName)
   return outputFile;
 }
 
+/*
+input: a char
+output: if it's 0 . else if 1 /
+*/
 char binaryTranslate(char c)
 {
   char output_char;

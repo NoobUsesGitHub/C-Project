@@ -57,14 +57,10 @@ void strcpyBySteps(char*, char*, int);
 
 int breakDownJumps(char *, char *,char*);
 
-void dumpSymbols(Symbol *, char *, Stype, char *);
 
 int calculateOpcodeBinaryAndPrint(OperatorType , int , int, int, int *, Symbol *, char *,FILE*);
 
 void calculateOperatorsBinaryAndPrint(char *, char *, int, int, int, int *, Symbol *,FILE*);
-
-
-void dumpSymbolsToMainFile(Symbol *, int*, FILE *,int);
 
 void checkIfExternal(char *, int, Symbol *);
 int massIsSpace(char*);
