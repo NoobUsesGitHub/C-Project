@@ -18,4 +18,4 @@ void addLineToNode(MacroList *, char *);
 
 int dumpIfexistsInMacro(MacroList *, double, FILE *);
 
-#endif // MACROLISTFUNCS_H
+#endif

@@ -16,7 +16,7 @@ void constSymbol(Symbol **s)
     (*(s))->hash = 0.0;
     (*(s))->type = CODE;
     (*(s))->line = 0;
-    (*(s))->externalType = 0;
+    (*(s))->externalType = CODE;
     (*(s))->next = NULL;
 }
 
@@ -25,7 +25,7 @@ void constSymbol(Symbol **s)
     output: the new macro node already connected to the list
 */
 Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line, char *input, Stype externType)
-{ /*do i need to return here?*/
+{
     char *str = (char *)malloc(strlen(name) * (sizeof(char) + 1));
     Symbol *current_node = header;
     bool existsAlready = FALSE;
@@ -36,23 +36,50 @@ Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line, char *
         header->hash = hasher(str);
         header->type = type;
         header->line = line;
-        header->externalType = CODE;
-        header->input = (char *)malloc((strlen(input) + 1) * (sizeof(char)));
-        strcpy(header->input, input);
+        header->externalType = externType;
+        if (input != NULL)
+        {
+            header->input = (char *)malloc((strlen(input) + 1) * (sizeof(char)));
+            strcpy(header->input, input);
+        }
+        else
+        {
+            header->input = NULL;
+        }
     }
     else
-    {
+    { /*checking the first spot*/
+        if (strcmp(current_node->name, name) == 0)
+        {
+            if ((type != EXTERN && type != ENTRY) && line != -1) /*if line -1 we are in the extern phase and we don't really care about duplicates*/
+            {
+                existsAlready = TRUE;
+            }
+            if (current_node->next != NULL)
+                current_node = current_node->next;
+        }
+
         while (current_node->next != NULL && existsAlready == FALSE)
         {
-            if (strcmp(current_node->name, name))
+            if (strcmp(current_node->name, name) == 0)
             {
-                if (type != EXTERN && line != -1) /*if line -1 we are in the extern phase and we don't really care about duplicates*/
+                if ((type != EXTERN && type != ENTRY) && line != -1) /*if line -1 we are in the extern phase and we don't really care about duplicates*/
+                {
                     existsAlready = TRUE;
-                continue;
+                    continue;
+                }
             }
             current_node = current_node->next;
         }
 
+        if (current_node->next == NULL && strcmp(current_node->name, name) == 0)
+        {
+            if ((type != EXTERN && type != ENTRY) && line != -1) /*if line -1 we are in the extern phase and we don't really care about duplicates*/
+            {
+                existsAlready = TRUE;
+            }
+        }
+        /*last check on current*/
         if (existsAlready == FALSE)
         {
             constSymbol(&(current_node->next));
@@ -60,10 +87,12 @@ Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line, char *
             current_node->next->hash = hasher(str);
             current_node->next->type = type;
             current_node->next->line = line;
-            header->externalType = CODE;
-
-            current_node->next->input = (char *)malloc((strlen(input) + 1) * (sizeof(char)));
-            strcpy(current_node->next->input, input);
+            current_node->next->externalType = externType;
+            if (input != NULL)
+            {
+                current_node->next->input = (char *)malloc((strlen(input) + 1) * (sizeof(char)));
+                strcpy(current_node->next->input, input);
+            }
         }
         else
         {
@@ -87,15 +116,12 @@ Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line, char *
             current_node->next->hash = hasher(str);
             current_node->next->type = type;
             current_node->next->line = line;
-            header->externalType = externType;
-
-            current_node->next->input = (char *)malloc((strlen(input) + 1) * (sizeof(char)));
-            strcpy(current_node->next->input, input);
-/*
-            else if (type == ENTRY)
+            current_node->next->externalType = externType;
+            if (input != NULL)
             {
-                current_node->externalType = ENTRY;
-            }*/
+                current_node->next->input = (char *)malloc((strlen(input) + 1) * (sizeof(char)));
+                strcpy(current_node->next->input, input);
+            }
         }
     }
     return current_node;
@@ -124,22 +150,22 @@ void freeSyList(Symbol *head)
 */
 Stype checkSymbolType(char *str)
 {
-    if (strcmp(str, ".data"))
+    if (strcmp(str, "data") == 0)
     {
         return DATA;
     }
 
-    if (strcmp(str, ".string"))
+    if (strcmp(str, "string") == 0)
     {
         return STRING;
     }
 
-    if (strcmp(str, ".entry"))
+    if (strcmp(str, "entry") == 0)
     {
         return ENTRY;
     }
 
-    if (strcmp(str, ".extern"))
+    if (strcmp(str, "extern") == 0)
     {
         return EXTERN;
     }
@@ -151,21 +177,28 @@ Stype checkSymbolType(char *str)
     input: a string, the symbol table
     output: the line where the symbol appeared, if it doesn't exist,-1
 */
-int existInSymbolTable(char *oper, Symbol *sym_list)
+int existInSymbolTable(char *oper, Symbol *sym_list, int mode)
 {
     double hsh = hasher(oper);
-
-    while (sym_list->next != NULL)
+    int line = -1;
+    while (sym_list != NULL && line == -1)
     {
-        if (sym_list->hash == hsh)
-            return sym_list->line;
+        if (sym_list->hash == hsh && (sym_list->line != -1 || sym_list->type == EXTERN && sym_list->line == -1))
+        {
+            if (sym_list->type == EXTERN)
+                line = 0;
+            else
+            {
+                line = sym_list->line;
+            }
+        }
         sym_list = sym_list->next;
     }
-    if (sym_list != NULL && sym_list->hash != 0 && sym_list->hash != hsh)
+    if (sym_list != NULL &&line==-1 && sym_list->hash != 0 && sym_list->hash != hsh)
     {
         return -1;
     }
-    return sym_list->line;
+    return line;
 }
 
 /*
@@ -177,7 +210,7 @@ Stype symbolTypeFromTable(char *oper, Symbol *sym_list)
 {
     double hsh = hasher(oper);
 
-    while (sym_list->next != NULL)
+    while (sym_list != NULL)
     {
         if (sym_list->hash == hsh)
             return (sym_list->type == EXTERN || sym_list->externalType == EXTERN) ? EXTERN : sym_list->type;
@@ -197,7 +230,7 @@ Stype symbolTypeFromTable(char *oper, Symbol *sym_list)
 int countSymbols(Symbol *header)
 {
     int i = 0;
-    while (header->input != NULL)
+    while (header != NULL && header->name != NULL)
     {
         if (header->type != CODE && header->type != ENTRY && header->type != EXTERN)
             i++;
@@ -213,9 +246,9 @@ int countSymbols(Symbol *header)
 void fillSymArr(Symbol *arr[], int numOfSymbols, Symbol *header)
 {
     int i = 0;
-    while (header->input != NULL && i < numOfSymbols)
+    while (header != NULL && header->name != NULL && i < numOfSymbols)
     {
-        if (header->type != CODE)
+        if (header->type == DATA||header->type == STRING)
         {
             arr[i] = header;
             i++;
@@ -230,7 +263,7 @@ void fillSymArr(Symbol *arr[], int numOfSymbols, Symbol *header)
 */
 int SymbolCompare(const void *a, const void *b)
 {
-    return ((Symbol *)a)->line > ((Symbol *)b)->line;
+    return ((Symbol *)a)->line < ((Symbol *)b)->line;
 }
 
 /*
@@ -239,15 +272,16 @@ int SymbolCompare(const void *a, const void *b)
 */
 void fixEntryPositions(Symbol *dataHeader)
 {
-    Symbol *pointer = NULL, *current_node = dataHeader;
+    Symbol *pointer = NULL;
+    Symbol *current_node = dataHeader;
     bool found = FALSE;
-    while (current_node->name != NULL)
+    while (current_node != NULL && current_node->name != NULL)
     {
-        if (current_node->type == ENTRY)
+        if (current_node->type == ENTRY && current_node->line == -1)
         {
             found = FALSE;
             pointer = dataHeader;
-            while (pointer->name != NULL && !found)
+            while (pointer != NULL && !found)
             {
                 if (pointer->type != ENTRY && pointer->hash == current_node->hash)
                 {
@@ -260,4 +294,3 @@ void fixEntryPositions(Symbol *dataHeader)
         current_node = current_node->next;
     }
 }
-

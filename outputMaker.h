@@ -9,4 +9,4 @@ FileList* toOutput(FILE*, char*);
 
 char binaryTranslate(char);
 
-#endif // OUTPUTMAKER_H
+#endif 

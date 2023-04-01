@@ -4,12 +4,13 @@
 #include <stdio.h>
 #define MAX_LINE_SIZE 81
 #define MAX_LABEL_SIZE 31
+#define BINARY_LINE_SIZE 15
 #define OPERATORS_AMOUNT 16
 #define SIMULATION 1
 #define EXECUTION 0
 #define LABEL_END ':'
 #define COMMENT ';'
-#define symbolMarker '.' /* hanhaya- direction? idk*/
+#define symbolMarker '.' /* hanhaya- direction?instruction?*/
 #define stringMarker '"' /* "abcd"*/
 #define delimints "    \t \f \r"
 #define SPACE_CHAR ' '
@@ -88,4 +89,4 @@ typedef enum bool
     FALSE = 0
 } bool;
 
-#endif // STRUCT_H
+#endif 

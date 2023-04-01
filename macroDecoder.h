@@ -7,4 +7,4 @@
 
 FileList* macroDecoder(FILE*, char*);
 
-#endif // MACRODECODER_H
+#endif
