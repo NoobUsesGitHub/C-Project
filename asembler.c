@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "helpers.h"
+#include "FileListFuncs.h"
 #include "outputMaker.h"
 #include "binaryMaker.h"
 #include "macroDecoder.h"
