@@ -100,7 +100,7 @@ void *addSymbolToList(Symbol *header, char *name, Stype type, int line, char *in
             {
                 current_node->name = NULL;
                 fprintf(stdout, "Symbol %s ay line %d exists already!!", name, line);
-                return current_node->next;
+                exit();
             }
             /*
                 entry
@@ -124,7 +124,6 @@ void *addSymbolToList(Symbol *header, char *name, Stype type, int line, char *in
             }
         }
     }
-    return current_node;
 }
 
 /*
@@ -194,7 +193,7 @@ int existInSymbolTable(char *oper, Symbol *sym_list, int mode)
         }
         sym_list = sym_list->next;
     }
-    if (sym_list != NULL &&line==-1 && sym_list->hash != 0 && sym_list->hash != hsh)
+    if (sym_list != NULL && line == -1 && sym_list->hash != 0 && sym_list->hash != hsh)
     {
         return -1;
     }
@@ -248,7 +247,7 @@ void fillSymArr(Symbol *arr[], int numOfSymbols, Symbol *header)
     int i = 0;
     while (header != NULL && header->name != NULL && i < numOfSymbols)
     {
-        if (header->type == DATA||header->type == STRING)
+        if (header->type == DATA || header->type == STRING)
         {
             arr[i] = header;
             i++;

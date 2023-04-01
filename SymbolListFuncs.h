@@ -8,7 +8,7 @@
 
 /*SymbolListFuncs*/
 
-Symbol *addSymbolToList(Symbol *, char *, Stype, int, char *, Stype);
+void *addSymbolToList(Symbol *, char *, Stype, int, char *, Stype);
 void freeSyList(Symbol *);
 Stype checkSymbolType(char *);
 int existInSymbolTable(char *, Symbol *, int);
