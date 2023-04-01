@@ -44,7 +44,9 @@
     "macrodecoder.h": "c",
     "ctype.h": "c",
     "outputmaker.h": "c",
-    "symbollistfuncs.h": "c"
+    "symbollistfuncs.h": "c",
+    "filelistfuncs.h": "c",
+    "binarymaker.h": "c"
   },
   "cmake.debugConfig": {
     "args": ["testerrors"]
