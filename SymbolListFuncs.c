@@ -42,24 +42,44 @@ Symbol *addSymbolToList(Symbol *header, char *name, Stype type, int line, char *
             header->input = (char *)malloc((strlen(input) + 1) * (sizeof(char)));
             strcpy(header->input, input);
         }
+        else
+        {
+            header->input = NULL;
+        }
     }
     else
-    {
+    { /*checking the first spot*/
+        if (strcmp(current_node->name, name) == 0)
+        {
+            if ((type != EXTERN && type != ENTRY) && line != -1) /*if line -1 we are in the extern phase and we don't really care about duplicates*/
+            {
+                existsAlready = TRUE;
+            }
+            if (current_node->next != NULL)
+                current_node = current_node->next;
+        }
+
         while (current_node->next != NULL && existsAlready == FALSE)
         {
             if (strcmp(current_node->name, name) == 0)
             {
-                if ((type != EXTERN || type != ENTRY) && line != -1) /*if line -1 we are in the extern phase and we don't really care about duplicates*/
+                if ((type != EXTERN && type != ENTRY) && line != -1) /*if line -1 we are in the extern phase and we don't really care about duplicates*/
                 {
                     existsAlready = TRUE;
                     continue;
                 }
-                current_node = current_node->next;
-                continue;
             }
             current_node = current_node->next;
         }
 
+        if (current_node->next == NULL && strcmp(current_node->name, name) == 0)
+        {
+            if ((type != EXTERN && type != ENTRY) && line != -1) /*if line -1 we are in the extern phase and we don't really care about duplicates*/
+            {
+                existsAlready = TRUE;
+            }
+        }
+        /*last check on current*/
         if (existsAlready == FALSE)
         {
             constSymbol(&(current_node->next));
@@ -161,14 +181,20 @@ int existInSymbolTable(char *oper, Symbol *sym_list, int mode)
 {
     double hsh = hasher(oper);
     int line = -1;
-    while (sym_list != NULL)
+    while (sym_list != NULL && line == -1)
     {
         if (sym_list->hash == hsh && (sym_list->line != -1 || sym_list->type == EXTERN && sym_list->line == -1))
+        {
             if (sym_list->type == EXTERN)
                 line = 0;
+            else
+            {
+                line = sym_list->line;
+            }
+        }
         sym_list = sym_list->next;
     }
-    if (sym_list != NULL && sym_list->hash != 0 && sym_list->hash != hsh)
+    if (sym_list != NULL &&line==-1 && sym_list->hash != 0 && sym_list->hash != hsh)
     {
         return -1;
     }
@@ -222,7 +248,7 @@ void fillSymArr(Symbol *arr[], int numOfSymbols, Symbol *header)
     int i = 0;
     while (header != NULL && header->name != NULL && i < numOfSymbols)
     {
-        if (header->type != CODE)
+        if (header->type == DATA||header->type == STRING)
         {
             arr[i] = header;
             i++;

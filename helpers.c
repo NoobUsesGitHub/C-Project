@@ -253,7 +253,7 @@ void removeRedundantSpaces(char *str)
 {
     int i = 0, j = 0, len = strlen(str);
     char temp[len * 2];
-    clearStr(temp,len * 2);
+    clearStr(temp, len * 2);
     while (i < len)
     {
         if (isspace(str[i]) != 0)
@@ -306,7 +306,11 @@ OperatorType stringToOperatorType(char *operator_name)
     {
         str[i] = tolower(str[i]);
     }
-
+    if (operator_name[strlen(operator_name) - 1] == '\n')
+    {
+        operator_name[strlen(operator_name) - 1] = '\0';
+        str[strlen(operator_name) - 1] = '\0';
+    }
     if (strcmp(operator_name, "mov") == 0 || strcmp(str, "MOV") == 0)
     {
         return MOV;
@@ -410,7 +414,7 @@ void dumpDataOpers(char *str, int *cnt, int mode, FILE *fp)
     char binaryChar[BINARY_LINE_SIZE];
     strcpy(binaryChar, "00000000000000");
     int value, i = 0, j = 0;
-    while (*str != '\n' && *str != '\0' && str!=NULL&&massIsSpace(str) != 1)
+    while (*str != '\n' && *str != '\0' && str != NULL && massIsSpace(str) != 1)
     {
         /*will run on the string until i finish the number or meet "," */
         if (*str == COMMA)
@@ -419,8 +423,10 @@ void dumpDataOpers(char *str, int *cnt, int mode, FILE *fp)
             value = atoi(temp);
             intToBinary(binaryChar, value);
             if (mode != SIMULATION)
+            {
                 fprintf(fp, "%d\t%s\n", *cnt, binaryChar);
-            *cnt = *cnt + 1;
+                *cnt = *cnt + 1;
+            }
             clearStr(temp, size);
             str++;
         }
@@ -431,14 +437,16 @@ void dumpDataOpers(char *str, int *cnt, int mode, FILE *fp)
             i++;
         }
     }
-    if (temp!=NULL&&massIsSpace(temp) != 1)
+    if (temp != NULL && massIsSpace(temp) != 1)
     {
         strcpy(binaryChar, "00000000000000");
         value = atoi(temp);
         intToBinary(binaryChar, value);
         if (mode != SIMULATION)
+        {
             fprintf(fp, "%d\t%s\n", *cnt, binaryChar);
-        *cnt = *cnt + 1;
+            *cnt = *cnt + 1;
+        }
         clearStr(temp, size);
     }
 }
@@ -458,8 +466,10 @@ void dumpStr(char *oper, int *cnt, int mode, FILE *fp)
         strcpy(binaryChar, "00000000000000");
         intToBinary(binaryChar, value);
         if (mode != SIMULATION)
+        {
             fprintf(fp, "%d\t%s\n", *cnt, binaryChar);
-        *cnt = *cnt + 1;
+            *cnt = *cnt + 1;
+        }
         oper++;
     }
 }
@@ -846,7 +856,7 @@ int checkAddressType(char *oper, OperatorType opcode, int mode, Symbol *sym_list
     if (realRegister(oper) != -1)
         return 3;
 
-    if (oper!=NULL&&massIsSpace(oper) == 1)
+    if (oper != NULL && massIsSpace(oper) == 1)
         return -1;
 
     if (opcode == JMP || opcode == BNE || opcode == JSR)

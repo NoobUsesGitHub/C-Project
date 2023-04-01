@@ -46,7 +46,7 @@
     "outputmaker.h": "c"
   },
   "cmake.debugConfig": {
-    "args": ["test2/test2"]
+    "args": ["test"]
   },
   "C_Cpp.errorSquiggles": "disabled"
 }

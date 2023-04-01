@@ -26,7 +26,7 @@ FileList *toBinary(FILE *fp, char *fileName)
     FileList *binaryFileNode;
     constNode(&binaryFileNode);
     strcpy(strNewName, fileName);
-    strNewName[strlen(strNewName) - 1] = 'n'; 
+    strNewName[strlen(strNewName) - 1] = 'n';
     binaryFileNode->fileName = (char *)malloc(strlen(strNewName) * sizeof(char));
     strcpy(binaryFileNode->fileName, strNewName);
     binaryFileNode->file = fopen(strNewName, "w");
@@ -49,7 +49,9 @@ FileList *toBinary(FILE *fp, char *fileName)
         i = 0;
         foundLabel = FALSE;
         bit = str;
-
+        /*skipping to first letter*/
+        while (isspace(*bit) != 0)
+            bit++;
         /*checking for comment */
         if (*bit == COMMENT || *bit == '\n' || *bit == '\0')
         {
@@ -144,7 +146,6 @@ FileList *toBinary(FILE *fp, char *fileName)
                 oper1[i - 1] = '\n';
                 oper1[i] = '\0';
 
-
                 if (foundLabel == FALSE)
                 {
                     clearStr(label, MAX_LABEL_SIZE);
@@ -227,6 +228,8 @@ FileList *toBinary(FILE *fp, char *fileName)
         switch (spaceCount)
         {
         case 0: /*opcode*/
+            strcpy(opcode, pch);
+            op_code_type = stringToOperatorType(opcode);
             break;
 
         case 1: /*opcode oper1*/
@@ -302,6 +305,8 @@ FileList *toBinary(FILE *fp, char *fileName)
         i = 0;
         bit = str;
         foundLabel = FALSE;
+        while (isspace(*bit) != 0)
+            bit++;
 
         /*checking for comment */
         if (*bit == COMMENT || *bit == '\n' || *bit == '\0')
@@ -359,6 +364,9 @@ FileList *toBinary(FILE *fp, char *fileName)
         switch (spaceCount)
         {
         case 0: /*opcode*/
+
+            strcpy(opcode, pch);
+            op_code_type = stringToOperatorType(opcode);
             break;
 
         case 1: /*opcode oper1*/
