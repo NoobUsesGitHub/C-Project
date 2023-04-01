@@ -816,7 +816,7 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
             strcpyBySteps(binary + 2, temp + 2, 2);
         }
         strcpy(temp, "0010");
-        strcpyBySteps(binary+8,temp,4);
+        strcpyBySteps(binary + 8, temp, 4);
         if (massIsSpace(label) != 1)
             needToPrintLabel = TRUE;
     }
@@ -830,7 +830,10 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
             checkIfExternal(label, *IC, sym_list);
         intToBinary(binary, existInSymbolTable(label, sym_list, EXECUTION));
         shiftLeftChar(binary, 2);
-        strcpy(binary + 12, "10");
+        if (mode==EXECUTION&& symbolTypeFromTable(label, sym_list) == EXTERN)
+            strcpy(binary + 12, "01");
+        else
+            strcpy(binary + 12, "10");
         if (mode != SIMULATION)
             fprintf(fp, "%d\t%s\n", *IC, binary);
         *IC = *IC + 1;
