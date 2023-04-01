@@ -10,7 +10,7 @@ SymbolListFuncs.o: SymbolListFuncs.h SymbolListFuncs.c struct.h helpers.o
 helpers.o: helpers.h helpers.c struct.h outputMaker.o SymbolListFuncs.o
 	gcc -Wall -ansi -c helpers.c -o helpers.o
 
-macroDecoder.o: macroDecoder.h macroDecoder. helpers.o
+macroDecoder.o: macroDecoder.h macroDecoder.o helpers.o
 	gcc -Wall -ansi -c macroDecoder.c -o macroDecoder.o
 
 binaryMaker.o: binaryMaker.h binaryMaker.c helpers.o FileListFuncs.o SymbolListFuncs.o struct.h
