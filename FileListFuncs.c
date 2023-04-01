@@ -16,6 +16,10 @@ void constNode(FileList **f)
     (*(f))->next = NULL;
 }
 
+/*
+    input: a file header and a file to add it to and it's name
+    will add the file to the linked list
+*/
 void addToList(FileList *header, FILE *fp, char *fileName)
 {
     char *str = (char *)malloc(strlen(fileName) * (sizeof(char) + 1));
@@ -82,6 +86,10 @@ void removeFileList(FileList *head)
     free(head);
 }
 
+/*
+    input: the input from the user
+    output: will open the files and keep them in the filelist node header included
+*/
 void stringToFiles(int argc, char *argv[], FileList **header)
 {
     int i, maxSize = 0;

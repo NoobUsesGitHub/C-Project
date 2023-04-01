@@ -21,7 +21,7 @@ void constSymbol(Symbol **s)
 }
 
 /*
-    input: a header node, a nase for the new Symbol and it's type, line number, it's string of data and its other type
+    input: a header node, a naצe for the new Symbol and it's type, line number, it's string of data and its other type
    will link the new symbol to the main table
 */
 void *addSymbolToList(Symbol *header, char *name, Stype type, int line, char *input, Stype externType)
@@ -128,7 +128,7 @@ void *addSymbolToList(Symbol *header, char *name, Stype type, int line, char *in
 }
 
 /*
- * input:a file node header
+ * input:a Symbol node header
  * will close all file objects
  */
 void freeSyList(Symbol *head)
@@ -260,6 +260,7 @@ void fillSymArr(Symbol *arr[], int numOfSymbols, Symbol *header)
 /*
     input: two pointers
     output: 1 if as symbols a's line position is greater than b's line position
+    used for Qsort
 */
 int SymbolCompare(const void *a, const void *b)
 {
@@ -292,5 +293,113 @@ void fixEntryPositions(Symbol *dataHeader)
             }
         }
         current_node = current_node->next;
+    }
+}
+
+
+/*
+    input: a header of the symbols table, the file name, a data symbol type, and the extention
+    will push all the data symbols of that type to a file
+*/
+void dumpSymbols(Symbol *header, char *fileName, Stype stype, char *extention)
+{
+    int size = strlen(fileName) + 1;
+    char newName[size];
+    char binary[BINARY_LINE_SIZE];
+    bool found_any = FALSE;
+    char *bit = NULL;
+    strcpy(binary, "00000000000000");
+    strcpy(newName, fileName);
+    strcpyBySteps(newName + strlen(newName) + 1 - strlen(extention), extention, 4);
+    newName[size] = 0;
+    FILE *fp = fopen(newName, "w");
+    if (fp == NULL)
+        fprintf(stdout, "we had trouble opening a %s file", extention);
+    while (header != NULL)
+    {
+        if (stype != EXTERN)
+        {
+            if (header->type == stype || (header->externalType == stype && header->externalType == CODE) || (stype == DATA && header->type == STRING))
+            {
+                found_any = TRUE;
+                intToBinary(binary, header->line);
+                bit = binary;
+                while (*bit != '\0')
+                {
+                    *bit = binaryTranslate(*bit);
+                    bit++;
+                }
+                fprintf(fp, "%s\t%s\n", header->name, binary);
+                strcpy(binary, "00000000000000");
+            }
+            else
+            {
+                if (header->type != stype && header->externalType == stype)
+                {
+                    found_any = TRUE;
+                    intToBinary(binary, header->line);
+                    bit = binary;
+                    while (*bit != '\0')
+                    {
+                        *bit = binaryTranslate(*bit);
+                        bit++;
+                    }
+                    fprintf(fp, "%s\t%s\n", header->name, binary);
+                    strcpy(binary, "00000000000000");
+                }
+            }
+        }
+        else
+        {
+            if (header->type == CODE && header->externalType == EXTERN)
+            {
+                found_any = TRUE;
+                intToBinary(binary, header->line);
+                bit = binary;
+                while (*bit != '\0')
+                {
+                    *bit = binaryTranslate(*bit);
+                    bit++;
+                }
+                fprintf(fp, "%s\t%s\n", header->name, binary);
+                strcpy(binary, "00000000000000");
+            }
+        }
+        header = header->next;
+    }
+    fclose(fp);
+    if (!found_any)
+        remove(newName);
+}
+
+/*
+input: the header of the list of symbols, the Instruction counter and file to print to
+will create an array and print the symbols ordered by line
+*/
+void dumpSymbolsToMainFile(Symbol *header, int *IC, FILE *fp, int mode)
+{
+    int numOfSymbols = countSymbols(header);
+    Symbol *arr[numOfSymbols];
+    fillSymArr(arr, numOfSymbols, header);
+    qsort(arr, numOfSymbols, sizeof(Symbol *), SymbolCompare);
+
+    int i = 0;
+    numOfSymbols = countSymbols(header);
+    for (; i < numOfSymbols; i++)
+    {
+        switch (arr[i]->type)
+        {
+        case STRING:
+            dumpStr(arr[i]->input, IC, mode, fp);
+            break;
+
+        case DATA:
+            dumpDataOpers(arr[i]->input, IC, mode, fp);
+            break;
+        case CODE:
+        case EXTERN:
+        case ENTRY:
+            break;
+        }
     }
 }
