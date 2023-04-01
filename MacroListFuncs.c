@@ -4,10 +4,6 @@
 #include "helpers.h"
 #include "MacroListFuncs.h"
 
-
-
-
-
 /*
     input: a header node, a name for the new macro and it's list of strings that it unfolds to
     output: the new macro node already connected to the list
