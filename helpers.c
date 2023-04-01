@@ -852,7 +852,7 @@ int calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int adT
                 strcpy(binary + 12, "10");
         }else
         {
-            fprintf(stdout,"label %s doesn't exist!",label);
+            fprintf(stdout,"label %s doesn't exist!\n",label);
             strcpy(binary + 12, "10");
             return 1;
         }
