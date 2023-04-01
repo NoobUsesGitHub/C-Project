@@ -43,7 +43,8 @@
     "helpers.h": "c",
     "macrodecoder.h": "c",
     "ctype.h": "c",
-    "outputmaker.h": "c"
+    "outputmaker.h": "c",
+    "symbollistfuncs.h": "c"
   },
   "cmake.debugConfig": {
     "args": ["testerrors"]

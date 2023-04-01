@@ -6,7 +6,7 @@
 #include "SymbolListFuncs.h"
 
 /*
- * input: a pointer for null macro node object
+ * input: a pointer for null symbol node object
  * output: the node
  */
 void constSymbol(Symbol **s)
@@ -124,6 +124,7 @@ void *addSymbolToList(Symbol *header, char *name, Stype type, int line, char *in
             }
         }
     }
+    return 0;
 }
 
 /*
