@@ -3,6 +3,7 @@
 #include <string.h>
 #include "helpers.h"
 #include "struct.h"
+#include "outputMaker.h"
 #include "SymbolListFuncs.h"
 
 /*
