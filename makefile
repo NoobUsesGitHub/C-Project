@@ -1,12 +1,11 @@
 asembler.out: asembler.o helpers.o macroDecoder.o binaryMaker.o outputMaker.o FileListFuncs.o MacroListFuncs.o SymbolListFuncs.o
-	gcc -Wall -ansi asembler.o helpers.o macroDecoder.o binaryMaker.o outputMaker.o  FileListFuncs.o MacroListFuncs.o -o asembler.out
-
+	gcc -Wall -ansi asembler.o helpers.o macroDecoder.o binaryMaker.o outputMaker.o  FileListFuncs.o MacroListFuncs.o SymbolListFuncs.o -o asembler.out
 
 SymbolListFuncs.o:
 	gcc -Wall -ansi -c SymbolListFuncs.c -o SymbolListFuncs.o
 
-helpers.o: SymbolListFuncs.o outputMaker.o
-	gcc -Wall -ansi -c helpers.c outputMaker.o SymbolListFuncs.o -o helpers.o
+helpers.o: SymbolListFuncs.o
+	gcc -Wall -ansi -c helpers.c SymbolListFuncs.o -o helpers.o
 
 macroDecoder.o: MacroListFuncs.o
 	gcc -Wall -ansi -c macroDecoder.c MacroListFuncs.o -o macroDecoder.o
