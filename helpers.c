@@ -682,7 +682,7 @@ void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1,
         case 3: /*register*/
             /*regCode(oper1)+A(00) */
             intToBinary(binary, realRegister(oper1));
-            shiftLeftChar(binary, 7);
+            shiftLeftChar(binary, 8);
             if (mode != SIMULATION)
                 fprintf(fp, "%d\t%s\n", *IC, binary);
             *IC = *IC + 1;
