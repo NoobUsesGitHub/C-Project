@@ -8,6 +8,8 @@
 
 /*SymbolListFuncs*/
 
+
+void constSymbol(Symbol**);
 void *addSymbolToList(Symbol *, char *, Stype, int, char *, Stype);
 void freeSyList(Symbol *);
 Stype checkSymbolType(char *);
