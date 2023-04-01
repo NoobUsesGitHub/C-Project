@@ -617,6 +617,7 @@ bool dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, in
     foundErr= calculateOpcodeBinaryAndPrint(op_type, adTypeOper1, adTypeOper2, mode, IC, sym_list, label, fp)==1?TRUE:FALSE;
     /*print the opers binary*/
     calculateOperatorsBinaryAndPrint(oper1, oper2, adTypeOper1, adTypeOper2, mode, IC, sym_list, fp);
+    return foundErr;
 }
 
 void calculateOperatorsBinaryAndPrint(char *oper1, char *oper2, int adTypeOper1, int adTypeOper2, int mode, int *IC, Symbol *sym_list, FILE *fp)
