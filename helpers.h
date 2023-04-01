@@ -45,11 +45,11 @@ int getNumOfOperands(OperatorType, Operator*);
 
 int realRegister(char*);
 
-bool isAddTypeCorrect(OperatorType,int, int, Operator*);
+bool isAddTypeCorrect(OperatorType,int, int, Operator*,int);
 
 bool existInAddressType(int, int[]);
 
-void dumpFullInstruction(char*,char*,char*,char*,int,int*,int,Operator*, Symbol *,FILE*);
+bool dumpFullInstruction(char*,char*,char*,char*,int,int*,int,Operator*, Symbol *,FILE*);
 
 int checkAddressType(char*, OperatorType, int, Symbol*);
 
@@ -59,12 +59,13 @@ int breakDownJumps(char *, char *,char*);
 
 void dumpSymbols(Symbol *, char *, Stype, char *);
 
-void calculateOpcodeBinaryAndPrint(OperatorType , int , int, int, int *, Symbol *, char *,FILE*);
+int calculateOpcodeBinaryAndPrint(OperatorType , int , int, int, int *, Symbol *, char *,FILE*);
 
 void calculateOperatorsBinaryAndPrint(char *, char *, int, int, int, int *, Symbol *,FILE*);
 
 
-void dumpSymbolsToMainFile(Symbol *, int, FILE *);
+void dumpSymbolsToMainFile(Symbol *, int*, FILE *,int);
 
 void checkIfExternal(char *, int, Symbol *);
-#endif // HELPERS_H
+int massIsSpace(char*);
+#endif 

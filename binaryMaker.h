@@ -7,4 +7,4 @@
 
 FileList* toBinary(FILE*, char*);
 
-#endif // BINARYMAKERS_H
+#endif
