@@ -10,7 +10,7 @@ FileList *toBinary(FILE *fp, char *fileName)
 {
     Operator *op_table = createOperatorsTable();
 
-    int IC = 100, DC = 0, wordCount = 0, spaceCount = 0, i = 0; /*wordCount=L*/
+    int IC = 100, DC = 0,comma_counter=0, wordCount = 0, spaceCount = 0, i = 0; /*wordCount=L*/
     Stype stype = 0;
     bool skp = FALSE, foundSymbol = FALSE, foundErr = FALSE, foundLabel = FALSE;
     char *bit = NULL, label[MAX_LABEL_SIZE], dataTester[7], opcode[5];
@@ -143,8 +143,7 @@ FileList *toBinary(FILE *fp, char *fileName)
                     break;
                 }
                 bit++;
-                oper1[i - 1] = '\n';
-                oper1[i] = '\0';
+                oper1[i - 1] = '\0';
 
                 if (foundLabel == FALSE)
                 {
@@ -181,10 +180,13 @@ FileList *toBinary(FILE *fp, char *fileName)
 
             case DATA:
                 i = 0;
+                comma_counter=0;
                 while (*bit != '\n')
                 {
                     if (isLetter(bit) == TRUE)
                     {
+                        if(*bit==COMMA)
+                            comma_counter++;
                         oper1[i] = *bit;
                         i++;
                     }
@@ -198,7 +200,7 @@ FileList *toBinary(FILE *fp, char *fileName)
                 }
 
                 dataNode = addSymbolToList(dataHeader, label, stype, DC, oper1, CODE);
-                DC++;
+                DC=DC+comma_counter+1;
                 break;
             }
             continue;

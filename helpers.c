@@ -169,7 +169,7 @@ double hasher(char *str)
     while (str[i] != '\0')
     {
         if (str[i] != '\n')
-            hash += ((int)(str[i])) / (size - i) * 7.0*size; /*hashing func- takes every letter and its place and calculates a key for it, adding them together*/
+            hash += ((int)(str[i])) / (size - i) * 7.0 * size; /*hashing func- takes every letter and its place and calculates a key for it, adding them together*/
         i++;
     }
     return hash;
@@ -471,6 +471,15 @@ void dumpStr(char *oper, int *cnt, int mode, FILE *fp)
         }
         oper++;
     }
+    /*we want to print the /0 though*/
+    value = (int)(*oper);
+    strcpy(binaryChar, "00000000000000");
+    intToBinary(binaryChar, value);
+    if (mode != SIMULATION)
+    {
+        fprintf(fp, "%d\t%s\n", *cnt, binaryChar);
+        *cnt = *cnt + 1;
+    }
 }
 
 /*
@@ -603,8 +612,8 @@ void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, in
     }
 
     /*print the opcode binary*/
-    if(opersCnt==1&&strcmp(oper1,label)==0)
-        clearStr(label,MAX_LABEL_SIZE);
+    if (opersCnt == 1 && strcmp(oper1, label) == 0)
+        clearStr(label, MAX_LABEL_SIZE);
     calculateOpcodeBinaryAndPrint(op_type, adTypeOper1, adTypeOper2, mode, IC, sym_list, label, fp);
     /*print the opers binary*/
     calculateOperatorsBinaryAndPrint(oper1, oper2, adTypeOper1, adTypeOper2, mode, IC, sym_list, fp);
@@ -781,7 +790,7 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
     if (op_type == JMP || op_type == JSR || op_type == BNE)
     {
         /*first 12-13*/
-        if (adTypeOper1 == 2)
+        if (adTypeOper1 == 1)
         {
             temp[3] = '1';
             temp[2] = '0';
@@ -794,7 +803,7 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
             strcpyBySteps(binary, temp + 2, 2);
         }
         /*second 10-11*/
-        if (adTypeOper2 == 2)
+        if (adTypeOper2 == 1)
         {
             temp[3] = '1';
             temp[2] = '0';
@@ -806,7 +815,8 @@ void calculateOpcodeBinaryAndPrint(OperatorType op_type, int adTypeOper1, int ad
             temp[2] = '1';
             strcpyBySteps(binary + 2, temp + 2, 2);
         }
-        needToPrintLabel = TRUE;
+        if (massIsSpace(label) != 1)
+            needToPrintLabel = TRUE;
     }
     if (mode != SIMULATION)
         fprintf(fp, "%d\t%s\n", *IC, binary);
@@ -862,7 +872,7 @@ int checkAddressType(char *oper, OperatorType opcode, int mode, Symbol *sym_list
 
     if (mode == SIMULATION || (mode != SIMULATION && existInSymbolTable(oper, sym_list, SIMULATION) != -1))
         return 1;
-    
+
     if (opcode == JMP || opcode == BNE || opcode == JSR)
         return 2;
     return -1;
