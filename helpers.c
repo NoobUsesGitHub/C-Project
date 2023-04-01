@@ -603,6 +603,8 @@ void dumpFullInstruction(char *label, char *opcode, char *oper1, char *oper2, in
     }
 
     /*print the opcode binary*/
+    if(opersCnt==1&&strcmp(oper1,label)==0)
+        clearStr(label,MAX_LABEL_SIZE);
     calculateOpcodeBinaryAndPrint(op_type, adTypeOper1, adTypeOper2, mode, IC, sym_list, label, fp);
     /*print the opers binary*/
     calculateOperatorsBinaryAndPrint(oper1, oper2, adTypeOper1, adTypeOper2, mode, IC, sym_list, fp);
@@ -858,11 +860,11 @@ int checkAddressType(char *oper, OperatorType opcode, int mode, Symbol *sym_list
     if (oper != NULL && massIsSpace(oper) == 1)
         return -1;
 
-    if (opcode == JMP || opcode == BNE || opcode == JSR)
-        return 2;
-
     if (mode == SIMULATION || (mode != SIMULATION && existInSymbolTable(oper, sym_list, SIMULATION) != -1))
         return 1;
+    
+    if (opcode == JMP || opcode == BNE || opcode == JSR)
+        return 2;
     return -1;
 }
 
