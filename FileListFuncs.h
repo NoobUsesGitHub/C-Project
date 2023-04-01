@@ -18,4 +18,4 @@ void reOpen(FileList*);
 
 void stringToFiles(int, char **, FileList**);
 
-#endif // FILELISTFUNCS_H
+#endif

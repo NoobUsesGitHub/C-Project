@@ -9,9 +9,9 @@
 /*SymbolListFuncs*/
 
 Symbol *addSymbolToList(Symbol *, char *, Stype, int, char *, Stype);
-void freeSyList(Symbol*);
-Stype checkSymbolType(char*);
-int existInSymbolTable(char *, Symbol *,int);
+void freeSyList(Symbol *);
+Stype checkSymbolType(char *);
+int existInSymbolTable(char *, Symbol *, int);
 Stype symbolTypeFromTable(char *, Symbol *);
 int countSymbols(Symbol *);
 void fillSymArr(Symbol *[], int, Symbol *);

@@ -89,4 +89,4 @@ typedef enum bool
     FALSE = 0
 } bool;
 
-#endif // STRUCT_H
+#endif 

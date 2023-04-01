@@ -68,4 +68,4 @@ void dumpSymbolsToMainFile(Symbol *, int*, FILE *,int);
 
 void checkIfExternal(char *, int, Symbol *);
 int massIsSpace(char*);
-#endif // HELPERS_H
+#endif 

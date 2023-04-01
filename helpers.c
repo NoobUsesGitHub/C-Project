@@ -194,7 +194,6 @@ void clearStr(char *str, int size)
 */
 bool isLetter(char *bit)
 {
-    char c = *bit;
     return (*bit != '\n' && isspace(*bit) == 0) ? TRUE : FALSE;
 }
 
