@@ -23,7 +23,7 @@ FileList *toOutput(FILE *fp, char *fileName)
   if (fp == NULL || outputFile->file == NULL)
   {
     outputFile->file = NULL;
-    fprintf(stdout, "couldn't create output file");
+    fprintf(stdout, "%s: couldn't create output file",fileName);
     return outputFile;
   }
   c = (char)fgetc(fp);

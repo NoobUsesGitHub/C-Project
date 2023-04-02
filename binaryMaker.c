@@ -34,7 +34,7 @@ FileList *toBinary(FILE *fp, char *fileName)
     if (fp == NULL || binaryFileNode->file == NULL)
     {
         binaryFileNode->file = NULL;
-        fprintf(stdout, "File is not correct\n"); /*need to print out to STDOUT and say which line*/
+        fprintf(stdout, "File %s is not correct\n",fileName); /*need to print out to STDOUT and say which line*/
         return binaryFileNode;
     }
 
@@ -85,7 +85,7 @@ FileList *toBinary(FILE *fp, char *fileName)
             /*check if label is a real register or opcode*/
             if (stringToOperatorType(label) != ERROR_NA || realRegister(label) != -1)
             {
-                fprintf(stdout, "label %s is a register or opcode!\n", label);
+                fprintf(stdout, "%s:label %s is a register or opcode!\n",fileName ,label);
                 foundErr = TRUE;
             }
         }
@@ -97,7 +97,7 @@ FileList *toBinary(FILE *fp, char *fileName)
 
         if (*bit == '\0')
         {
-            fprintf(stdout, "line %d eneded unexpectandly\n", IC);
+            fprintf(stdout, "%s: line %d eneded unexpectandly\n",fileName, IC);
             foundErr = TRUE;
         }
 
@@ -121,7 +121,7 @@ FileList *toBinary(FILE *fp, char *fileName)
 
             if (*bit == '\0' || *bit == '\n')
             {
-                fprintf(stdout, "line %d eneded unexpectandly\n", IC);
+                fprintf(stdout, "%s: line %d eneded unexpectandly\n",fileName, IC);
                 foundErr = TRUE;
             }
 
@@ -139,7 +139,7 @@ FileList *toBinary(FILE *fp, char *fileName)
 
                 if (oper1[i - 1] != '"' && MAX_LABEL_SIZE - 2 < i)
                 {
-                    fprintf(stdout, "string finished with no end\n");
+                    fprintf(stdout, "%s: string finished with no end\n",fileName);
                     foundErr = TRUE;
                     break;
                 }
@@ -256,7 +256,7 @@ FileList *toBinary(FILE *fp, char *fileName)
         
         if (spaceCount > 2)
         {
-            fprintf(stdout, "operator %s was found with too many operands\n", opcode);
+            fprintf(stdout, "%s: operator %s was found with too many operands\n",fileName, opcode);
             foundErr = TRUE;
             continue;
         }
@@ -269,18 +269,18 @@ FileList *toBinary(FILE *fp, char *fileName)
 
         if (op_code_type == ERROR_NA)
         { /*if opcode a real opcode*/
-            fprintf(stdout, "opcode %s not found\n", opcode);
+            fprintf(stdout, "%s: opcode %s not found\n",fileName, opcode);
             foundErr = TRUE;
         }
 
         if (stringToOperatorType(oper1) != ERROR_NA || stringToOperatorType(oper1) != ERROR_NA)
         { /*if any operator is a name of an opecode*/
-            fprintf(stdout, "operator src %s not found\n", oper1);
+            fprintf(stdout, "%s: operator src %s not found\n", fileName,oper1);
             foundErr = TRUE;
         }
         if (stringToOperatorType(oper2) != ERROR_NA || stringToOperatorType(oper2) != ERROR_NA)
         { /*if any operator is a name of an opecode*/
-            fprintf(stdout, "operator dest %s not found\n", oper2);
+            fprintf(stdout, "%s: operator dest %s not found\n",fileName, oper2);
             foundErr = TRUE;
         }
 
@@ -288,7 +288,7 @@ FileList *toBinary(FILE *fp, char *fileName)
     }
     if (foundErr == TRUE)
     {
-        fprintf(stdout, "there are error's in the first pass!\n");
+        fprintf(stdout, "%s: there are error's in the first pass!\n",fileName);
     }
     else
     {
@@ -405,19 +405,19 @@ FileList *toBinary(FILE *fp, char *fileName)
 
         if (op_code_type == ERROR_NA) /*if opcode a real opcode*/
         {                             /*if opcode a real opcode*/
-            fprintf(stdout, "opcode %s not found\n", opcode);
+            fprintf(stdout, "%s: opcode %s not found\n",fileName, opcode);
             foundErr = TRUE;
         }
 
         if (stringToOperatorType(oper1) != ERROR_NA || stringToOperatorType(oper1) != ERROR_NA) /*if any operator is a name of an opecode*/
         {                                                                                       /*if any operator is a name of an opecode*/
-            fprintf(stdout, "operator src %s not found\n", oper1);
+            fprintf(stdout, "%s: operator src %s not found\n",fileName, oper1);
             foundErr = TRUE;
         }
 
         if (stringToOperatorType(oper2) != ERROR_NA || stringToOperatorType(oper2) != ERROR_NA) /*if any operator is a name of an opecode*/
         {                                                                                       /*if any operator is a name of an opecode*/
-            fprintf(stdout, "operator dest %s not found\n", oper2);
+            fprintf(stdout, "%s: operator dest %s not found\n",fileName, oper2);
             foundErr = TRUE;
         }
 

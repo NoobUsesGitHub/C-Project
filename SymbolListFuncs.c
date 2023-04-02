@@ -137,9 +137,6 @@ void freeSyList(Symbol *head)
     Symbol *next = head;
     while (next != NULL)
     {
-        free(head->name);
-        if(head->input!=NULL)
-            free(head->input);
         next = head->next;
         free(head);
         head = next;

@@ -23,7 +23,7 @@ FileList *macroDecoder(FILE *fp, char *fileName)
     if (fp == NULL || macroFileNode->file == NULL)
     {
         macroFileNode->file = NULL;
-        fprintf(stdout, "Couldn't create a decoded macro file");
+        fprintf(stdout, "%s: Couldn't create a decoded macro file",fileName);
         return macroFileNode;
     }
 
@@ -53,7 +53,7 @@ FileList *macroDecoder(FILE *fp, char *fileName)
                 pch = strtok(NULL, delimints);
                 curMacro = addMacroToList(header, pch, NULL);
                 if (stringToOperatorType(pch) != -1)
-                    fprintf(stdout, "%s can't be a name of a macro!", pch);
+                    fprintf(stdout, "%s: %s can't be a name of a macro!",fileName, pch);
                 skp = TRUE;
             }
 
