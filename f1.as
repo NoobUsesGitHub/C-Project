@@ -1,4 +1,0 @@
-abcdef
-aaaa
-fefefe
-sd

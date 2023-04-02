@@ -422,7 +422,7 @@ FileList *toBinary(FILE *fp, char *fileName)
         }
 
         dumpFullInstruction(label, opcode, oper1, oper2, spaceCount, &IC, EXECUTION, op_table, dataHeader, binaryFileNode->file);
-        clearStr(str,MAX_LINE_SIZE);
+        
     }
     dumpSymbolsToMainFile(dataHeader, &IC, binaryFileNode->file, EXECUTION);
 
