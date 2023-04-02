@@ -19,7 +19,7 @@ FileList *macroDecoder(FILE *fp, char *fileName)
     strNewName[strlen(strNewName) - 1] = 'm';
     macroFileNode->fileName = (char *)malloc(strlen(strNewName) * sizeof(char));
     strcpy(macroFileNode->fileName, strNewName);
-    macroFileNode->file = fopen(strNewName, "r+");
+    macroFileNode->file = fopen(strNewName, "w+");
     if (fp == NULL || macroFileNode->file == NULL)
     {
         macroFileNode->file = NULL;
