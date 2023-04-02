@@ -30,7 +30,7 @@ FileList *toBinary(FILE *fp, char *fileName)
     strNewName[strlen(strNewName) - 1] = 'n';
     binaryFileNode->fileName = (char *)malloc(strlen(strNewName) * sizeof(char));
     strcpy(binaryFileNode->fileName, strNewName);
-    binaryFileNode->file = fopen(strNewName, "w");
+    binaryFileNode->file = fopen(strNewName, "w+");
     if (fp == NULL || binaryFileNode->file == NULL)
     {
         binaryFileNode->file = NULL;
@@ -435,5 +435,6 @@ FileList *toBinary(FILE *fp, char *fileName)
     /*second pass*/
     freeSyList(dataHeader);
     deleteOperatorsTable(op_table);
+    rewind(binaryFileNode->file);
     return binaryFileNode;
 }

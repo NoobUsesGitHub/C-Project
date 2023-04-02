@@ -19,7 +19,7 @@ FileList *macroDecoder(FILE *fp, char *fileName)
     strNewName[strlen(strNewName) - 1] = 'm';
     macroFileNode->fileName = (char *)malloc(strlen(strNewName) * sizeof(char));
     strcpy(macroFileNode->fileName, strNewName);
-    macroFileNode->file = fopen(strNewName, "w");
+    macroFileNode->file = fopen(strNewName, "w+");
     if (fp == NULL || macroFileNode->file == NULL)
     {
         macroFileNode->file = NULL;
@@ -61,7 +61,7 @@ FileList *macroDecoder(FILE *fp, char *fileName)
             {
                 if (dumpIfexistsInMacro(header, hasher(pch), macroFileNode->file) == 0)
                 {
-                    if (pch[strlen(pch)-1] != '\n')
+                    if (pch[strlen(pch) - 1] != '\n')
                         fprintf(macroFileNode->file, "%s ", pch);
                     else
                         fprintf(macroFileNode->file, "%s", pch);
@@ -74,6 +74,7 @@ FileList *macroDecoder(FILE *fp, char *fileName)
     }
 
     freeMacroList(header);
+    rewind(macroFileNode->file);
 
     return macroFileNode;
 }

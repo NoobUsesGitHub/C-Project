@@ -49,7 +49,7 @@
     "binarymaker.h": "c"
   },
   "cmake.debugConfig": {
-    "args": ["testerrors"]
+    "args": ["test","test2","testerrors","alltest"]
   },
   "C_Cpp.errorSquiggles": "disabled"
 }
