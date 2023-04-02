@@ -1,0 +1,6 @@
+;dasdasda
+mov #4,r1
+mov #4,r1
+mov #4,r1
+.entry HELLO
+HELLO: jmp HI
